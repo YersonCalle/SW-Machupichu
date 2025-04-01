@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Doppio+One&family=Dosis:wght@200..800&family=Edu+AU+VIC+WA+NT+Pre:wght@400..700&family=Edu+VIC+WA+NT+Beginner:wght@400..700&family=League+Spartan:wght@100..900&family=Satisfy&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Winky+Sans:ital,wght@0,300..900;1,300..900&display=swap');
+
 *{
     margin: 0;
     padding: 0;
+    background-color: #303030;
 }
 .form-login{
     padding: 10vw;
@@ -9,8 +12,17 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
+    color: white;
+}
+.form-login h2{
+    font-family: "Doppio One", sans-serif;
+    font-size: 30px;
+}
+.form-group{
+    font-family: "Doppio One", sans-serif;
 }
 .logo-login{
     height: 15vh;
+    background-color: white;
 }
