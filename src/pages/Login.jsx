@@ -1,10 +1,9 @@
 import React from 'react'
-import logo from '../assets/images/logo-machu.svg'
+import logo from '../assets/images/logo-machuu.png'
 import '../styles/pages/Login.css'
 function Login() {
   return (
     <form className="form-login" >
-        <h2>MACHUPICCHU</h2>
         <img src={logo} alt="Logo de Machupicchu" className='logo-login' />
         <div className="form-group">
             <label htmlFor="username">Usuario</label>
