@@ -8,10 +8,10 @@ const panels = [
   {
     title: 'Ventas',
     cards: [
-      { title: 'Puntos de Venta', icon: puntoDeVenta, url: '/punto-de-venta' },
-      { title: 'Caja', icon: caja, url: '/caja' },
-      { title: 'Empleados y Saldo', icon: empleado, url: '/empleados' },
-      { title: 'Informes', icon: reportes, url: '/informes' },
+      { title: 'Puntos de Venta', icon: puntoDeVenta, url: '/point-of-sale' },
+      { title: 'Caja', icon: caja, url: '/cash' },
+      { title: 'Empleados y Saldo', icon: empleado, url: '/employees' },
+      { title: 'Informes', icon: reportes, url: '/report' },
     ],
   },
   {
@@ -51,7 +51,6 @@ const panels = [
 
 function Dashboard() {
   const [currentPanel, setCurrentPanel] = useState(0);
-  const navigate = useNavigate(); // Mueve useNavigate dentro del componente
 
   const handleNext = () => {
     setCurrentPanel((prev) => (prev + 1) % panels.length);

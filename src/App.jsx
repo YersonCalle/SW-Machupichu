@@ -3,7 +3,7 @@ import './App.css'
 import Login from './pages/Login.jsx'
 import Sales from './pages/Sales.jsx'
 import Dashboard from './pages/Dashboard.jsx'
-import Caja from './pages/Caja.jsx'
+import Cash from './pages/Cash.jsx'
 import Employees from './pages/Employees.jsx'
 import Report from './pages/Report.jsx'
 
@@ -13,10 +13,10 @@ function App() {
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/punto-de-venta" element={<Sales />} />
-      <Route path="/caja" element={<Caja />} />
-      <Route path="/empleados" element={<Employees />} />
-      <Route path="/informes" element={<Report />} />
+      <Route path="/point-of-sale" element={<Sales />} />
+      <Route path="/cash" element={<Cash />} />
+      <Route path="/employees" element={<Employees />} />
+      <Route path="/report" element={<Report />} />
     </Routes>
   </BrowserRouter>
   )
