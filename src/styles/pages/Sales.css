@@ -1,0 +1,62 @@
+
+main-mostrador {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.sales-tittle  h1{
+    background-color: #808080;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.sales-detail {
+    display: flex;
+    height: calc(100vh - 50px);
+}
+
+.detail h2{
+    background-color:#d3d3d3 ;
+}
+
+.detail {
+    width: 25%;
+    background-color: #d3d3d3;
+    padding: 20px;
+}
+
+.sales-products {
+   display: flex;
+   flex-direction: column;
+    gap: 20px;
+    width: 75%;
+    background-color: #e0e0e0;
+    padding: 20px;
+    
+}
+
+.sales-products h2{
+    background-color: #e0e0e0;
+
+}
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    background-color: #e0e0e0;
+}
+
+.prod {
+    background-color: white;
+    height: 150px;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.details h2, .sales-products h2 {
+    margin-top: 0;
+}
