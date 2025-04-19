@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/pages/Dashboard.css';
 import { caja, puntoDeVenta, empleado, reportes } from '../assets/icons/index.js';
-import CardDash from '../components/ui/CardDash';
+import CardDash from '../components/ui/CardDash/CardDash.jsx';
 import { useNavigate } from 'react-router-dom';
 
 const panels = [
@@ -47,7 +47,7 @@ const panels = [
       { title: 'Tablas', icon: 'https://cdn-icons-png.flaticon.com/512/0/100.png' },
     ],
   },
-];
+]
 
 function Dashboard() {
   const [currentPanel, setCurrentPanel] = useState(0);
@@ -69,7 +69,7 @@ function Dashboard() {
             key={index}
             title={card.title}
             icon={card.icon}
-            url={card.url} // Asegúrate de que cada card tenga una URL válida
+            url={card.url} 
           />
         ))}
       </div>

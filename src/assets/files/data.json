@@ -1,0 +1,46 @@
+{
+    "products": [
+        {
+            "id": 1,
+            "name": "Pollo",
+            "price": 10.00,
+            "description": "Description for Product 1",
+            "image": "https://via.placeholder.com/150"
+        },
+        {
+            "id": 2,
+            "name": "Pollon",
+            "price": 20.00,
+            "description": "Description for Product 2",
+            "image": "https://via.placeholder.com/150"
+        },
+        {
+            "id": 3,
+            "name": "Mounstruito",
+            "price": 30.00,
+            "description": "Description for Product 3",
+            "image": "https://via.placeholder.com/150"
+        },
+        {
+            "id": 4,
+            "name": "Mounstruito con chifa",
+            "price": 30.00,
+            "description": "Description for Product 3",
+            "image": "https://via.placeholder.com/150"
+        },
+        {
+            "id": 5,
+            "name": "Chola de oro",
+            "price": 30.00,
+            "description": "Description for Product 3",
+            "image": "https://via.placeholder.com/150"
+        },
+        {
+            "id": 6,
+            "name": "Lomo saltado",
+            "price": 30.00,
+            "description": "Description for Product 3",
+            "image": "https://via.placeholder.com/150"
+        }
+    ]
+}

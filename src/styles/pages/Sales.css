@@ -27,13 +27,12 @@ main-mostrador {
 }
 
 .sales-products {
-   display: flex;
-   flex-direction: column;
+    display: flex;
+    flex-direction: column;
     gap: 20px;
     width: 75%;
     background-color: #e0e0e0;
     padding: 20px;
-    
 }
 
 .sales-products h2{
@@ -46,6 +45,25 @@ main-mostrador {
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     background-color: #e0e0e0;
+}
+
+.detail h2{
+    background-color: #e0e0e0;
+    padding: .5rem;
+}
+
+.detail .detail-products {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 1rem;
+    background-color: #e0e0e0;
+}
+
+.detail .detail-products .product-item {
+    background-color: #FFFFFF;
+    padding: .5rem;
+    text-align: center;
 }
 
 .prod {
