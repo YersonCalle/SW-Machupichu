@@ -11,7 +11,7 @@
     & h1{
       font-size: 2.5rem;
       font-weight: bold;
-      color: #FFF;
+      color: #070707;
       text-align: center;
     }
 }
@@ -37,12 +37,11 @@
 .dash-btn{
   padding: 1rem 1.5rem;
   border-radius: 10px;
-  background-color: #FFF;
-  border: 1px solid #000;
-  color: #000;
+  background-color: #d28f3d; 
+  color: #ffffff;
     &:hover{
       cursor: pointer;
-      background-color: #a3a3a3;
+      background-color: #a77a2b;
     }
 }
 
