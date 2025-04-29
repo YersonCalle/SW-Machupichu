@@ -1,88 +1,84 @@
 @import url('https://fonts.googleapis.com/css2?family=Doppio+One&family=Dosis:wght@200..800&family=Edu+AU+VIC+WA+NT+Pre:wght@400..700&family=Edu+VIC+WA+NT+Beginner:wght@400..700&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Gruppo&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=League+Spartan:wght@100..900&family=Satisfy&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Winky+Sans:ital,wght@0,300..900;1,300..900&display=swap');
 
-*{
-    margin: 0;
-    padding: 0;
+* {
+  margin: 0;
+  padding: 0;
 }
+
 .form-login {
-    max-width: 400px;
-    margin: 20vh auto;
-    padding: 30px;
-    background-color: #fff7e6; 
-    border-radius: 8px;
-    text-align: center;
-  }
+  max-width: 400px;
+  margin: 20vh auto;
+  padding: 30px;
+  background-color: var(--background-color);
+  border-radius: var(--border-radius);
+  text-align: center;
+}
 
 .logo-login {
-    width: 180px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    width: 250px;
-    
-  }
-.form-group {
-    margin-bottom: 0px;
-    text-align: left;
-  }
-  .form-group label {
-    display: block;
-    font-size: 16px;
-    
-    color: #d28f3d;
-    margin-bottom: 8px;
-    font-family: "Doppio One", sans-serif;
-  } 
-  .form-group input {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border: 2px solid #c29f6b;
-    border-radius: 6px;
-    background-color: #f9f4e3; 
-    transition: border-color 0.3s, background-color 0.3s;
-    margin: 5px 0;
-  }
-  .form-group input:focus {
-    border-color: #7a5c44; 
-    background-color: #fff; 
-    outline: none;
-  }
-  
-  button {
-    width: 100%;
-    padding: 14px;
-    background-color: #d28f3d; 
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin: 15px 0 0 0;
-      &:hover {
-        background-color: #a77a2b;
-      }
+  width: 180px;
+  margin-bottom: 20px;
+  border-radius: var(--border-radius);
+  width: 250px;
+}
 
+.form-group {
+  margin-bottom: 0px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-size: 16px;
+  color: var(--text-color-dk);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #c29f6b;
+  border-radius: var(--border-radius);
+  transition: border-color 0.3s, background-color 0.3s;
+  margin: 5px 0;
+}
+
+.form-group input:focus {
+  border-color: #7a5c44;
+  background-color: #fff;
+  outline: none;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  background-color: #d28f3d;
+  color: white;
+  border: none;
+  border-radius:var(--background-color);
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 15px 0 0 0;
+
+  &:hover {
+    background-color: #a77a2b;
   }
-  
- 
-  
-  
-  input::placeholder {
-    color: #bfa46f; 
-  }
-  
-  body {
-    background-color: #f4f1eb; 
-    font-family: 'Verdana', sans-serif;
-    color: #4a4a4a; 
-  }
-  
+}
+
+input::placeholder {
+  color: #bfa46f;
+}
+
+body {
+  background-color: #f4f1eb;
+  color: #4a4a4a;
+}
+
 .form-login {
-    border: 1px solid #d2b08c;
-  }
-  
+  border: 1px solid #d2b08c;
+}
+
 .form-group input,
-    button {
-    transition: all 0.3s ease;
+button {
+  transition: all 0.3s ease;
 }

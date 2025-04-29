@@ -1,12 +1,12 @@
 
 main-mostrador {
     margin: 0;
-    font-family: Arial, sans-serif;
+    color: var(--text-color-dk);
 }
 
 .sales-tittle  h1{
-    background-color: #808080;
-    color: white;
+    background-color: #f5f1dcdc;
+    color: var(--text-color-dk);
     text-align: center;
     padding: 20px 0;
 }
@@ -16,13 +16,9 @@ main-mostrador {
     height: calc(100vh - 50px);
 }
 
-.detail h2{
-    background-color:#d3d3d3 ;
-}
-
 .detail {
     width: 25%;
-    background-color: #d3d3d3;
+    background-color: #e7e1bfdc;
     padding: 20px;
 }
 
@@ -31,24 +27,17 @@ main-mostrador {
     flex-direction: column;
     gap: 20px;
     width: 75%;
-    background-color: #e0e0e0;
+    background-color: var(--background-color);
     padding: 20px;
-}
-
-.sales-products h2{
-    background-color: #e0e0e0;
-
 }
 
 .products {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
-    background-color: #e0e0e0;
 }
 
 .detail h2{
-    background-color: #e0e0e0;
     padding: .5rem;
 }
 
@@ -57,19 +46,20 @@ main-mostrador {
     flex-direction: column;
     gap: 20px;
     padding: 0 1rem;
-    background-color: #e0e0e0;
 }
 
 .detail .detail-products .product-item {
-    background-color: #FFFFFF;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
     padding: .5rem;
     text-align: center;
 }
 
 .prod {
-    background-color: white;
+    background-color: var(--background-color);
     height: 150px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--text-color-dk);
+    border-radius: var(--border-radius);
     display: flex;
     justify-content: center;
     align-items: center;

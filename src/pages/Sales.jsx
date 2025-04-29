@@ -16,11 +16,11 @@ function Sales() {
     <>
     <main className='main-mostrador'>
         <div class="sales-tittle">
-            <h1>MACHUPICCHU</h1>
+            <h1>Machu Picchu</h1>
         </div>
         <div class="sales-detail">
             <div class="detail">
-                <h2>DETALLE</h2>
+                <h2>Detalle</h2>
                 <div class="detail-products">
                     {products.map((product, index) => (
                         <div key={index} className="product-item">
@@ -29,13 +29,13 @@ function Sales() {
                         </div>
                     ))}
                 <div className="total product-item">
-                    <h3>TOTAL</h3>
+                    <h3>Total</h3>
                     <h3>$ {total}</h3>
                 </div>
             </div>
         </div>
             <div class="sales-products">
-                <h2>PRODUCTOS</h2>
+                <h2>Productos</h2>
                 <div class="products">
                     {data.products.map((product, index) => (
                         <CardSale key={index} title={product.name} price={product.price} onClick={() => handleAddProduct(product)} />

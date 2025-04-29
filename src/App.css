@@ -5,3 +5,16 @@
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
+
+/* Variables */
+
+:root {
+  --primary-color: #d28f3d;
+  --secondary-color: #c29f6b;
+  --background-color: #fff7e6;
+  --background-color-dk: #e7e1bfdc;
+  --acent-color: #d3c69050;
+  --text-color-lg: #e4e4e4;
+  --text-color-dk: #d28f3d;
+  --border-radius: 8px;
+}
