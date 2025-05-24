@@ -6,12 +6,13 @@ import Dashboard from './pages/Dashboard.jsx'
 import Cash from './pages/Cash.jsx'
 import Employees from './pages/Employees.jsx'
 import Report from './pages/Report.jsx'
+import Users from './pages/users.jsx'
 
 function App() {
   return (
   <BrowserRouter>
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route path="/" element={<Users />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/point-of-sale" element={<Sales />} />
       <Route path="/cash" element={<Cash />} />
