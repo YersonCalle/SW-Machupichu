@@ -2,13 +2,11 @@ import React from 'react'
 import '../styles/pages/Users.css'
 
 
-function Sales() {
-    const [products, setProducts] = React.useState([])
-    const [total, setTotal] = React.useState(0)
+function Users() {
+    
 
-    function handleAddProduct(product) {
-        setProducts([...products, product])
-        setTotal(total + product.price)
+    function AddEmployees() {
+        
     }
 
   return (
