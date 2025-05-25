@@ -41,6 +41,27 @@
             "price": 30.00,
             "description": "Description for Product 3",
             "image": "https://via.placeholder.com/150"
+        },
+        {
+            "id": 7,
+            "name": "Chicharron",
+            "price": 30.00,
+            "description": "Description for Product 3",
+            "image": "https://via.placeholder.com/150"
+        },
+        {
+            "id": 8,
+            "name": "Chicharron de pollo",
+            "price": 30.00,
+            "description": "Description for Product 3",
+            "image": "https://via.placeholder.com/150"
+        },
+        {
+            "id": 9,
+            "name": "Chicharron de cerdo",
+            "price": 30.00,
+            "description": "Description for Product 3",
+            "image": "https://via.placeholder.com/150"
         }
     ]
 }
