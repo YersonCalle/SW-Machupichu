@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard.jsx'
 import Cash from './pages/Cash.jsx'
 import Employees from './pages/Employees.jsx'
 import Report from './pages/Report.jsx'
+/*import Users from './pages/users.jsx'*/
 
 function App() {
   return (

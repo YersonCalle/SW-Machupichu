@@ -18,7 +18,7 @@ const panels = [
     title: 'Control',
     cards: [
       { title: 'Empleados', icon: 'https://cdn-icons-png.flaticon.com/512/0/100.png' },
-      { title: 'Parametros', icon: 'https://cdn-icons-png.flaticon.com/512/0/100.png' },
+      { title: 'Usuarios', icon: 'https://cdn-icons-png.flaticon.com/512/0/100.png' },
       { title: 'Tablas', icon: 'https://cdn-icons-png.flaticon.com/512/0/100.png' },
       { title: 'Mapa de Mesas', icon: 'https://cdn-icons-png.flaticon.com/512/0/100.png' },
     ],
