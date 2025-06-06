@@ -41,7 +41,7 @@ const panels = [
   {
     title: 'Productos',
     cards: [
-      { title: 'Carga de productos', icon: 'https://cdn-icons-png.flaticon.com/512/0/100.png' },
+      { title: 'Carga de productos', icon: 'https://cdn-icons-png.flaticon.com/512/0/100.png', url: '/load-products' },
       { title: 'Caja de insumos', icon: 'https://cdn-icons-png.flaticon.com/512/0/100.png' },
       { title: 'Cargo de gustos', icon: 'https://cdn-icons-png.flaticon.com/512/0/100.png' },
       { title: 'Tablas', icon: 'https://cdn-icons-png.flaticon.com/512/0/100.png' },

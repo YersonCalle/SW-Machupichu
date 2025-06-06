@@ -2,12 +2,8 @@ import React from 'react'
 import '../styles/pages/Users.css'
 
 
-function Users() {
-    
+function Employees() {
 
-    function AddEmployees() {
-        
-    }
 
   return (
     <>

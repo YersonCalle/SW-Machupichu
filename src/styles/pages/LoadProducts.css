@@ -1,0 +1,17 @@
+.title {
+  padding: 1rem;
+  font-size: var(--h2);
+  text-align: center;
+}
+
+.load-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;
+
+    & button{
+      width: 200px;
+    }
+}

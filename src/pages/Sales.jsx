@@ -9,8 +9,7 @@ function Sales() {
 
     function handleAddProduct(product) {
         setProducts([...products, product])
-        setTotal(total + product.price)
-    }
+        setTotal(total + product.price)}
 
   return (
     <>
