@@ -1,5 +1,6 @@
 import React from 'react'
 import logo from '../assets/images/logo-machuu.png'
+import Button1 from '../components/ui/Button1/Button1.jsx'
 import '../styles/pages/Login.css'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -62,8 +63,8 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
         </div>
-        <button type="submit" onClick={handleSubmit} className="btn-login">Iniciar Sesión</button>
-        <button type="button" onClick={()=> setShowModal(true)} className="btn-login">Agregar Usuario</button>
+        <Button1 text='Iniciar Sesión' onClick={handleSubmit} />
+        <Button1 text='Agregar Usuario' onClick={() => setShowModal(true)} />
     </form>    
     </div>
   </div>
