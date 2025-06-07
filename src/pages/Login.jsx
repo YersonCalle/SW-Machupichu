@@ -8,15 +8,15 @@ function Login() {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const navigate = useNavigate()
-  
   const [showModal , setShowModal] = useState(false)
+
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
     if (username === 'admin' && password === 'admin') {
       alert('Bienvenido');
-      navigate('/dashboard')
+      navigate('/point-of-sale');
     } else {
       alert('Usuario o contraseña incorrectos');
     }

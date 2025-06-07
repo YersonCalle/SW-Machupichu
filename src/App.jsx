@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-do
 import './App.css'
 import Login from './pages/Login.jsx'
 import Sales from './pages/Sales.jsx'
-import Dashboard from './pages/Dashboard.jsx'
 import Cash from './pages/Cash.jsx'
 import Employees from './pages/Employees.jsx'
 import Report from './pages/Report.jsx'
@@ -28,7 +27,6 @@ function App() {
     <Layout>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/point-of-sale" element={<Sales />} />
         <Route path="/cash" element={<Cash />} />
         <Route path="/employees" element={<Employees />} />
