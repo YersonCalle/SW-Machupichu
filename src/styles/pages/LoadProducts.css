@@ -12,6 +12,6 @@
   padding: 1rem;
 
     & button{
-      width: 200px;
+      padding: 2rem;
     }
 }

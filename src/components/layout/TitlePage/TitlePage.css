@@ -1,0 +1,9 @@
+.title-page{
+    display:flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: #c53030;
+    color: #ffffff;
+    text-align: center;
+    padding: 20px;
+}

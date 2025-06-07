@@ -13,12 +13,6 @@
     flex-direction: column;
 }
 
-.title-page  h1{
-    background-color: #c53030;
-    color: #ffffff;
-    text-align: center;
-    padding: 20px 0;
-}
 
 .sales-detail {
     display: flex;
