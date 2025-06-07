@@ -1,10 +1,11 @@
 .sidebar {
-  width: 280px;
+  width: 250px;
   background-color: #c53030;
   color: white;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  position: fixed;
 }
 
 .sidebar-header {
