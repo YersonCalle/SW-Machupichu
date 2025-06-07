@@ -1,6 +1,7 @@
 import React from 'react'
 import '../styles/pages/LoadProducts.css'
 import TitlePage from '../components/layout/TitlePage/TitlePage.jsx'
+import Button1 from '../components/ui/Button1/Button1.jsx'
 
 
 
@@ -21,9 +22,9 @@ function LoadPrducts() {
     <>
     <TitlePage title='Productos' />
     <div className='load-container'>
-        <button id='btn-add-product' onClick={AddProduct}>Agregar producto</button>
-        <button id='btn-delete-product' onClick={DeleteProduct}>Eliminar producto</button>
-        <button id='btn-update-product' onClick={UpdateProduct}>Modificar producto</button>
+        <Button1 text='Agregar producto' onClick={AddProduct}></Button1>
+        <Button1 text='Eliminar producto' onClick={DeleteProduct}></Button1>
+        <Button1 text='Actualizar producto' onClick={UpdateProduct}></Button1>
     </div>
     </>
     

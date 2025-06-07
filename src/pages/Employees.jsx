@@ -1,10 +1,10 @@
 import React from 'react'
 import TitlePage from '../components/layout/TitlePage/TitlePage.jsx'
 import '../styles/pages/Users.css'
+import Button1 from '../components/ui/Button1/Button1.jsx'
 
 
 function Employees() {
-
 
   return (
     <>
@@ -27,11 +27,11 @@ function Employees() {
         </section>
 
         <aside class="users-actions">
-            <button>Añadir</button>
-            <button>Permisos</button>
-            <button>Documentos</button>
-            <button>Modificar</button>
-            <button>Dar de Baja</button>
+            <Button1 text='Añadir'></Button1>
+            <Button1 text='Permisos'></Button1>
+            <Button1 text='Documentos'></Button1>
+            <Button1 text='Modificar'></Button1>
+            <Button1 text='Dar de Baja'></Button1>
         </aside>
         </section> 
     </main>
