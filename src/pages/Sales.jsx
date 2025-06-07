@@ -16,7 +16,6 @@ function Sales() {
     return (
         <>
             <main className='main-mostrador'>
-                <SideBar />
                 <div className="sales-container">
                     <div class="sales-tittle">
                         <h1>Punto de venta</h1>
