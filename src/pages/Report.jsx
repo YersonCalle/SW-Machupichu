@@ -1,10 +1,9 @@
 import React from 'react'
+import TitlePage from '../components/layout/TitlePage/TitlePage.jsx'
 
 function Report() {
   return (
-    <div>
-        <h1> Informes</h1>
-    </div>
+    <TitlePage title='Reportes' />
   )
 }
 

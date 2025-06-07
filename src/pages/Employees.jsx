@@ -1,4 +1,5 @@
 import React from 'react'
+import TitlePage from '../components/layout/TitlePage/TitlePage.jsx'
 import '../styles/pages/Users.css'
 
 
@@ -7,11 +8,8 @@ function Employees() {
 
   return (
     <>
-    <header>
-        <h1>Machupicchu</h1>
-    </header>
+    <TitlePage title='Empleados' />
     <main>
-        <h2>Empleados</h2>
         <section class="users-users">    
             <section class="users-employees">
             <div class="users-categories">

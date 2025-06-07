@@ -7,6 +7,7 @@ import Employees from './pages/Employees.jsx'
 import Report from './pages/Report.jsx'
 import LoadProducts from './pages/LoadPrducts.jsx'
 import SideBar from './components/layout/SideBar/SideBar.jsx'
+import Clients from './pages/Clients.jsx'
 
 function Layout({ children }) {
   const location = useLocation();
@@ -32,6 +33,7 @@ function App() {
         <Route path="/employees" element={<Employees />} />
         <Route path="/report" element={<Report />} />
         <Route path="/load-products" element={<LoadProducts />} />
+        <Route path='/clients' element={<Clients />} />
       </Routes>
     </Layout>
   </BrowserRouter>
