@@ -30,8 +30,12 @@ function Login() {
 
   return (
     <>
-    <form className="form-login" >
+    <div class='login'>
+          <h2>LOGIN</h2>
+        <div class='login-container'>
         <img src={logo} alt="Logo de Machupicchu" className='logo-login' />
+        
+    <form className="form-login" >
         <div className="form-group">
             <label htmlFor="username">Usuario</label>
             <input 
@@ -61,6 +65,8 @@ function Login() {
         <button type="submit" onClick={handleSubmit} className="btn-login">Iniciar Sesión</button>
         <button type="button" onClick={()=> setShowModal(true)} className="btn-login">Agregar Usuario</button>
     </form>    
+    </div>
+  </div>
   
   {showModal && (
   <div className="login-modal">
