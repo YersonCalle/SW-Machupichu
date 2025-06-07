@@ -1,4 +1,4 @@
-import "../SideBar.css"
+import "./SideBar.css"
 
 const Sidebar = ({ activeItem = "punto-venta", onItemClick }) => {
   const navItems = [
