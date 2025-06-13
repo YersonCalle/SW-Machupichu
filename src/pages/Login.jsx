@@ -73,7 +73,10 @@ function Login() {
   <div className="login-modal">
     <div className="login-modalAdd">
       <form onSubmit={handleRegisterSubmit}>
+        <h2>Registrar Usuario</h2>
         <div className='login-modal-form'>
+        <label htmlFor="name">Nombre</label>
+        <input type="name" name='name'/>
         <label htmlFor="user">Usuario</label>
         <input type="text" name="user" />
         <label htmlFor="password">Contraseña</label>
@@ -82,8 +85,11 @@ function Login() {
         <input type="password" name="token" />
         
       </div>      
-        <button type="button" onClick={() => setShowModal(false)}>Cancelar</button>
-        <button type="submit">Registrar</button>
+        <div className='modal-btn'>
+        <Button1 text='Registrar' />
+        <Button1 text='Cancelar' onClick={() => setShowModal(false)} />
+        </div>
+      
       </form>
 
     </div>

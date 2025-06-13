@@ -20,11 +20,12 @@
   margin-bottom: 10px;
 }
 
-.restaurant-name {
+.restaurant-name img{
   font-size: 16px;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
+  height: 90px;
 }
 
 .sidebar-nav {

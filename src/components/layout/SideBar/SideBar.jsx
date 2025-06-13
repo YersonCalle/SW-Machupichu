@@ -1,5 +1,6 @@
 import "./SideBar.css"
 import { useNavigate } from "react-router-dom"
+import logo from '../../../assets/images/logo-machuu.png'
 
 
 const Sidebar = ({ activeItem = "punto-venta", onItemClick }) => {
@@ -85,9 +86,7 @@ const Sidebar = ({ activeItem = "punto-venta", onItemClick }) => {
     <div className="sidebar">
       <div className="sidebar-header">
         <div className="restaurant-name">
-          Pollería
-          <br />
-          MACHUPICCHU
+          <img src={logo} alt="Logo de machipucchu" />
         </div>
       </div>
 
