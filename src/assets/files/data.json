@@ -1,19 +1,6 @@
 {
     "products": [
-        {
-            "id": 1,
-            "name": "Pollo",
-            "price": 10.00,
-            "description": "Description for Product 1",
-            "image": "https://via.placeholder.com/150"
-        },
-        {
-            "id": 2,
-            "name": "Pollon",
-            "price": 20.00,
-            "description": "Description for Product 2",
-            "image": "https://via.placeholder.com/150"
-        },
+        
         {
             "id": 3,
             "name": "Mounstruito",
@@ -62,6 +49,20 @@
             "price": 30.00,
             "description": "Description for Product 3",
             "image": "https://via.placeholder.com/150"
+        }
+    ],
+    "usuarios": [
+        {
+            "id": 1,
+            "name": "Eduardo Quispe",
+            "user": "Edu_Quispe10",
+            "password": "EduQuispe10"
+        },
+        {
+            "id": 2,
+            "name": "Manolo Rojas",
+            "user": "Manolito",
+            "password": "ManolitoTuCachorra"
         }
     ]
 }
