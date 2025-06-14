@@ -14,15 +14,34 @@ function Login() {
 
   const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (username === 'admin' && password === 'admin') {
-      alert('Bienvenido');
-      navigate('/point-of-sale');
-    } else {
-      alert('Usuario o contraseña incorrectos');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+        const userData = await getData("/src/assets/files/data.json");
+        const user = userData.usuarios;
+        
+        let userFind = false
+
+        for(let i=0;i<user.length ; i++){
+          let userExample = user[i].user
+          let passwordExample = user[i].password
+           
+
+
+          if(username === userExample && password === passwordExample){
+            alert('bienvenido')
+            navigate('/point-of-sale')
+            userFind = True
+          }}
+          if(!userFind){
+            alert('Datos invalidos')
+          }
+        
+    } catch (error) {
+        console.error("Error cargando datos:", error);
     }
-  }
+
+};
   
   const handleRegisterSubmit = (e) => {
     e.preventDefault();
@@ -39,7 +58,7 @@ async function getData(rutaArchivo) {
     }
     
     const data = await response.json();
-    console.log(`Contenido de ${rutaArchivo}:`, data);
+    
     return data;
     
   } catch (error) {
@@ -51,9 +70,9 @@ async function getData(rutaArchivo) {
 
   return (
     <>
-    <div class='login'>
+    <div className='login'>
           <h2>LOGIN</h2>
-        <div class='login-container'>
+        <div className='login-container'>
         <img src={logo} alt="Logo de Machupicchu" className='logo-login' />
         
     <form className="form-login" >
@@ -83,7 +102,7 @@ async function getData(rutaArchivo) {
               onChange={(e) => setPassword(e.target.value)}
             />
         </div>
-        <Button1 text='Iniciar Sesión' onClick={() => getData('/src/assets/files/data.json')} />
+        <Button1 text='Iniciar Sesión' onClick={ handleSubmit} />
         <Button1 text='Agregar Usuario' onClick={() => setShowModal(true)} />
     </form>    
     </div>
