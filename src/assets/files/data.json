@@ -5,7 +5,7 @@
             "id": 3,
             "name": "Mounstruito",
             "price": 30.00,
-            "description": "Description for Product 3",
+            "description": "Mounstruito is a delicious dish that combines various ingredients to create a unique flavor.",
             "image": "https://via.placeholder.com/150"
         },
         {
@@ -56,7 +56,7 @@
             "id": 1,
             "name": "Eduardo Quispe",
             "user": "Edu_Quispe10",
-            "password": "EduQuispe10"
+            "password": "EduQuis10"
         },
         {
             "id": 2,

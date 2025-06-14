@@ -5,6 +5,7 @@ import '../styles/pages/Login.css'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import data from '../assets/files/data.json'
+import { getData } from '../utils/utils.js'
 
 function Login() {
 
@@ -14,6 +15,7 @@ function Login() {
 
   const navigate = useNavigate()
 
+  // Función inicio sesión
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -22,51 +24,30 @@ function Login() {
         
         let userFind = false
 
-        for(let i=0;i<user.length ; i++){
+        for (let i=0;i<user.length;i++){
           let userExample = user[i].user
           let passwordExample = user[i].password
-           
-
 
           if(username === userExample && password === passwordExample){
-            alert('bienvenido')
+            alert('Bienvenido ' + userExample)
             navigate('/point-of-sale')
             userFind = True
-          }}
-          if(!userFind){
-            alert('Datos invalidos')
           }
-        
+        }
+          if(!userFind){
+            alert('Datos incorrectos, por favor intente de nuevo')
+          }
     } catch (error) {
         console.error("Error cargando datos:", error);
     }
 
 };
-  
+  //Funcion registrar usuario
   const handleRegisterSubmit = (e) => {
     e.preventDefault();
     alert('Registro enviado');
     setShowModal(false);
   };
-
-async function getData(rutaArchivo) {
-  try {
-    const response = await fetch(rutaArchivo);
-    
-    if (!response.ok) {
-      throw new Error(`No se pudo encontrar: ${rutaArchivo}`);
-    }
-    
-    const data = await response.json();
-    
-    return data;
-    
-  } catch (error) {
-    console.error(`Error leyendo ${rutaArchivo}:`, error.message);
-  }
-}
-
-
 
   return (
     <>
