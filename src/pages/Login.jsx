@@ -4,6 +4,7 @@ import Button1 from '../components/ui/Button1/Button1.jsx'
 import '../styles/pages/Login.css'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import data from '../assets/files/data.json'
 
 function Login() {
 
@@ -28,6 +29,25 @@ function Login() {
     alert('Registro enviado');
     setShowModal(false);
   };
+
+async function getData(rutaArchivo) {
+  try {
+    const response = await fetch(rutaArchivo);
+    
+    if (!response.ok) {
+      throw new Error(`No se pudo encontrar: ${rutaArchivo}`);
+    }
+    
+    const data = await response.json();
+    console.log(`Contenido de ${rutaArchivo}:`, data);
+    return data;
+    
+  } catch (error) {
+    console.error(`Error leyendo ${rutaArchivo}:`, error.message);
+  }
+}
+
+
 
   return (
     <>
@@ -63,7 +83,7 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
         </div>
-        <Button1 text='Iniciar Sesión' onClick={handleSubmit} />
+        <Button1 text='Iniciar Sesión' onClick={() => getData('/src/assets/files/data.json')} />
         <Button1 text='Agregar Usuario' onClick={() => setShowModal(true)} />
     </form>    
     </div>
