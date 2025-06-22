@@ -1,6 +1,6 @@
 import React from 'react'
 import TitlePage from '../components/layout/TitlePage/TitlePage.jsx'
-import '../styles/pages/Users.css'
+import '../styles/pages/Employees.css'
 import Button1 from '../components/ui/Button1/Button1.jsx'
 
 
