@@ -23,9 +23,16 @@
   padding: 1rem 2rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: .5rem;
     & .subtitle{
       font-size: 1.2rem;
       font-weight: bold;
     }
+}
+
+.products-grid{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: .5rem;
 }

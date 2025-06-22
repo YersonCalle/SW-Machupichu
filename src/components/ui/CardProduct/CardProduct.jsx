@@ -3,7 +3,7 @@ import './CardProduct.css'
 import Button1 from '../Button1/Button1'
 
 
-function CardProduct({title, id, price, descrip}) {
+function CardProduct({title, id, price, descrip, onUpdate, onDelete}) {
   return (
     <div className='card-product'>
         <div className='card-product-info'>
@@ -13,8 +13,8 @@ function CardProduct({title, id, price, descrip}) {
             <p className='card-product-descrip'>{descrip}</p>
         </div>
         <div className='card-product-actions'>
-            <Button1 text='Actualizar' className='card-product-button'></Button1>
-            <Button1 text='Eliminar' className='card-product-button'></Button1>
+            <Button1 text='Actualizar' onClick={onUpdate} className='card-product-button'></Button1>
+            <Button1 text='Eliminar' onClick={onDelete} className='card-product-button'></Button1>
         </div>
     </div>
   )
