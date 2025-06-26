@@ -1,49 +1,89 @@
-
-.users-users {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f8f8f8;
+.employees-container {
+  padding: 40px;
+  background-color: #f5f5f5;
 }
 
-.users-users {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-}
-header {
-    background-color: #b22222;
-    color: white;
-    text-align: center;
-    padding: 15px;
-    font-size: 1.5em;
+.employees-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
 }
 
-.users-employees {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 70%;
+.employees-table {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.users-categories {
-    background-color: #b22222;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
+.employee-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #4a5568;
 }
 
-.lista {
-    background-color: white;
-    min-height: 80px;
-    border: 2px solid #b22222;
-    margin-top: 5px;
-    border-radius: 5px;
+.employee-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
-.users-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 25%;
+.employee-name {
+  font-weight: bold;
+  color: #2d3748;
+}
+
+.employee-email {
+  color: #666;
+  font-size: 14px;
+}
+
+.role-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.role-admin {
+  background: #fed7d7;
+  color: #c53030;
+}
+
+.role-manager {
+  background: #bee3f8;
+  color: #3182ce;
+}
+
+.role-waiter {
+  background: #c6f6d5;
+  color: #38a169;
+}
+
+.role-kitchen {
+  background: #feebc8;
+  color: #ed8936;
+}
+
+.status-active {
+  color: #38a169;
+  font-weight: bold;
+}
+
+.status-inactive {
+  color: #e53e3e;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .employees-table {
+    overflow-x: auto;
+  }
 }
