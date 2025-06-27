@@ -9,6 +9,7 @@ import LoadProducts from './pages/LoadPrducts.jsx'
 import SideBar from './components/layout/SideBar/SideBar.jsx'
 import Clients from './pages/Clients.jsx'
 import Users from './pages/Users.jsx'
+import Printers from './pages/Printers.jsx'
 
 function Layout({ children }) {
   const location = useLocation();
@@ -36,6 +37,7 @@ function App() {
         <Route path="/load-products" element={<LoadProducts />} />
         <Route path='/clients' element={<Clients />} />
         <Route path='/users' element={<Users />} />
+        <Route path='/printers'element={<Printers/>}/>
       </Routes>
     </Layout>
   </BrowserRouter>
