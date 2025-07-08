@@ -100,6 +100,8 @@ function LoadProducts() {
                 title={product.name || product.nombre}
                 price={product.price || product.precio}
                 descrip={product.description || product.descripcion}
+                category={product.category}
+                image={product.image}
                 onUpdate={() => updateProduct(product.id)}
                 onDelete={() => deleteProduct(product.id)}
               />
