@@ -1,11 +1,11 @@
 import React from 'react'
-import './CardSale.css'
+import './Menu.css'
 
 function CardSale({title, price, onClick}) {
   return (
     <div className='prod' onClick={onClick}>
         <div className='prod-title'>
-            <h3>que fue</h3>
+            <h3>{title}</h3>
         </div>
         <div className='prod-price'>
             <h3>$ {price}</h3>
