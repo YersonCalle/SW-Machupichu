@@ -17,18 +17,18 @@ function LoadProducts() {
       setLoading(true);
       setError(null);
       
-      const response = await getData('/src/assets/files/data.json');
+      const response = await getData('http://localhost:3000/api/productos');
       
-      if (response && response.products) {
-        setProducts(response.products);
-        console.log('Productos cargados:', response.products);
+      if (Array.isArray(response) && response.length > 0) {
+        setProducts(response);
+        console.log('Productos cargados:', response);
       } else {
-        setError('No se encontraron productos en el archivo');
+        setError('No se encontraron productos :(');
       }
       
     } catch (error) {
       console.error('Error cargando productos:', error);
-      setError('Error al cargar los productos');
+      setError('Error al cargar los productos :(');
     } finally {
       setLoading(false);
     }
@@ -40,7 +40,7 @@ function LoadProducts() {
 
   async function eliminarDato(id) {
     try {
-      const response = await fetch(`/src/assets/files/data.json${id}`, {
+      const response = await fetch(`http://localhost:3000/api/productos/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -66,8 +66,8 @@ function LoadProducts() {
     alert(`Actualizaste el producto ${productId}`);
   };
 
-  const deleteProduct = (productId) => {
-    alert(`Eliminaste el producto ${productId}`);
+  const disableProduct = (productId) => {
+    alert(`Deshabilitaste el producto ${productId}`);
   }
 
   return (
@@ -97,13 +97,12 @@ function LoadProducts() {
               <CardProduct
                 key={product.id}
                 id={product.id}
-                title={product.name || product.nombre}
-                price={product.price || product.precio}
-                descrip={product.description || product.descripcion}
-                category={product.category}
-                image={product.image}
+                title={product.nombre}
+                price={product.precio}
+                descrip={product.descripcion}
+                category={product.categoria_id}
                 onUpdate={() => updateProduct(product.id)}
-                onDelete={() => deleteProduct(product.id)}
+                onDelete={() => disableProduct(product.id)}
               />
             ))}
           </div>
@@ -115,10 +114,10 @@ function LoadProducts() {
       </div>
 
       <div className='load-container'>
-        <h3 className='subtitle'>Eliminar Producto</h3>
+        <h3 className='subtitle'>Deshabilitar Producto</h3>
         <p>Precaución:</p>
-        <p>Tenga en cuenta que al ELIMINAR un producto se borrará COMPLETAMENTE del sistema, esto incluye si hay alguna mesa activa con este producto seleccionado. Se recomienda eliminar con cuidado y fuera de horario laboral.</p>
-        <Button1 text='ELIMINAR PRODUCTO' onClick={deleteProduct} />
+        <p>Tenga en cuenta que al DESHABILITAR un producto se deshabilitará para que no se pueda seleccionar en el punto de venta, esto incluye si hay alguna mesa activa con este producto seleccionado. Se recomienda eliminar con cuidado y fuera de horario laboral.</p>
+        <Button1 text='Deshabilitar Producto' onClick={disableProduct} />
       </div>
     </>
   );

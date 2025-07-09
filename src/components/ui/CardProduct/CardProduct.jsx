@@ -20,7 +20,7 @@ function CardProduct({title, id, price, descrip, onUpdate, onDelete, category, i
 
         <div className='card-product-actions'>
             <Button1 text='Actualizar' onClick={onUpdate} className='card-product-button'></Button1>
-            <Button1 text='Eliminar' onClick={onDelete} className='card-product-button'></Button1>
+            <Button1 text='Deshabilitar' onClick={onDelete} className='card-product-button'></Button1>
         </div>
     </div>
   )
