@@ -1,0 +1,40 @@
+{
+  "usuarioActivo": {
+    "id": 1,
+    "nombre": "Manolo",
+    "rol": "mesero"
+  },
+  "mesas": [
+    { "id": 1, "numero": 1, "capacidad": 4, "estado_actual": "libre" },
+    { "id": 2, "numero": 2, "capacidad": 6, "estado_actual": "ocupada" },
+    { "id": 3, "numero": 3, "capacidad": 2, "estado_actual": "libre" }
+  ],
+  "pedidos": [
+    {
+      "id": 101,
+      "mesa_id": 2,
+      "mesa_numero": 2,
+      "usuario_id": 1,
+      "estado": "preparando",
+      "fecha_pedido": "2025-07-24T19:00:00",
+      "total": 48.50,
+      "productos": [
+        { "producto_nombre": "Hamburguesa", "cantidad": 2, "precio_unitario": 8.5, "subtotal": 17.0 },
+        { "producto_nombre": "Papas Fritas", "cantidad": 1, "precio_unitario": 6.0, "subtotal": 6.0 },
+        { "producto_nombre": "Coca-Cola", "cantidad": 2, "precio_unitario": 7.75, "subtotal": 15.5 },
+        { "producto_nombre": "Flan", "cantidad": 1, "precio_unitario": 10.0, "subtotal": 10.0 }
+      ]
+    }
+  ],
+  "categorias": [
+    { "id": 1, "nombre": "Comidas" },
+    { "id": 2, "nombre": "Bebidas" },
+    { "id": 3, "nombre": "Postres" }
+  ],
+  "productos": [
+    { "id": 1, "nombre": "Hamburguesa", "descripcion": "Con queso y panceta", "precio": 8.5, "categoria_id": 1, "disponible": true },
+    { "id": 2, "nombre": "Papas Fritas", "descripcion": "Porción mediana", "precio": 6.0, "categoria_id": 1, "disponible": true },
+    { "id": 3, "nombre": "Coca-Cola", "descripcion": "500 ml", "precio": 7.75, "categoria_id": 2, "disponible": true },
+    { "id": 4, "nombre": "Flan", "descripcion": "Con dulce de leche", "precio": 10.0, "categoria_id": 3, "disponible": true }
+  ]
+}

@@ -11,6 +11,12 @@ import Clients from './pages/Clients.jsx'
 import Users from './pages/Users.jsx'
 import Printers from './pages/Printers.jsx'
 
+//mesero
+import Mesero from './pages/Mesero/IndexMesero.jsx'
+import MisPedidos from './pages/Mesero/MisPedidos.jsx'
+import TomarPedidos from './pages/Mesero/TomarPedido.jsx'
+import VerPedidosMesa from './pages/Mesero/VerPedidoMesa.jsx'
+
 function Layout({ children }) {
   const location = useLocation();
   const hideSidebar = location.pathname === '/';
@@ -38,6 +44,10 @@ function App() {
         <Route path='/clients' element={<Clients />} />
         <Route path='/users' element={<Users />} />
         <Route path='/printers'element={<Printers/>}/>
+        <Route path='/mesero'element={<Mesero/>}/>
+        <Route path='/mis'element={<MisPedidos/>}/>
+        <Route path='/tomar-pedidos'element={<TomarPedidos/>}/>
+        <Route path='/ver-pedidos-mesa'element={<VerPedidosMesa/>}/>
       </Routes>
     </Layout>
   </BrowserRouter>

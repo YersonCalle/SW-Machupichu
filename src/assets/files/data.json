@@ -55,13 +55,17 @@
             "id": 1,
             "name": "Eduardo Quispe",
             "user": "Edu_Quispe10",
-            "password": "EduQuis10"
+            "password": "EduQuis10",
+            "rol": "mesero"
         },
         {
             "id": 2,
             "name": "Manolo Rojas",
             "user": "Manolito",
-            "password": "1234"
+            "password": "1234",
+            "rol":"mesero",
+            "isLogged": true
+
             
         }
     ]
