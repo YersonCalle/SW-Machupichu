@@ -1,6 +1,6 @@
 import { useState } from "react"
-import TitlePage from "../components/layout/TitlePage/TitlePage"
-import '../styles/pages/Printers.css'
+import TitlePage from '../../components/layout/TitlePage/TitlePage.jsx'
+import '../../styles/pages/Printers.css'
 
 
 const Printers = () => {

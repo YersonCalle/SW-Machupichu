@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
-import TitlePage from '../components/layout/TitlePage/TitlePage.jsx'
-import '../styles/pages/Employees.css'
-import { getData } from '../utils/utils.js'
+import TitlePage from '../../components/layout/TitlePage/TitlePage.jsx'
+import '../../styles/pages/Employees.css'
+import { getData } from '../../utils/utils.js'
 
 const Employees = () => {
   const [showModal, setShowModal] = useState(false)

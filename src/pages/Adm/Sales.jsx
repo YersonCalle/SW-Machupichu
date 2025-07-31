@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import '../styles/pages/Sales.css'
-import TitlePage from '../components/layout/TitlePage/TitlePage.jsx'
-import CardSale from '../components/ui/CardSale/CardSale.jsx'
-import TableItem from '../components/ui/TableItem/TableItem.jsx'
-import data from '../assets/files/data.json'
-import { getData } from '../utils/utils.js'
+import '../../styles/pages/Sales.css'
+import TitlePage from '../../components/layout/TitlePage/TitlePage.jsx'
+import CardSale from '../../components/ui/CardSale/CardSale.jsx'
+import TableItem from '../../components/ui/TableItem/TableItem.jsx'
+import data from '../../assets/files/data.json'
+import { getData } from '../../utils/utils.js'
 
 function Sales() {
   const [products, setProducts] = useState([])
