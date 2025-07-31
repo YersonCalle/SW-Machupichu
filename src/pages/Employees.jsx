@@ -1,59 +1,12 @@
-
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import TitlePage from '../components/layout/TitlePage/TitlePage.jsx'
 import '../styles/pages/Employees.css'
-
+import { getData } from '../utils/utils.js'
 
 const Employees = () => {
   const [showModal, setShowModal] = useState(false)
   const [editingEmployee, setEditingEmployee] = useState(null)
-  const [employees, setEmployees] = useState([
-    {
-      id: 1,
-      name: "Carlos Mendoza",
-      email: "carlos@machupicchu.com",
-      phone: "+51 987 654 321",
-      role: "admin",
-      status: "active",
-      hireDate: "2023-01-15",
-    },
-    {
-      id: 2,
-      name: "María García",
-      email: "maria@machupicchu.com",
-      phone: "+51 987 654 322",
-      role: "manager",
-      status: "active",
-      hireDate: "2023-02-20",
-    },
-    {
-      id: 3,
-      name: "José Rodríguez",
-      email: "jose@machupicchu.com",
-      phone: "+51 987 654 323",
-      role: "waiter",
-      status: "active",
-      hireDate: "2023-03-10",
-    },
-    {
-      id: 4,
-      name: "Ana López",
-      email: "ana@machupicchu.com",
-      phone: "+51 987 654 324",
-      role: "waiter",
-      status: "active",
-      hireDate: "2023-04-05",
-    },
-    {
-      id: 5,
-      name: "Pedro Vargas",
-      email: "pedro@machupicchu.com",
-      phone: "+51 987 654 325",
-      role: "kitchen",
-      status: "inactive",
-      hireDate: "2023-01-30",
-    },
-  ])
+  const [employees, setEmployees] = useState([])
 
   const [formData, setFormData] = useState({
     name: "",
@@ -123,7 +76,7 @@ const Employees = () => {
       setEmployees(employees.map((e) => (e.id === editingEmployee.id ? { ...e, ...formData } : e)))
     } else {
       const newEmployee = {
-        id: Math.max(...employees.map((e) => e.id)) + 1,
+        id: Math.max(...employees.map((e) => e.id), 0) + 1,
         ...formData,
       }
       setEmployees([...employees, newEmployee])
@@ -140,16 +93,26 @@ const Employees = () => {
     }))
   }
 
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const userData = await getData("/src/assets/files/data.json")
+        setEmployees(userData.usuarios || [])
+      } catch (error) {
+        console.error("Error al cargar los usuarios:", error)
+      }
+    }
+
+    fetchEmployees()
+  }, [])
+
   return (
     <>
     <TitlePage title='Empleados' />
-    
     <div className="employees-container">
       <div className="employees-header">
         <h2>Gestión de Empleados</h2>
-        <button className="add-product-btn" onClick={handleAddEmployee}>
-          + Agregar Empleado
-        </button>
+        <button className="add-product-btn" onClick={handleAddEmployee}>+ Agregar Empleado</button>
       </div>
 
       <div className="employees-table">
@@ -165,8 +128,8 @@ const Employees = () => {
             </tr>
           </thead>
           <tbody>
-            {employees.map((employee) => (
-              <tr key={employee.id}>
+            {employees.map((employee, index) => (
+              <tr key={index}>
                 <td>
                   <div className="employee-info">
                     <div className="employee-avatar">{getInitials(employee.name)}</div>
@@ -188,12 +151,8 @@ const Employees = () => {
                 <td>{new Date(employee.hireDate).toLocaleDateString()}</td>
                 <td>
                   <div className="product-actions">
-                    <button className="edit-btn" onClick={() => handleEditEmployee(employee)}>
-                      Editar
-                    </button>
-                    <button className="delete-btn" onClick={() => handleDeleteEmployee(employee.id)}>
-                      Eliminar
-                    </button>
+                    <button className="edit-btn" onClick={() => handleEditEmployee(employee)}>Editar</button>
+                    <button className="delete-btn" onClick={() => handleDeleteEmployee(employee.id)}>Eliminar</button>
                   </div>
                 </td>
               </tr>
@@ -207,59 +166,30 @@ const Employees = () => {
           <div className="modal">
             <div className="modal-header">
               <h3 className="modal-title">{editingEmployee ? "Editar Empleado" : "Agregar Empleado"}</h3>
-              <button className="close-btn" onClick={() => setShowModal(false)}>
-                ×
-              </button>
+              <button className="close-btn" onClick={() => setShowModal(false)}>×</button>
             </div>
 
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label className="form-label">Nombre Completo</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  required
-                />
+                <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="form-input" required />
               </div>
-
               <div className="form-group">
                 <label className="form-label">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  required
-                />
+                <input type="email" name="email" value={formData.email} onChange={handleInputChange} className="form-input" required />
               </div>
-
               <div className="form-group">
                 <label className="form-label">Teléfono</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  required
-                />
+                <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className="form-input" required />
               </div>
-
               <div className="form-group">
                 <label className="form-label">Rol</label>
                 <select name="role" value={formData.role} onChange={handleInputChange} className="form-select">
                   {roles.map((role) => (
-                    <option key={role.value} value={role.value}>
-                      {role.label}
-                    </option>
+                    <option key={role.value} value={role.value}>{role.label}</option>
                   ))}
                 </select>
               </div>
-
               <div className="form-group">
                 <label className="form-label">Estado</label>
                 <select name="status" value={formData.status} onChange={handleInputChange} className="form-select">
@@ -267,26 +197,13 @@ const Employees = () => {
                   <option value="inactive">Inactivo</option>
                 </select>
               </div>
-
               <div className="form-group">
                 <label className="form-label">Fecha de Ingreso</label>
-                <input
-                  type="date"
-                  name="hireDate"
-                  value={formData.hireDate}
-                  onChange={handleInputChange}
-                  className="form-input"
-                  required
-                />
+                <input type="date" name="hireDate" value={formData.hireDate} onChange={handleInputChange} className="form-input" required />
               </div>
-
               <div className="form-actions">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                  Cancelar
-                </button>
-                <button type="submit" className="btn btn-primary">
-                  {editingEmployee ? "Actualizar" : "Agregar"}
-                </button>
+                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancelar</button>
+                <button type="submit" className="btn btn-primary">{editingEmployee ? "Actualizar" : "Agregar"}</button>
               </div>
             </form>
           </div>
@@ -298,4 +215,6 @@ const Employees = () => {
 }
 
 export default Employees
+
+
 

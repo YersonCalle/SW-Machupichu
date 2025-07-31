@@ -54,14 +54,18 @@
         {
             "id": 1,
             "name": "Eduardo Quispe",
-            "user": "Edu_Quispe10",
-            "password": "EduQuis10"
+            "user": "Edu",
+            "password": "1234",
+            "rol": "administrador"
         },
         {
             "id": 2,
             "name": "Manolo Rojas",
             "user": "Manolito",
-            "password": "1234"
+            "password": "1234",
+            "rol":"mesero",
+            "isLogged": true
+
             
         }
     ]
