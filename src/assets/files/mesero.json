@@ -1,9 +1,4 @@
 {
-  "usuarioActivo": {
-    "id": 1,
-    "nombre": "Manolo",
-    "rol": "mesero"
-  },
   "mesas": [
     { "id": 1, "numero": 1, "capacidad": 4, "estado_actual": "libre" },
     { "id": 2, "numero": 2, "capacidad": 6, "estado_actual": "ocupada" },

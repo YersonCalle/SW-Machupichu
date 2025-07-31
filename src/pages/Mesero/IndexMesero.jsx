@@ -31,11 +31,11 @@ function IndexMesero() {
       })
       .catch(error => console.error('Error al cargar datos:', error));
   }, []);
-
+//
   const verPedidoMesa = id => navigate(`/mesero/ver-pedido/${id}`);
   const tomarPedido = (id, numero) => {
     if (window.confirm(`¿Tomar pedido para Mesa ${numero}?`)) {
-      navigate(`/mesero/tomar-pedidos/${id}`);
+      navigate(`tomar/${id}`);
     }
   };
 
@@ -46,7 +46,7 @@ function IndexMesero() {
           <h1 className="welcome-title">¡Hola, {usuario.nombre}!</h1>
           <p className="welcome-subtitle">Bienvenido a tu panel de mesero</p>
           <div className="quick-actions">
-            <a href="/mis" className="quick-action-btn">
+            <a href="/tomar" className="quick-action-btn">
               <i className="fas fa-list me-2"></i>Ver Mis Pedidos
             </a>
             <a href="/" className="quick-action-btn">
