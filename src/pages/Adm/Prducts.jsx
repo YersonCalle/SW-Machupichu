@@ -5,7 +5,7 @@ import Button1 from '../../components/ui/Button1/Button1.jsx'
 import CardProduct from '../../components/ui/CardProduct/CardProduct.jsx'
 import { getData } from '../../utils/utils.js'
 
-function LoadProducts() {
+function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -123,4 +123,4 @@ function LoadProducts() {
   );
 }
 
-export default LoadProducts;
+export default Products;
