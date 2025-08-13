@@ -24,7 +24,7 @@ function Login() {
       if (usuario) {
         alert(`Bienvenido ${usuario.user}`);
         if (usuario.rol === 'administrador') {
-          navigate('/employees');
+          navigate('/Tables');
         } else {
           navigate('/mesero');
         }
