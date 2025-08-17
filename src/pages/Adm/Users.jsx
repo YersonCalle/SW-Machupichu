@@ -108,15 +108,19 @@ const Employees = () => {
 
   return (
     <>
-    <TitlePage title='Empleados' />
-    <div className="employees-container">
+    <TitlePage />
+    <div className="employees-container container-fluid p-4">
       <div className="employees-header">
-        <h2>Gestión de Empleados</h2>
-        <button className="add-product-btn" onClick={handleAddEmployee}>+ Agregar Empleado</button>
+        <h2><i class="fas fa-users me-2"></i>Gestión de Usuarios</h2>
+        <button className="btn btn-danger" onClick={handleAddEmployee}><i class="fas fa-plus me-2"></i>Agregar Empleado</button>
       </div>
 
-      <div className="employees-table">
-        <table className="table">
+      //mensaje de alerta ---
+
+    <div className="card">
+    <div className="card-body">
+      <div className="employees-table table-responsive">
+        <table className="table table-hover">
           <thead>
             <tr>
               <th>Empleado</th>
@@ -159,6 +163,8 @@ const Employees = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      </div>
       </div>
 
       {showModal && (

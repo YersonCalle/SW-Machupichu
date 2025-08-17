@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import TitlePage from '../../components/layout/TitlePage/TitlePage.jsx';
+
 
 const estados = ['pendiente', 'preparando', 'listo', 'entregado', 'cancelado'];
 
@@ -18,7 +20,7 @@ const Sales = () => {
   const [filtro, setFiltro] = useState('');
 
   useEffect(() => {
-    fetch('/api/pedidos.json') // <-- Cambiá a tu endpoint real
+    fetch('../../assets/files/data.json') //Url de la API
       .then((res) => res.json())
       .then((data) => setPedidos(data));
   }, []);
@@ -41,14 +43,16 @@ const Sales = () => {
   };
 
   return (
-    <div className="main-content container-fluid p-4">
+    <>
+    <TitlePage />
+
+    <div className="container-fluid p-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="fw-bold">
           <i className="fas fa-clipboard-list me-2"></i>Gestión de Pedidos
         </h2>
       </div>
 
-      {/* Filtro de estado */}
       <div className="card mb-4">
         <div className="card-body">
           <div className="btn-group flex-wrap">
@@ -126,8 +130,7 @@ const Sales = () => {
                       Total: ${pedido.total.toFixed(2)}
                     </strong>
                   </div>
-
-                  {/* Acciones */}
+                  
                   {pedido.estado !== 'entregado' && pedido.estado !== 'cancelado' && (
                     <div className="dropdown">
                       <button
@@ -186,6 +189,7 @@ const Sales = () => {
           ))}
       </div>
     </div>
+    </>
   );
 };
 

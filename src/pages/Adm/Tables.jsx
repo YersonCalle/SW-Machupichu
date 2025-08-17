@@ -52,7 +52,7 @@ function Tables() {
 
   return (
     <>
-     <TitlePage title='Impresoras' />
+     <TitlePage />
 
     <div className="container py-4">
       <div className="d-flex justify-content-between align-items-center mb-4">

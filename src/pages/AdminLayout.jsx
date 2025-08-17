@@ -1,6 +1,6 @@
 import React from "react";
 import Sidebar from "../components/layout/SideBar/SideBar";
-import "../App.css"; // Asegurate de que los estilos globales estén disponibles
+import "../App.css";
 
 const AdminLayout = ({ children }) => {
   return (
@@ -22,13 +22,13 @@ const styles = {
     overflow: "hidden",
   },
   sidebar: {
-    width: "250px", // ajustalo al ancho real de tu sidebar
-    backgroundColor: "#f8f9fa",
+    width: "250px",
+    backgroundColor: "#f8f9fa91",
     boxShadow: "2px 0 5px rgba(0,0,0,0.1)",
   },
   content: {
     flex: 1,
-    padding: "20px",
+  
     overflowY: "auto",
   },
 };
