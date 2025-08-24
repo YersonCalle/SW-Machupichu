@@ -4,11 +4,12 @@ import Button1 from '../components/ui/Button1/Button1.jsx';
 import '../styles/pages/Login.css';
 import { useNavigate } from 'react-router-dom';
 import { getData } from '../utils/utils.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [showModal, setShowModal] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -29,50 +30,67 @@ function Login() {
           navigate('/mesero');
         }
       } else {
-        alert('Email o contraseña incorrectos');
+        setError('Email o contraseña incorrectos'); 
       }
-    } catch (error) {
-      alert('Error de conexión: ' + error.message);
+    } catch (err) {
+      setError('Error de conexión: ' + err.message);
     }
   };
 
   return (
-    <>
-      <div className="login">
-        <h2>LOGIN</h2>
-        <div className="login-container">
-          <img src={logo} alt="Logo de Machupicchu" className="logo-login" />
+    <div className="body">
+      <div className="login-card">
+        <div className="login-header">
+          <div id='logo'>
+            <img src={logo} alt="Logo de Machupicchu"/>
+          </div>
+          <p className="mb-0">Sabor y Confianza</p>
+        </div>
 
-          <form className="form-login" onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="username">Usuario</label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                placeholder="Ingresa el usuario"
-                required
-                onChange={(e) => setUsername(e.target.value)}
-              />
+        <div className="login-body">
+          {error && (
+            <div className="alert alert-danger">
+              <i className="fas fa-exclamation-triangle me-2"></i> {error}
             </div>
-            <div className="form-group">
-              <label htmlFor="password">Contraseña</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                required
-                placeholder="Ingresa la contraseña"
-                minLength="4"
-                maxLength="10"
-                onChange={(e) => setPassword(e.target.value)}
-              />
+          )}
+
+          <form onSubmit={handleSubmit}>
+
+            <div className="mb-3">
+              <label className="form-label" htmlFor="username">Usuario</label>
+              <div className="input-group">
+                <span className="input-group-text"><i className="fas fa-envelope"></i></span>
+                <input className='form-control'
+                  type="text"
+                  id="username"
+                  placeholder="Ingresa el usuario"
+                  required
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </div>
             </div>
+
+            <div className="mb-4">
+              <label className="form-label" htmlFor="password">Contraseña</label>
+              <div className='input-group'>
+                <span className="input-group-text"><i className="fas fa-lock"></i></span>
+                <input className='form-control'
+                  type="password"
+                  id="password"
+                  required
+                  placeholder="Ingresa la contraseña"
+                  minLength="4"
+                  maxLength="10"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+            </div>
+
             <Button1 type="submit" text="Iniciar sesión" />
           </form>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
