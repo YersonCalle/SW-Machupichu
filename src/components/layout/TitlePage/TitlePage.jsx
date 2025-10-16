@@ -1,38 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './TitlePage.css';
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import './TitlePage.css'
 
 function TitlePage() {
-  const [username, setUsername] = useState('');
-  const navigate = useNavigate();
+  const [username, setUsername] = useState('')
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch('/src/assets/files/data.json');
-        const data = await response.json();
+        const response = await fetch('/src/assets/files/data.json')
+        const data = await response.json()
 
-        const usuarios = data.usuarios;
-        const userActivo = usuarios.find(u => u.isLogged === true);
+        const usuarios = data.usuarios
+        const userActivo = usuarios.find((u) => u.isLogged === true)
 
         if (userActivo) {
-          setUsername(userActivo.user);
+          setUsername(userActivo.user)
         } else {
-          setUsername('Invitado');
+          setUsername('Invitado')
         }
       } catch (error) {
-        console.error('Error al obtener el usuario:', error);
-        setUsername('Error');
+        console.error('Error al obtener el usuario:', error)
+        setUsername('Error')
       }
-    };
+    }
 
-    fetchUser();
-  }, []);
+    fetchUser()
+  }, [])
 
   const handleLogout = () => {
-    // Navega a la ruta de logout, puede ser reemplazada por lógica más avanzada
-    navigate('/logout');
-  };
+    navigate('/')
+  }
 
   return (
     <div className="title-header">
@@ -44,26 +43,39 @@ function TitlePage() {
           <h5 className="mb-0">Panel de Administración</h5>
         </div>
 
-        <div className="user-dropdown">
-          <button className="btn btn-link dropdown-toggle">
+        <div className="dropdown">
+          {/* botón para desplegar menú */}
+          <button
+            className="btn btn-link dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
             <i className="fas fa-user-circle me-2"></i>
             {username}
           </button>
-          <div className="dropdown-menu dropdown-menu-end">
-            <div className="dropdown-info">
-              <span className="text-muted">Conectado como </span>
-              <strong className="dropdown-name">{username}</strong>
-            </div>
-            <hr className="dropdown-divider" />
-            <button className="dropdown-item" onClick={handleLogout}>
-              <i className="fas fa-sign-out-alt me-2"></i>
-              Cerrar Sesión
-            </button>
-          </div>
+
+          <ul className="dropdown-menu dropdown-menu-end">
+            <li>
+              <span className="dropdown-item-text">
+                <small className="text-muted">Conectado como </small> <br />
+                <strong className="dropdown-name">{username}</strong>
+              </span>
+            </li>
+            <li>
+              <hr className="dropdown-divider" />
+            </li>
+            <li>
+              <a className="dropdown-item" onClick={handleLogout}>
+                <i className="fas fa-sign-out-alt me-2"></i>
+                Cerrar Sesión
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default TitlePage;
+export default TitlePage

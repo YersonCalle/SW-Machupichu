@@ -8,7 +8,6 @@ const Sidebar = ({ activeItem = "punto-venta", onItemClick }) => {
 
   const navigate = useNavigate();
 
-  // Rutas de navegación
   const routes = {
   "ventas": "/point-of-sale",
   "mesas" : "/tables",
@@ -19,6 +18,9 @@ const Sidebar = ({ activeItem = "punto-venta", onItemClick }) => {
   };
 
   const handleItemClick = (itemId) => {
+    if (onItemClick) {
+      onItemClick(itemId); 
+    }
     const path = routes[itemId];
     if (path) {
       navigate(path);
@@ -29,23 +31,17 @@ const Sidebar = ({ activeItem = "punto-venta", onItemClick }) => {
   {
     id: "ventas",
     label: "Ventas",
-    icon: (
-                  <i class="fas fa-clipboard-list"></i>
-    )
+    icon: (<i className="fas fa-clipboard-list"></i>)
   },
-  {//modificacion
+  {
     id: "mesas",
     label: "Mesas",
-    icon: (
-                 <i class="fas fa-chair"></i>
-    ),
+    icon: (<i className="fas fa-chair"></i>),
   },
   {
     id: "productos",
     label: "Productos",
-    icon: (
-                  <i class="fas fa-utensils"></i>
-    ),
+    icon: (<i className="fas fa-utensils"></i>),
   },
   {
     id: "informes",
@@ -59,15 +55,12 @@ const Sidebar = ({ activeItem = "punto-venta", onItemClick }) => {
   {
     id: "usuarios",
     label: "Usuarios",
-    icon: (
-                  <i class="fas fa-users"></i>
-    ),
+    icon: (<i className="fas fa-users"></i>),
   },
   {
     id: "impresoras",
     label: "Impresoras",
-    icon: (
-      <svg className="nav-icon" viewBox="0 0 24 24">
+    icon: (<svg className="nav-icon" viewBox="0 0 24 24">
         <path d="M18 3H6V7H18V3ZM19 12C19.55 12 20 11.55 20 11S19.55 10 19 10 18 10.45 18 11 18.45 12 19 12ZM16 19H8V14H16V19ZM19 8H5C3.35 8 2 9.35 2 11V17H6V21H18V17H22V11C22 9.35 20.65 8 19 8Z" />
       </svg>
     ),
@@ -89,7 +82,7 @@ const Sidebar = ({ activeItem = "punto-venta", onItemClick }) => {
             className={`nav-item ${activeItem === item.id ? "active" : ""}`}
             onClick={() => handleItemClick(item.id)}
           >
-            {item.icon}
+            <span className="nav-icon">{item.icon}</span>
             <span className="nav-text">{item.label}</span>
           </div>
         ))}

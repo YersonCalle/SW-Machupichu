@@ -8,7 +8,7 @@ import '../../styles/pages/Adm/Table.css'
 const mesasIniciales = [
   { id: 1, numero: 1, capacidad: 4, estado_actual: 'libre' },
   { id: 2, numero: 2, capacidad: 6, estado_actual: 'ocupada' },
-  // Agregá más mesas si querés
+
 ];
 
 function Tables() {
@@ -70,10 +70,13 @@ function Tables() {
                 <div className="mesa-icon mb-3">
                   <i className={`fas fa-chair fa-2x ${mesa.estado_actual === 'ocupada' ? 'text-danger' : 'text-success'}`}></i>
                 </div>
+                <div id='card'>
+
                 <h5 className="card-title">Mesa {mesa.numero}</h5>
                 <p className="card-text">
                   <i className="fas fa-users me-1"></i>{mesa.capacidad} personas
                 </p>
+                </div>
                 <span className={`badge ${mesa.estado_actual === 'ocupada' ? 'bg-danger' : 'bg-success'} mb-3`}>
                   {mesa.estado_actual.charAt(0).toUpperCase() + mesa.estado_actual.slice(1)}
                 </span>

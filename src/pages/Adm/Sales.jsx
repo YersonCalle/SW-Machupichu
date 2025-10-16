@@ -2,45 +2,16 @@ import React, { useState, useEffect } from 'react';
 import TitlePage from '../../components/layout/TitlePage/TitlePage.jsx';
 
 
-const estados = ['pendiente', 'preparando', 'listo', 'entregado', 'cancelado'];
-
-const getBadgeClass = (estado) => {
-  const clases = {
-    pendiente: 'bg-warning',
-    preparando: 'bg-info',
-    listo: 'bg-success',
-    entregado: 'bg-primary',
-    cancelado: 'bg-danger',
-  };
-  return clases[estado] || 'bg-secondary';
-};
-
 const Sales = () => {
   const [pedidos, setPedidos] = useState([]);
-  const [filtro, setFiltro] = useState('');
+
 
   useEffect(() => {
-    fetch('../../assets/files/data.json') //Url de la API
+    fetch('../../assets/files/data.json') 
       .then((res) => res.json())
       .then((data) => setPedidos(data));
   }, []);
 
-  const cambiarEstado = (id, nuevoEstado) => {
-    if (window.confirm('¿Cambiar el estado del pedido?')) {
-      fetch(`/api/pedidos/${id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nuevo_estado: nuevoEstado }),
-      })
-        .then(() => {
-          setPedidos((prev) =>
-            prev.map((p) =>
-              p.id === id ? { ...p, estado: nuevoEstado } : p
-            )
-          );
-        });
-    }
-  };
 
   return (
     <>
@@ -53,45 +24,6 @@ const Sales = () => {
         </h2>
       </div>
 
-      <div className="card mb-4">
-        <div className="card-body">
-          <div className="btn-group flex-wrap">
-            <input
-              type="radio"
-              className="btn-check"
-              name="filtro"
-              id="todos"
-              value=""
-              checked={filtro === ''}
-              onChange={() => setFiltro('')}
-            />
-            <label className="btn btn-outline-secondary" htmlFor="todos">
-              Todos
-            </label>
-            {estados.map((estado) => (
-              <React.Fragment key={estado}>
-                <input
-                  type="radio"
-                  className="btn-check"
-                  name="filtro"
-                  id={estado}
-                  value={estado}
-                  checked={filtro === estado}
-                  onChange={() => setFiltro(estado)}
-                />
-                <label
-                  className={`btn btn-outline-${getBadgeClass(estado).split('-')[1]}`}
-                  htmlFor={estado}
-                >
-                  {estado.charAt(0).toUpperCase() + estado.slice(1)}
-                </label>
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Tarjetas de pedidos */}
       <div className="row">
         {pedidos
           .filter((p) => filtro === '' || p.estado === filtro)

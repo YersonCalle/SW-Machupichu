@@ -3,7 +3,6 @@ import logo from '../assets/images/logo-machuu.png';
 import Button1 from '../components/ui/Button1/Button1.jsx';
 import '../styles/pages/Login.css';
 import { useNavigate } from 'react-router-dom';
-import { getData } from '../utils/utils.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Login() {
@@ -14,23 +13,28 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+
     try {
-      const userData = await getData('/src/assets/files/data.json');
-      const usuarios = userData.usuarios;
+      const res = await fetch('http://localhost:3000/api/usuarios/get');
+      if (!res.ok) throw new Error('Error al conectar con el servidor');
+
+      const data = await res.json();
+      const usuarios = data.usuarios || data;
 
       const usuario = usuarios.find(
-        (u) => u.user === username && u.password === password
+        (u) => u.usuario === username && u.contraseña === password
       );
 
       if (usuario) {
-        alert(`Bienvenido ${usuario.user}`);
-        if (usuario.rol === 'administrador') {
+        alert(`Bienvenido ${usuario.usuario}`);
+        if ((u) =>u.estado === '0') {
           navigate('/Tables');
         } else {
           navigate('/mesero');
         }
       } else {
-        setError('Email o contraseña incorrectos'); 
+        setError('Usuario o contraseña incorrectos');
       }
     } catch (err) {
       setError('Error de conexión: ' + err.message);
@@ -41,8 +45,8 @@ function Login() {
     <div className="body">
       <div className="login-card">
         <div className="login-header">
-          <div id='logo'>
-            <img src={logo} alt="Logo de Machupicchu"/>
+          <div id="logo">
+            <img src={logo} alt="Logo de Machupicchu" />
           </div>
           <p className="mb-0">Sabor y Confianza</p>
         </div>
@@ -55,12 +59,12 @@ function Login() {
           )}
 
           <form onSubmit={handleSubmit}>
-
             <div className="mb-3">
               <label className="form-label" htmlFor="username">Usuario</label>
               <div className="input-group">
-                <span className="input-group-text"><i className="fas fa-envelope"></i></span>
-                <input className='form-control'
+                <span className="input-group-text"><i className="fas fa-user"></i></span>
+                <input
+                  className="form-control"
                   type="text"
                   id="username"
                   placeholder="Ingresa el usuario"
@@ -72,15 +76,14 @@ function Login() {
 
             <div className="mb-4">
               <label className="form-label" htmlFor="password">Contraseña</label>
-              <div className='input-group'>
+              <div className="input-group">
                 <span className="input-group-text"><i className="fas fa-lock"></i></span>
-                <input className='form-control'
+                <input
+                  className="form-control"
                   type="password"
                   id="password"
-                  required
                   placeholder="Ingresa la contraseña"
-                  minLength="4"
-                  maxLength="10"
+                  required
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
