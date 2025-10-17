@@ -11,7 +11,7 @@ const Sidebar = ({ activeItem = "punto-venta", onItemClick }) => {
   const routes = {
   "ventas": "/point-of-sale",
   "mesas" : "/tables",
-  "productos": "/load-products",
+  "productos": "/products",
   "informes": "/report",
   "usuarios": "/users",
   "impresoras": "/printers",
