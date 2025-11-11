@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.css';
 import TitlePage from '../../components/layout/TitlePage/TitlePage.jsx';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../../styles/pages/Adm/Table.css'
