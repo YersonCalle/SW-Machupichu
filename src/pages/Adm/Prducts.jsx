@@ -97,10 +97,9 @@ function Products() {
               <CardProduct
                 key={product.id}
                 id={product.id}
-                title={product.nombre}
+                title={product.descripcion}
                 price={product.precio}
-                descrip={product.descripcion}
-                category={product.categoria_id}
+                category={product.categoria.descripcion}
                 onUpdate={() => updateProduct(product.id)}
                 onDelete={() => disableProduct(product.id)}
               />

@@ -1,6 +1,6 @@
 .card-product {
   width: 100%;
-  height: 120px;
+  height: 150px;
   padding: 1rem 1.5rem;
   display: flex;
   justify-content: space-between;
@@ -14,6 +14,21 @@
     flex-direction: column;
     justify-content: space-between;
     gap:2px;
+    & h2{
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    & p{
+      font-size: .8rem;
+      color:gray;
+      margin-bottom: 0;
+    }
+    & .card-product-price{
+      font-style: italic;
+      font-size: .9rem;
+      color: black;
+      font-weight: 600;
+    }
     }
     & .card-product-actions{
       display: flex;
@@ -22,17 +37,10 @@
     }
 }
 
-.card-product-title{
-  font-size: 1.4rem;
-  font-weight: 600;
-}
 
 .card-product-id{
   font-size: .8rem;
   color: gray;
-}
-.card-product-price{
-  font-style: italic;
 }
 .card-product-category{
   font-size: .8rem;
