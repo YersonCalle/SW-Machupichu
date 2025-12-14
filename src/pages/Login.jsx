@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import logo from '../assets/images/logo-machuu.png';
-import Button1 from '../components/ui/Button1/Button1.jsx';
-import '../styles/pages/Login.css';
+import Button1 from '../ui/Button1/Button1.jsx';
+import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -16,7 +16,7 @@ function Login() {
     setError('');
 
     try {
-      const res = await fetch('http://localhost:3000/api/usuarios');
+      const res = await fetch('http://localhost:3000/api/usuarios/get');
       if (!res.ok) throw new Error('Error al conectar con el servidor');
 
       const data = await res.json();
@@ -28,7 +28,7 @@ function Login() {
 
       if (usuario) {
         alert(`Bienvenido ${usuario.usuario}`);
-        if ((u) =>u.estado === '0') {
+        if ((u) =>u.roles === '0') {
           navigate('/Tables');
         } else {
           navigate('/mesero');

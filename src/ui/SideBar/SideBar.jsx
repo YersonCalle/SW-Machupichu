@@ -1,6 +1,6 @@
 import "./SideBar.css"
 import { useNavigate } from "react-router-dom"
-import logo from '../../../assets/images/logo-machuu.png'
+import logo from '../../assets/images/logo-machuu.png' ; 
 
 
 const Sidebar = ({ activeItem = "punto-venta", onItemClick }) => {

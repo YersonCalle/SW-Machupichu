@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import TitlePage from '../../components/layout/TitlePage/TitlePage.jsx';
+import TitlePage from '../../../ui/TitlePage/TitlePage.jsx';
 
 
 const Sales = () => {

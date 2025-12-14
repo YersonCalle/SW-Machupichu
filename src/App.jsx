@@ -6,22 +6,22 @@ import './App.css';
 import Login from './pages/Login.jsx';
 
 // Páginas de administrador
-import Sales from './pages/Adm/Sales.jsx';
-import Cash from './pages/Adm/CashClosing.jsx';
-import Users from './pages/Adm/Users.jsx';
-import Report from './pages/Adm/Report.jsx';
-import Products from './pages/Adm/Prducts.jsx';
-import Printers from './pages/Adm/Printers.jsx';
-import Tables from './pages/Adm/Tables.jsx';
+import Sales from './admin/features/pedidos/Sales.jsx';
+import Cash from './admin/CashClosing.jsx';
+import Users from './admin/features/usuarios/Users.jsx';
+import Report from './admin/features/informes/Report.jsx';
+import Products from './admin/features/productos/Prducts.jsx';
+import Printers from './admin//features/impresoras/Printers.jsx';
+import Tables from './admin/features/mesas/Tables.jsx';
 
 // Layout del administrador (con Sidebar)
-import AdminLayout from './pages/AdminLayout.jsx';
+import AdminLayout from './pages/Layout/AdminLayout.jsx';
 
 // Páginas del mesero (sin sidebar)
-import Mesero from './pages/Mesero/IndexMesero.jsx';
-import MisPedidos from './pages/Mesero/MisPedidos.jsx';
-import TomarPedidos from './pages/Mesero/TomarPedido.jsx';
-import VerPedidosMesa from './pages/Mesero/VerPedidoMesa.jsx';
+import Mesero from './pos/IndexMesero.jsx';
+import MisPedidos from './pos/MisPedidos.jsx';
+import TomarPedidos from './pos/TomarPedido.jsx';
+import VerPedidosMesa from './pos/VerPedidoMesa.jsx';
 
 function App() {
   return (

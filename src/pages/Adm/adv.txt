@@ -1,7 +1,0 @@
-cuidado con las rutas que se modifico , mas que todo en la parte de adminisstracion
-tener en cuenta al momento de las observaciones
-
-
--Cancelacion al momento de crear una mesa ya existente
--modificar los estados 
--ordenar por los estilos pertinentes . 

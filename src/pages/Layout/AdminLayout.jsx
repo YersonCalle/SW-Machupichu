@@ -1,6 +1,6 @@
 import React from "react";
-import Sidebar from "../components/layout/SideBar/SideBar";
-import "../App.css";
+import Sidebar from "../../ui/SideBar/SideBar";
+import "../../App.css";
 
 const AdminLayout = ({ children }) => {
   return (

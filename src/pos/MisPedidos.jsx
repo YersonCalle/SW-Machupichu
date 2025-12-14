@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../../styles/pages/Mesero/Mesero.css';
+import './Mesero.css';
 
 function MisPedidos() {
   const [pedidos, setPedidos] = useState([]);

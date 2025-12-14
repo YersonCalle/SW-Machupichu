@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import '../../styles/pages/LoadProducts.css'
-import TitlePage from '../../components/layout/TitlePage/TitlePage.jsx'
-import Button1 from '../../components/ui/Button1/Button1.jsx'
-import CardProduct from '../../components/ui/CardProduct/CardProduct.jsx'
-import { getData } from '../../utils/utils.js'
+import './LoadProducts.css'
+import TitlePage from '../../../ui/TitlePage/TitlePage.jsx'
+import Button1 from '../../../ui/Button1/Button1.jsx'
+import CardProduct from '../../../ui/CardProduct/CardProduct.jsx'
+import { getData } from '../../../utils/utils.js'
 
 function Products() {
   const [products, setProducts] = useState([]);

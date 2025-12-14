@@ -1,6 +1,6 @@
 import { useState} from "react"
-import TitlePage from '../../components/layout/TitlePage/TitlePage.jsx'
-import '../../styles/pages/Report.css'
+import TitlePage from '../../../ui/TitlePage/TitlePage.jsx';
+import './Report.css'
 
 const Report = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("today")

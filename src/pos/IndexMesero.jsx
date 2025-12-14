@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../styles/pages/Mesero/Mesero.css';
+import './Mesero.css';
 
 async function fetchMeseroData() {
   const response = await fetch('/src/assets/files/mesero.json');
