@@ -7,14 +7,11 @@ function CardProduct({title, id, price, descrip, onUpdate, onDelete, category, i
   return (
     <div className='card-product'>
       <div className='card-product-left'>
-        <div className='card-product-image'>
-          <img src={image} alt="" />
-        </div>
         <div className='card-product-info'>
             <h2 className='card-product-title'>{title}</h2>
+            <p className='card-product-price'>${price}</p>
             <p className='card-product-id'>#{id}</p>
             <p className='card-product-category'> {category} </p>
-            <p className='card-product-price'>${price}</p>
         </div>
       </div>
 
