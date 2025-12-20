@@ -20,13 +20,18 @@
     }
     & p{
       font-size: .8rem;
-      color:gray;
+      color:rgb(179, 179, 179);
       margin-bottom: 0;
     }
     & .card-product-price{
       font-style: italic;
       font-size: .9rem;
       color: black;
+      font-weight: 500;
+    }
+    .card-product-category{
+      font-size: .8rem;
+      color:rgb(54, 54, 54);
       font-weight: 600;
     }
     }
@@ -42,10 +47,7 @@
   font-size: .8rem;
   color: gray;
 }
-.card-product-category{
-  font-size: .8rem;
-  color:gray;
-}
+
 .card-product-descrip{
   text-align: center; 
   font-size: .9rem;
