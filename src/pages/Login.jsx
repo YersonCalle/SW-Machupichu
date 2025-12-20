@@ -16,7 +16,7 @@ function Login() {
     setError('');
 
     try {
-      const res = await fetch('http://localhost:3000/api/usuarios/get');
+      const res = await fetch('http://localhost:3000/api/usuarios');
       if (!res.ok) throw new Error('Error al conectar con el servidor');
 
       const data = await res.json();
