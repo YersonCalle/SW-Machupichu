@@ -10,6 +10,7 @@ function Products() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Cargar productos
   const loadProducts = async (e) => {
     e.preventDefault();
     
@@ -34,40 +35,40 @@ function Products() {
     }
   };
 
+  // Agregar productos
   const AddProduct = (e) => {
     alert('Agregaste un producto');
   };
 
-  async function eliminarDato(id) {
-    try {
-      const response = await fetch(`http://localhost:3000/api/productos/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          // Si necesitas autenticación:
-          // 'Authorization': 'Bearer tu-token'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-
-      // Algunas APIs devuelven el objeto eliminado, otras solo un status
-      const resultado = await response.json();
-      console.log('Eliminado exitosamente:', resultado);
-      
-    } catch (error) {
-      console.error('Error al eliminar:', error);
-    }
-  }
-
+  // Actualizar producto
   const updateProduct = (productId) => {
     alert(`Actualizaste el producto ${productId}`);
   };
 
-  const disableProduct = (productId) => {
-    alert(`Deshabilitaste el producto ${productId}`);
+  // Deshabilitar producto
+  const disableProduct = async (productId) => {
+    const confirmar = window.confirm('¿Seguro que quieres deshabilitar este producto?');
+    if (!confirmar) return;
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/productos/${productId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        const message = data.message ?? `Error ${response.status}`;
+        throw new Error(message);
+      }
+
+      setProducts((prev) => prev.filter((product) => product.id !== productId));
+    } catch (err) {
+      console.error('Error al deshabilitar producto:', err);
+      setError('No se pudo deshabilitar el producto. Intenta nuevamente.');
+    }
   }
 
   return (
@@ -116,7 +117,7 @@ function Products() {
         <h3 className='subtitle'>Deshabilitar Producto</h3>
         <p>Precaución:</p>
         <p>Tenga en cuenta que al DESHABILITAR un producto se deshabilitará para que no se pueda seleccionar en el punto de venta, esto incluye si hay alguna mesa activa con este producto seleccionado. Se recomienda eliminar con cuidado y fuera de horario laboral.</p>
-        <Button1 text='Deshabilitar Producto' onClick={disableProduct} />
+        <Button1 text='Deshabilitar Producto' onClick={() => alert('Selecciona un producto en la lista para deshabilitar.')} />
       </div>
     </>
   );
