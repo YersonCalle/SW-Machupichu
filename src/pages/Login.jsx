@@ -4,7 +4,7 @@ import Button1 from '../ui/Button1/Button1.jsx';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { fetchData } from '../service/api.js';
+import { getData } from '../utils/utils.js';
 
 const Login = () => {
   const [usuario, setUsuario] = useState('');
@@ -14,12 +14,14 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError('');
 
     try {
-      const data = await fetchData('usuarios.json');
-      
-      const userFound = data.usuarios.find(
-        u => u.usuario === usuario && u.password === password
+      // ⬇️ AHORA SÍ esperamos la respuesta
+      const usuarios = await getData('http://localhost:3000/api/usuarios');
+
+      const userFound = usuarios.find(
+        u => u.usuario === usuario && u.contraseña === password
       );
 
       if (!userFound) {
@@ -27,19 +29,24 @@ const Login = () => {
         return;
       }
 
-      if (userFound.activo === 0) {
+      if (userFound.estado === 0) {
         setError('Cuenta desactivada');
         return;
       }
 
-      localStorage.setItem('user_name', userFound.nombre);
-      localStorage.setItem('user_role', userFound.rol);
+      localStorage.setItem('user_id', userFound.id);
+      localStorage.setItem('user_name', userFound.usuario);
+      localStorage.setItem('user_role', userFound.rol.descripcion);
 
-      if (userFound.rol === 'admin') navigate('/admin');
-      else navigate('/pos');
+      if (userFound.rol.descripcion === 'Administrador') {
+        navigate('/admin');
+      } else {
+        navigate('/pos');
+      }
 
     } catch (err) {
-      setError('Error de conexión');
+      console.error(err);
+      setError('Error de conexión con el servidor');
     }
   };
 
@@ -57,17 +64,20 @@ const Login = () => {
           {error && <div className="alert alert-danger">{error}</div>}
 
           <form onSubmit={handleLogin}>
-            <label className="form-label" htmlFor="">Usuario</label>
+            <label className="form-label" htmlFor="usuario">Usuario</label>
             <input
               type="text"
-              placeholder="Usuario"
+              id="usuario"
+              value={usuario}
               onChange={(e) => setUsuario(e.target.value)}
               required
             />
-            <label htmlFor="">Contraseña</label>
+
+            <label className="form-label" htmlFor="password">Contraseña</label>
             <input
               type="password"
-              placeholder="Contraseña"
+              id="password"
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
