@@ -1,0 +1,28 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "nombre": "Yerson",
+      "usuario": "yerson",
+      "password": "12",
+      "rol": "admin",
+      "activo": 1
+    },
+    {
+      "id": 2,
+      "nombre": "Edu",
+      "usuario": "edu",
+      "password": "12",
+      "rol": "mesero",
+      "activo": 1
+    },
+    {
+      "id": 3,
+      "nombre": "Juan",
+      "usuario": "juan",
+      "password": "12",
+      "rol": "mesero",
+      "activo": 0
+    }
+  ]
+}

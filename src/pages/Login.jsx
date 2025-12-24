@@ -4,40 +4,42 @@ import Button1 from '../ui/Button1/Button1.jsx';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { fetchData } from '../service/api.js';
 
-function Login() {
-  const [username, setUsername] = useState('');
+const Login = () => {
+  const [usuario, setUsuario] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setError('');
 
     try {
-      const res = await fetch('http://localhost:3000/api/usuarios/get');
-      if (!res.ok) throw new Error('Error al conectar con el servidor');
+      const data = await fetchData('usuarios.json');
 
-      const data = await res.json();
-      const usuarios = data.usuarios || data;
-
-      const usuario = usuarios.find(
-        (u) => u.usuario === username && u.contraseña === password
+      const userFound = data.usuarios.find(
+        u => u.usuario === usuario && u.password === password
       );
 
-      if (usuario) {
-        alert(`Bienvenido ${usuario.usuario}`);
-        if ((u) =>u.roles === '0') {
-          navigate('/Tables');
-        } else {
-          navigate('/mesero');
-        }
-      } else {
+      if (!userFound) {
         setError('Usuario o contraseña incorrectos');
+        return;
       }
+
+      if (userFound.activo === 0) {
+        setError('Cuenta desactivada');
+        return;
+      }
+
+      localStorage.setItem('user_name', userFound.nombre);
+      localStorage.setItem('user_role', userFound.rol);
+
+      if (userFound.rol === 'admin') navigate('/admin');
+      else navigate('/pos');
+
     } catch (err) {
-      setError('Error de conexión: ' + err.message);
+      setError('Error de conexión');
     }
   };
 
@@ -52,42 +54,23 @@ function Login() {
         </div>
 
         <div className="login-body">
-          {error && (
-            <div className="alert alert-danger">
-              <i className="fas fa-exclamation-triangle me-2"></i> {error}
-            </div>
-          )}
+          {error && <div className="alert alert-danger">{error}</div>}
 
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label className="form-label" htmlFor="username">Usuario</label>
-              <div className="input-group">
-                <span className="input-group-text"><i className="fas fa-user"></i></span>
-                <input
-                  className="form-control"
-                  type="text"
-                  id="username"
-                  placeholder="Ingresa el usuario"
-                  required
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="mb-4">
-              <label className="form-label" htmlFor="password">Contraseña</label>
-              <div className="input-group">
-                <span className="input-group-text"><i className="fas fa-lock"></i></span>
-                <input
-                  className="form-control"
-                  type="password"
-                  id="password"
-                  placeholder="Ingresa la contraseña"
-                  required
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-            </div>
+          <form onSubmit={handleLogin}>
+            <label className="form-label" htmlFor="">Usuario</label>
+            <input
+              type="text"
+              placeholder="Usuario"
+              onChange={(e) => setUsuario(e.target.value)}
+              required
+            />
+            <label htmlFor="">Contraseña</label>
+            <input
+              type="password"
+              placeholder="Contraseña"
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
 
             <Button1 type="submit" text="Iniciar sesión" />
           </form>
@@ -95,6 +78,6 @@ function Login() {
       </div>
     </div>
   );
-}
+};
 
 export default Login;

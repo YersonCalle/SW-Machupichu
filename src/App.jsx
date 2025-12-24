@@ -1,5 +1,4 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, BrowserRouter } from 'react-router-dom';
 import './App.css';
 
 // Páginas generales
@@ -25,10 +24,12 @@ import VerPedidosMesa from './pos/VerPedidoMesa.jsx';
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/point-of-sale" element={<AdminLayout> <Sales /> </AdminLayout> }/>
+       
+       
+        <Route path="/admin" element={<AdminLayout> <Sales /> </AdminLayout> }/>
         <Route path="/cash" element={ <AdminLayout> <Cash /> </AdminLayout>} />
         <Route path="/users" element={ <AdminLayout> <Users /> </AdminLayout> }/>
         <Route path="/report" element={ <AdminLayout> <Report /> </AdminLayout> }/>
@@ -40,7 +41,7 @@ function App() {
         <Route path="/tomar" element={<TomarPedidos />} />
         <Route path="/ver-pedidos-mesa" element={<VerPedidosMesa />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 
