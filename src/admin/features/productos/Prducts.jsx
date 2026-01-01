@@ -81,6 +81,7 @@ function Products() {
         
         <Button1 
           text={loading ? 'Cargando...' : 'Cargar Productos'} 
+          color="var(--primary-color)"
           onClick={loadProducts}
           disabled={loading}
         />
@@ -117,7 +118,11 @@ function Products() {
         <h3 className='subtitle'>Deshabilitar Producto</h3>
         <p>Precaución:</p>
         <p>Tenga en cuenta que al DESHABILITAR un producto se deshabilitará para que no se pueda seleccionar en el punto de venta, esto incluye si hay alguna mesa activa con este producto seleccionado. Se recomienda eliminar con cuidado y fuera de horario laboral.</p>
-        <Button1 text='Deshabilitar Producto' onClick={() => alert('Selecciona un producto en la lista para deshabilitar.')} />
+        <Button1 
+          text='Deshabilitar Producto' 
+          color="var(--primary-color)"
+          onClick={() => alert('Selecciona un producto en la lista para deshabilitar.')} 
+        />
       </div>
     </>
   );
