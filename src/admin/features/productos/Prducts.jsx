@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import './LoadProducts.css'
-import TitlePage from '../../../ui/TitlePage/TitlePage.jsx'
+
 import Button1 from '../../../ui/Button1/Button1.jsx'
 import CardProduct from '../../../ui/CardProduct/CardProduct.jsx'
 import { getData } from '../../../utils/utils.js'
@@ -73,7 +73,6 @@ function Products() {
 
   return (
     <>
-      <TitlePage title='Productos' />
       
       <div className='list-products'>
         <h3 className='subtitle'>Listado de productos</h3>

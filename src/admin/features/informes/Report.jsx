@@ -1,5 +1,4 @@
 import { useState} from "react"
-import TitlePage from '../../../ui/TitlePage/TitlePage.jsx';
 import './Report.css'
 
 const Report = () => {
@@ -42,7 +41,6 @@ const Report = () => {
 
   return (
     <>
-    <TitlePage title='Informe' />
     <div className="reports-container">
       <div className="stats-grid">
         <div className="stat-card">

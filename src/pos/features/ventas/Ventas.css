@@ -1,0 +1,86 @@
+
+.ventas-container {
+  display: flex;
+  height: 80vh;
+  gap: 20px;
+}
+
+.productos-seccion {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.filtros-categorias {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.btn-categoria {
+  border-radius: 20px;
+}
+
+.grid-productos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.card-producto {
+  cursor: pointer;
+  text-align: center;
+}
+
+.icono-producto {
+  font-size: 1.2rem;
+}
+
+.nombre-producto {
+  color: black;
+  margin-bottom: 5px;
+}
+
+.precio-producto {
+  color: green;
+  font-weight: bold;
+}
+
+.panel-carrito {
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+}
+
+.lista-items-carrito {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.item-carrito {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.footer-carrito {
+  border-top: 2px solid #eee;
+  padding-top: 10px;
+}
+
+.total-contenedor {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.btn-pagar {
+  margin-top: 10px;
+  padding: 15px;
+}
+
+.btn-cerrar-carrito {
+  margin-top: 5px;
+}

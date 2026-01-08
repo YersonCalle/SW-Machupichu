@@ -1,0 +1,64 @@
+.mesas-container {
+  padding: 20px;
+}
+
+.mesas-titulo {
+  margin-bottom: 20px;
+}
+
+.mesas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.mesa-card {
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  background-color: white;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  border: 3px solid transparent; 
+}
+
+.mesa-card:hover {
+  transform: scale(1.05);
+}
+
+.mesa-libre {
+  border-color: #16a34a;
+}
+
+.mesa-ocupada {
+  border-color: #dc2626;
+}
+
+.mesa-card h3 {
+  margin: 0 0 10px 0;
+}
+
+.mesa-capacidad {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.mesa-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: white;
+  display: inline-block;
+  text-transform: uppercase;
+}
+
+.badge-libre {
+  background-color: #16a34a;
+}
+
+.badge-ocupada {
+  background-color: #dc2626;
+}

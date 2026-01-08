@@ -1,5 +1,4 @@
 import { useState } from "react"
-import TitlePage from '../../../ui/TitlePage/TitlePage.jsx'
 import './Printers.css'
 
 
@@ -108,7 +107,6 @@ const Printers = () => {
 
   return (
     <>
-    <TitlePage title='Impresoras' />
     <div className="printers-container">
       <div className="products-header">
         <h2>Gestión de Impresoras</h2>

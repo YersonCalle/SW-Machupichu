@@ -1,3 +1,4 @@
+
 /* Reset */
 * {
   margin: 0;
@@ -31,6 +32,12 @@
   --acent-color: #d3c69050;
   --text-color-lg: #e4e4e4;
   --text-color-dk: #d28f3d;
+   --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --warning: #ea580c;
+  
   --border-radius: 8px;
 
   /* Varaibles de texto / fuentes */

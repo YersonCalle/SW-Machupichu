@@ -17,7 +17,7 @@ const Login = () => {
     setError('');
 
     try {
-      // ⬇️ AHORA SÍ esperamos la respuesta
+   
       const usuarios = await getData('http://localhost:3000/api/usuarios');
 
       const userFound = usuarios.find(
