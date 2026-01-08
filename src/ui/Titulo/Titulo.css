@@ -1,0 +1,11 @@
+.titulo {
+  margin-bottom: 20px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+.titulo h1 {
+  font-family: 'Kanit', sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+}

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { mesaService } from "../../../service/mesaService";
+import Titulo from "../../../ui/Titulo/Titulo";
+import Button2 from "../../../ui/Buttnon-Form/Button2";
 import "./Table.css";
 
 const Tables = () => {
@@ -67,9 +69,8 @@ const Tables = () => {
 
   return (
     <div>
-      <div className="header-table">
-        <h1>Gestión de Mesas</h1>
-      </div>
+      
+      < Titulo titulo="Gestion de Mesas"/>
 
       {mensaje && <div className="alert alert-success">{mensaje}</div>}
 
@@ -80,11 +81,10 @@ const Tables = () => {
 
         <form onSubmit={handleAgregar} className="form-container ">
           <div className="form-row">
-            <div className="form-group">
+            <div className="form-grou">
               <label>Número de Mesa</label>
               <input
                 type="number"
-                placeholder="Número"
                 className="form-control"
                 value={nuevaMesa.numero}
                 onChange={(e) =>
@@ -107,8 +107,7 @@ const Tables = () => {
               />
             </div>
           </div>
-
-          <button type="submit" className="btn btn-primary">Agregar Mesa</button>
+          <Button2 type="submit" text="Agregar Mesa" />
         </form>
       </div>
 

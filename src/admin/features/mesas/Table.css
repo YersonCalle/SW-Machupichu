@@ -1,16 +1,18 @@
-/* Estructura General */
-.header-table {
-  margin-bottom: 20px;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 10px;
-}
-
-/* Tarjetas y Formularios */
-.card-table {
+.card-table, .card {
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #f0eeee;
+}
+
+.card-header h2 {
+  font-family: 'Kanit', sans-serif;
+  margin: 0;
+  font-size: 18px;
 }
 
 .form-container {
@@ -23,34 +25,74 @@
   margin-bottom: 15px;
 }
 
-.form-group {
+.form-grou,
+.form-groups {
   flex: 1;
 }
 
-.form-group label {
+.form-grou label,
+.form-groups label {
   display: block;
   margin-bottom: 5px;
-  font-weight: bold;
+ 
 }
 
-/* Tabla */
 .table-container {
-  overflow-x: auto;
   padding: 10px;
+  overflow-x: auto;
 }
 
 .table-custom {
+  
   width: 100%;
   border-collapse: collapse;
 }
 
-.table-custom th, .table-custom td {
+.table-custom thead {
+  background-color: #f8f9fa;
+}
+
+.table-custom th,
+.table-custom td {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #ddd;
+  font-size: 14px;
 }
 
-/* Modal / Overlay */
+.table-custom th {
+    font-family: 'Kanit', sans-serif;
+  font-weight: 500;
+}
+
+.badge {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.badge-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.badge-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 13px;
+}
+
+.btn-block {
+  width: 100%;
+  margin-top: 15px;
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -67,12 +109,27 @@
   animation: fadeIn 0.3s ease-out;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+.modal-content h2 {
+  font-family: 'Kanit', sans-serif;
+  margin-top: 0;
+  font-size: 18px;
 }
 
-/* Utilidades */
-.mt-20 { margin-top: 20px; }
-.ml-5 { margin-left: 5px; }
-.btn-block { width: 100%; margin-top: 15px; }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+.ml-5 {
+  margin-left: 5px;
+}
