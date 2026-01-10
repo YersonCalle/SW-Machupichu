@@ -90,7 +90,6 @@ const Login = () => {
                 required
                 placeholder="Ingresa la contraseña"
                 minLength="4"
-                maxLength="10"
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
