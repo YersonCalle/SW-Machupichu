@@ -80,7 +80,7 @@ function Products() {
         
         <Button1 
           text={loading ? 'Cargando...' : 'Cargar Productos'} 
-          color="var(--primary-color)"
+          color="var(--primary)"
           onClick={loadProducts}
           disabled={loading}
         />
