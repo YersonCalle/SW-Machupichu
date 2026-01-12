@@ -3,12 +3,14 @@ import './LoadProducts.css'
 
 import Button1 from '../../../ui/Button1/Button1.jsx'
 import CardProduct from '../../../ui/CardProduct/CardProduct.jsx'
+import AddProductModal from './AddProductModal.jsx' // Importar el modal
 import { getData } from '../../../utils/utils.js'
 
 function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado del modal
 
   // Cargar productos
   const loadProducts = async (e) => {
@@ -35,9 +37,16 @@ function Products() {
     }
   };
 
-  // Agregar productos
+  // Agregar productos - Ahora abre el modal
   const AddProduct = (e) => {
-    alert('Agregaste un producto');
+    e.preventDefault();
+    setIsModalOpen(true);
+  };
+
+  // Callback cuando se crea un producto
+  const handleProductAdded = (newProduct) => {
+    // Recargar la lista de productos
+    loadProducts({ preventDefault: () => {} });
   };
 
   // Actualizar producto
@@ -73,17 +82,31 @@ function Products() {
 
   return (
     <>
+      {/* Modal para agregar producto */}
+      <AddProductModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onProductAdded={handleProductAdded}
+      />
       
       <div className='list-products'>
         <h3 className='subtitle'>Listado de productos</h3>
         <p>Para ver los productos, haga click en el botón "Cargar Productos".</p>
         
-        <Button1 
-          text={loading ? 'Cargando...' : 'Cargar Productos'} 
-          color="var(--primary)"
-          onClick={loadProducts}
-          disabled={loading}
-        />
+        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+          <Button1 
+            text={loading ? 'Cargando...' : 'Cargar Productos'} 
+            color="var(--primary)"
+            onClick={loadProducts}
+            disabled={loading}
+          />
+          
+          <Button1 
+            text='Agregar Producto' 
+            color="var(--success, #28a745)"
+            onClick={AddProduct}
+          />
+        </div>
 
         {error && (
           <div className="error-message" style={{color: 'red', margin: '10px 0'}}>
