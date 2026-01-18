@@ -1,32 +1,35 @@
-.mesas-container {
-  padding: 20px;
+.plano-container {
+  padding: 30px;
 }
 
-.mesas-titulo {
-  margin-bottom: 20px;
+.plano-titulo {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 30px;
 }
 
 .mesas-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 30px;
 }
 
 .mesa-card {
-  padding: 30px;
-  border-radius: 12px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px 20px;
   text-align: center;
   cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-  background-color: white;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  border: 3px solid transparent; 
+  transition: all 0.25s ease;
+  border: 3px solid transparent;
 }
 
 .mesa-card:hover {
-  transform: scale(1.05);
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.12);
 }
 
+/* ESTADOS */
 .mesa-libre {
   border-color: #16a34a;
 }
@@ -35,30 +38,22 @@
   border-color: #dc2626;
 }
 
-.mesa-card h3 {
-  margin: 0 0 10px 0;
-}
-
-.mesa-capacidad {
-  font-size: 0.9rem;
-  color: #666;
+.mesa-numero {
+  font-size: 1.6rem;
+  font-weight: 700;
   margin-bottom: 10px;
 }
 
-.mesa-badge {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  color: white;
-  display: inline-block;
-  text-transform: uppercase;
+.mesa-estado {
+  font-size: 1rem;
+  letter-spacing: 1px;
+  font-weight: 600;
 }
 
-.badge-libre {
-  background-color: #16a34a;
+.mesa-libre .mesa-estado {
+  color: #16a34a;
 }
 
-.badge-ocupada {
-  background-color: #dc2626;
+.mesa-ocupada .mesa-estado {
+  color: #dc2626;
 }

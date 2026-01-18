@@ -38,15 +38,13 @@ const Empleados = () => {
     <div className="empleados-container">
       <Titulo titulo="Gestion de Usuarios" />
 
-
-      {/* NUEVO EMPLEADO */}
     <section className="card">
       <div className="card-header">
         <h2>Nuevo Empleado</h2>
       </div>
 
       <form onSubmit={handleCreate} className="form-container">
-        {/* FILA 1 */}
+      
         <div className="form-row">
           <div className="form-group">
             <label>Nombre Completo</label>
@@ -77,7 +75,6 @@ const Empleados = () => {
           </div>
         </div>
 
-        {/* FILA 2 */}
         <div className="form-row">
           <div className="form-group">
             <label>Usuario</label>
@@ -112,7 +109,6 @@ const Empleados = () => {
       </form>
     </section>
 
-    {/* LISTA DE EMPLEADOS */}
     <section className="card mt-20">
       <div className="card-header">
         <h2>Lista de Empleados</h2>

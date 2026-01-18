@@ -20,6 +20,7 @@ import PosLayout from './pages/Layout/PosLayout.jsx';
 // Páginas del mesero
 import Mesas from './pos/features/mesas/Mesas.jsx';
 import Pedidos from './pos/features/pedidos/Pedidos.jsx';
+import Ventas from './pos/features/ventas/Ventas.jsx';
 
 
 
@@ -42,6 +43,7 @@ function App() {
           <Route index element={<Navigate to="mesas" replace />} />
           <Route path="mesas" element={<Mesas />} />
           <Route path="pedidos" element={<Pedidos />} />
+          <Route path="ventas" element={<Ventas />} />
         </Route>
       </Routes>
     </BrowserRouter>
