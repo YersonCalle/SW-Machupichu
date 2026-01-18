@@ -62,7 +62,7 @@ const Tables = () => {
     id: mesa.id,
     numero: mesa.numero,
     capacidad: mesa.capacidad,
-    estado: mesa.estado?.descripcion?.toLowerCase() || "libre",
+    estado: mesa.estado_id?.descripcion?.toLowerCase() || "libre",
   });
   setShowModal(true);
 };

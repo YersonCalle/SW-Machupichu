@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { userService } from '../../../service/userService';
 import './Empleados.css';
+import Titulo from '../../../ui/Titulo/Titulo';
 
 const Empleados = () => {
   const [empleados, setEmpleados] = useState([]);
@@ -35,67 +36,190 @@ const Empleados = () => {
 
   return (
     <div className="empleados-container">
-      <header className="header"><h1>Gestión de Personal</h1></header>
+      <Titulo titulo="Gestion de Usuarios" />
 
-      <section className="card">
-        <form onSubmit={handleCreate} className="form-container">
-          <div className="form-row">
-            <input type="text" placeholder="Usuario" className="form-control" value={nuevo.usuario} 
-                   onChange={e => setNuevo({...nuevo, usuario: e.target.value})} required />
-            <input type="password" placeholder="Clave" className="form-control" value={nuevo.contraseña} 
-                   onChange={e => setNuevo({...nuevo, contraseña: e.target.value})} required />
-            <select className="form-control" value={nuevo.rol_id} onChange={e => setNuevo({...nuevo, rol_id: e.target.value})}>
-              <option value={1}>Admin</option>
+
+      {/* NUEVO EMPLEADO */}
+    <section className="card">
+      <div className="card-header">
+        <h2>Nuevo Empleado</h2>
+      </div>
+
+      <form onSubmit={handleCreate} className="form-container">
+        {/* FILA 1 */}
+        <div className="form-row">
+          <div className="form-group">
+            <label>Nombre Completo</label>
+            <input
+              type="text"
+              className="form-control"
+              value={nuevo.nombre}
+              onChange={(e) =>
+                setNuevo({ ...nuevo, nombre: e.target.value })
+              }
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Rol</label>
+            <select
+              className="form-control"
+              value={nuevo.rol_id}
+              onChange={(e) =>
+                setNuevo({ ...nuevo, rol_id: e.target.value })
+              }
+            >
               <option value={3}>Mesero</option>
+              <option value={1}>Administrador</option>
               <option value={4}>Cocinero</option>
             </select>
           </div>
-          <button type="submit" className="btn btn-primary">Registrar</button>
-        </form>
-      </section>
+        </div>
 
-      <section className="card mt-20">
-        <table className="table-custom">
-          <thead>
-            <tr><th>Usuario</th><th>Rol</th><th>Cargo</th><th>Acciones</th></tr>
-          </thead>
-          <tbody>
-            {empleados.map(emp => (
-              <tr key={emp.id}>
-                <td>{emp.usuario}</td>
-                <td><span className="badge">{emp.rol?.descripcion}</span></td>
-                <td>{emp.cargo?.descripcion}</td>
-                <td>
-                  <button className="btn btn-sm btn-primary" onClick={() => { setEdit(emp); setShowModal(true); }}>Editar</button>
-                  <button className="btn btn-sm btn-danger ml-5" onClick={() => userService.delete(emp.id).then(load)}>Borrar</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+        {/* FILA 2 */}
+        <div className="form-row">
+          <div className="form-group">
+            <label>Usuario</label>
+            <input
+              type="text"
+              className="form-control"
+              value={nuevo.usuario}
+              onChange={(e) =>
+                setNuevo({ ...nuevo, usuario: e.target.value })
+              }
+              required
+            />
+          </div>
 
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content card">
-            <h2>Editar {edit.usuario}</h2>
-            <form onSubmit={handleUpdate}>
-              <label>Nuevo Nombre de Usuario</label>
-              <input type="text" className="form-control" value={edit.usuario} onChange={e => setEdit({...edit, usuario: e.target.value})} />
-              <label>Cambiar Rol</label>
-              <select className="form-control" value={edit.rol_id} onChange={e => setEdit({...edit, rol_id: e.target.value})}>
-                <option value={1}>Admin</option>
-                <option value={3}>Mesero</option>
-                <option value={4}>Cocinero</option>
-              </select>
-              <button type="submit" className="btn btn-primary btn-block">Guardar</button>
-              <button type="button" className="btn btn-secondary btn-block" onClick={() => setShowModal(false)}>Cancelar</button>
-            </form>
+          <div className="form-group">
+            <label>Contraseña</label>
+            <input
+              type="password"
+              className="form-control"
+              value={nuevo.contraseña}
+              onChange={(e) =>
+                setNuevo({ ...nuevo, contraseña: e.target.value })
+              }
+              required
+            />
           </div>
         </div>
-      )}
-    </div>
-  );
+
+        <button type="submit" className="btn btn-primary">
+          Agregar Empleado
+        </button>
+      </form>
+    </section>
+
+    {/* LISTA DE EMPLEADOS */}
+    <section className="card mt-20">
+      <div className="card-header">
+        <h2>Lista de Empleados</h2>
+      </div>
+
+      <div className="table-container">
+        <table className="table-custom">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Usuario</th>
+              <th>Rol</th>
+              <th>Fecha Creación</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {empleados.length > 0 ? (
+              empleados.map((emp) => (
+                <tr key={emp.id}>
+                  <td>{emp.nombre}</td>
+                  <td>{emp.usuario}</td>
+                  <td>
+                    <span
+                      className={`badge ${
+                        emp.rol?.descripcion?.toUpperCase() === "MESERO"
+                          ? "badge-success"
+                          : "badge-warning"
+                      }`}
+                    >
+                      {emp.rol?.descripcion}
+                    </span>
+                  </td>
+                  <td>{emp.fecha_creacion}</td>
+                  <td>
+                    <button
+                      className="btn btn-sm btn-primary"
+                      onClick={() => {
+                        setEdit(emp);
+                        setShowModal(true);
+                      }}
+                    >
+                      Editar
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" style={{ textAlign: "center" }}>
+                  No hay empleados registrados
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    {/* MODAL EDITAR */}
+    {showModal && (
+      <div className="modal-overlay">
+        <div className="modal-content card">
+          <h2>Editar Empleado</h2>
+
+          <form onSubmit={handleUpdate}>
+            <label>Usuario</label>
+            <input
+              type="text"
+              className="form-control"
+              value={edit.usuario}
+              onChange={(e) =>
+                setEdit({ ...edit, usuario: e.target.value })
+              }
+            />
+
+            <label>Rol</label>
+            <select
+              className="form-control"
+              value={edit.rol_id}
+              onChange={(e) =>
+                setEdit({ ...edit, rol_id: e.target.value })
+              }
+            >
+              <option value={3}>Mesero</option>
+              <option value={1}>Administrador</option>
+              <option value={4}>Cocinero</option>
+            </select>
+
+            <button type="submit" className="btn btn-primary btn-block">
+              Guardar
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-secondary btn-block"
+              onClick={() => setShowModal(false)}
+            >
+              Cancelar
+            </button>
+          </form>
+        </div>
+      </div>
+    )}
+  </div>
+);
 };
 
 export default Empleados;

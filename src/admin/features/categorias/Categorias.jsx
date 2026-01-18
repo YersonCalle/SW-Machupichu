@@ -1,30 +1,76 @@
 import React, { useState, useEffect } from 'react';
-import { getData } from '../../../utils/utils';
+import { categoryService } from '../../../service/categoryService';
 import './Categorias.css'
+import Titulo from '../../../ui/Titulo/Titulo';
+import Button2 from '../../../ui/Buttnon-Form/Button2';
 
 const Categorias = () => {
   const [categorias, setCategorias] = useState([]);
   const [mensaje, setMensaje] = useState('');
   const [modalActive, setModalActive] = useState(false);
-  
+
+  const [nuevaCategoria, setNuevaCat] = useState({ nombre: "", descripcion: "" });
   const [editCat, setEditCat] = useState({ id: '', nombre: '', descripcion: '' });
 
   useEffect(() => {
-    getData('').then(data => {
-      if (data) setCategorias(data.filter(cat => cat.activo === 1));
-    });
+    cargarCat();
   }, []);
 
+  const cargarCat = async () => {
+    try {
+      const data = await categoryService.getAll();
+      setCategorias(data);
+    } catch (err) {
+      setMensaje("Error al cargar las categorias");
+    }
+  };
+
+  const handleAgregar = async (e) => {
+    e.preventDefault();
+    try {
+      await categoryService.create(nuevaCategoria);
+      setNuevaCat({ nombre: "", descripcion: "" });
+      setMensaje("Nueva Categoria Creada");
+      cargarCat();
+    } catch (err) {
+      alert("No se puede crear la categoria");
+    }
+  };
+
+  const guardarEdicion = async (e) => {
+    e.preventDefault();
+    try {
+      await categoryService.update(editCat.id, editCat);
+      setModalActive(false);
+      cargarCat();
+    } catch (err) {
+      alert("Error al actualizar");
+    }
+  };
+
+  const eliminarCat = async (id) => {
+    if (!window.confirm("¿Eliminar categoria?")) return;
+    try {
+      await categoryService.delete(id);
+      cargarCat();
+    } catch (err) {
+      alert("No se pudo eliminar");
+    }
+  };
+
   const abrirModal = (cat) => {
-    setEditCat(cat);
+    setEditCat({
+      id: cat.id,
+      nombre: cat.nombre,
+      descripcion: cat.descripcion
+    });
     setModalActive(true);
   };
 
   return (
     <div>
-      <div className="header">
-        <h1>Categorías</h1>
-      </div>
+
+      <Titulo titulo="Gestion de Categorias" />
 
       {mensaje && <div className="alert alert-success">{mensaje}</div>}
 
@@ -32,18 +78,29 @@ const Categorias = () => {
         <div className="card-header">
           <h2>Nueva Categoría</h2>
         </div>
-        <form onSubmit={(e) => e.preventDefault()}>
-          <div className="form-row">
-            <div className="form-group">
+        <form onSubmit={handleAgregar}>
+          <div className="form-cat">
+            <div className="form-cat2">
               <label>Nombre</label>
-              <input type="text" name="nombre" required />
+              <input
+                type="text"
+                name="nombre"
+                value={nuevaCategoria.nombre}
+                onChange={e => setNuevaCat({ ...nuevaCategoria, nombre: e.target.value })}
+                required
+              />
             </div>
-            <div className="form-group">
+            <div className="form-cat2">
               <label>Descripción</label>
-              <input type="text" name="descripcion" />
+              <input
+                type="text"
+                name="descripcion"
+                value={nuevaCategoria.descripcion}
+                onChange={e => setNuevaCat({ ...nuevaCategoria, descripcion: e.target.value })}
+              />
             </div>
           </div>
-          <button type="submit" className="btn btn-primary">Agregar Categoría</button>
+          <Button2 text="Agregar Categoria" type="submit" />
         </form>
       </div>
 
@@ -68,15 +125,27 @@ const Categorias = () => {
                     <td>{cat.descripcion}</td>
                     <td>
                       <div className="table-actions">
-                        <button className="btn btn-sm btn-primary" onClick={() => abrirModal(cat)}>Editar</button>
-                        <button className="btn btn-sm btn-danger" onClick={() => confirm('¿Eliminar esta categoría?')}>Eliminar</button>
+                        <button
+                          className="btn btn-sm btn-primary"
+                          onClick={() => abrirModal(cat)}
+                        >
+                          Editar
+                        </button>
+                        <button
+                          className="btn btn-sm btn-danger"
+                          onClick={() => eliminarCat(cat.id)}
+                        >
+                          Eliminar
+                        </button>
                       </div>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" style={{ textAlign: 'center' }}>No hay categorías registradas</td>
+                  <td colSpan="4" style={{ textAlign: 'center' }}>
+                    No hay categorías registradas
+                  </td>
                 </tr>
               )}
             </tbody>
@@ -84,32 +153,35 @@ const Categorias = () => {
         </div>
       </div>
 
-      {/* MODAL EDITAR - Replicando tu lógica JS */}
       <div className={`modal ${modalActive ? 'active' : ''}`}>
         <div className="modal-content">
           <div className="modal-header">
             <h2>Editar Categoría</h2>
-            <span className="modal-close" onClick={() => setModalActive(false)}>&times;</span>
+            <span className="modal-close" onClick={() => setModalActive(false)}>
+              &times;
+            </span>
           </div>
-          <form onSubmit={(e) => e.preventDefault()}>
+          <form onSubmit={guardarEdicion}>
             <div className="form-group">
               <label>Nombre</label>
-              <input 
-                type="text" 
-                value={editCat.nombre} 
-                onChange={e => setEditCat({...editCat, nombre: e.target.value})} 
-                required 
+              <input
+                type="text"
+                value={editCat.nombre}
+                onChange={e => setEditCat({ ...editCat, nombre: e.target.value })}
+                required
               />
             </div>
             <div className="form-group">
               <label>Descripción</label>
-              <input 
-                type="text" 
-                value={editCat.descripcion} 
-                onChange={e => setEditCat({...editCat, descripcion: e.target.value})} 
+              <input
+                type="text"
+                value={editCat.descripcion}
+                onChange={e => setEditCat({ ...editCat, descripcion: e.target.value })}
               />
             </div>
-            <button type="submit" className="btn btn-primary">Guardar Cambios</button>
+            <button type="submit" className="btn btn-primary">
+              Guardar Cambios
+            </button>
           </form>
         </div>
       </div>

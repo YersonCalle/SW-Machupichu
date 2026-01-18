@@ -1,32 +1,192 @@
-.empleados-container { padding: 20px; }
-.header { margin-bottom: 20px; }
 
-/* Formularios */
+
+/* ===== CONTENEDOR ===== */
+.empleados-container {
+  padding: 20px;
+}
+
+/* ===== HEADER ===== */
+.header {
+  margin-bottom: 20px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  padding: 20px;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+
+/* ===== FORMULARIOS ===== */
+.form-container {
+  padding: 0;
+}
+
 .form-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 15px;
   margin-bottom: 15px;
 }
-.form-group { flex: 1; display: flex; flex-direction: column; }
-.form-group label { font-weight: bold; margin-bottom: 5px; }
 
-/* Tabla */
-.table-container { overflow-x: auto; background: white; border-radius: 8px; }
-table { width: 100%; border-collapse: collapse; }
-th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-
-/* Modales */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-  justify-content: center; align-items: center;
+.form-control {
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-size: 14px;
 }
-.modal.active { display: flex; }
-.modal-content { background: white; padding: 25px; border-radius: 8px; width: 500px; }
 
-/* Badges de Roles */
-.badge { padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; }
-.badge-warning { background: #ffc107; color: black; }
-.badge-success { background: #28a745; color: white; }
+.form-control:focus {
+  outline: none;
+  border-color: #0d6efd;
+}
+
+/* ===== BOTONES ===== */
+.btn {
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #0d6efd;
+  color: #fff;
+  padding: 8px 14px;
+  font-size: 14px;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: #fff;
+  padding: 8px 14px;
+  font-size: 14px;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: #fff;
+  padding: 8px 14px;
+  font-size: 14px;
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 13px;
+}
+
+.btn-block {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.ml-5 {
+  margin-left: 5px;
+}
+
+/* ===== TABLA ===== */
+.table-custom {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-custom thead {
+  background-color: #f8f9fa;
+}
+
+.table-custom th,
+.table-custom td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+.table-custom th {
+  font-weight: 600;
+}
+
+/* ===== BADGES ===== */
+.badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+  background-color: #e9ecef;
+  color: #333;
+}
+
+/* Roles específicos (auto compatibles con backend) */
+.badge:contains("ADMIN"),
+.badge-admin {
+  background-color: #ffe5d0;
+  color: #b45309;
+}
+
+.badge:contains("MESERO"),
+.badge-success {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.badge:contains("COCINERO"),
+.badge-warning {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  width: 420px;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+.modal-content label {
+  display: block;
+  font-weight: 600;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
