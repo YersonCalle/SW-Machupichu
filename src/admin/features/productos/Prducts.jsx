@@ -3,14 +3,17 @@ import './LoadProducts.css'
 
 import Button1 from '../../../ui/Button1/Button1.jsx'
 import CardProduct from '../../../ui/CardProduct/CardProduct.jsx'
-import AddProductModal from './AddProductModal.jsx' // Importar el modal
+import AddProductModal from './AddProductModal.jsx'
+import UpdateProductModal from './UpdateProductModal.jsx' // Importar el nuevo modal
 import { getData } from '../../../utils/utils.js'
 
 function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado del modal
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false); // Estado del modal de actualización
+  const [selectedProduct, setSelectedProduct] = useState(null); // Producto a actualizar
 
   // Cargar productos
   const loadProducts = async (e) => {
@@ -37,10 +40,10 @@ function Products() {
     }
   };
 
-  // Agregar productos - Ahora abre el modal
+  // Agregar productos
   const AddProduct = (e) => {
     e.preventDefault();
-    setIsModalOpen(true);
+    setIsAddModalOpen(true);
   };
 
   // Callback cuando se crea un producto
@@ -49,9 +52,23 @@ function Products() {
     loadProducts({ preventDefault: () => {} });
   };
 
-  // Actualizar producto
+  // Actualizar producto - Abre el modal de edición
   const updateProduct = (productId) => {
-    alert(`Actualizaste el producto ${productId}`);
+    const product = products.find(p => p.id === productId);
+    if (product) {
+      setSelectedProduct(product);
+      setIsUpdateModalOpen(true);
+    }
+  };
+
+  // Callback cuando se actualiza un producto
+  const handleProductUpdated = (updatedProduct) => {
+    // Actualizar el producto en la lista sin recargar todo
+    setProducts(prev => 
+      prev.map(p => p.id === updatedProduct.id ? updatedProduct : p)
+    );
+    // O si prefieres recargar todos los productos:
+    // loadProducts({ preventDefault: () => {} });
   };
 
   // Deshabilitar producto
@@ -84,9 +101,20 @@ function Products() {
     <>
       {/* Modal para agregar producto */}
       <AddProductModal 
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
         onProductAdded={handleProductAdded}
+      />
+
+      {/* Modal para actualizar producto */}
+      <UpdateProductModal 
+        isOpen={isUpdateModalOpen}
+        onClose={() => {
+          setIsUpdateModalOpen(false);
+          setSelectedProduct(null);
+        }}
+        onProductUpdated={handleProductUpdated}
+        product={selectedProduct}
       />
       
       <div className='list-products'>
