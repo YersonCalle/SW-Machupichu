@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import Titulo from '../../../ui/Titulo/Titulo';
 
 
 const Sales = () => {
@@ -16,12 +16,10 @@ const Sales = () => {
   return (
     <>
     
+    <Titulo titulo="Gestion de Pedidos"/>
+
     <div className="container-fluid p-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="fw-bold">
-          <i className="fas fa-clipboard-list me-2"></i>Gestión de Pedidos
-        </h2>
-      </div>
+      
 
       <div className="row">
         {pedidos

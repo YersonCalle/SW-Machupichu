@@ -1,23 +1,30 @@
 import { apiRequest } from "../api/apiConfig";
 
 export const mesaService = {
-    getAll: () => apiRequest("/mesas"),
-  
-    create: (mesaData) => apiRequest("/mesas", {
-    method: "POST",
-    body: JSON.stringify({ ...mesaData, estado: "libre" }),
-  }),
+  getAll: () => apiRequest("/mesas"),
 
-    update: (id, mesaData) => apiRequest(`/mesas/${id}`, {
-    method: "PUT",
-    body: JSON.stringify({
-    numero: mesaData.numero,
-    capacidad: mesaData.capacidad,
-    estado: mesaData.estado
-  }),
-}),
+  create: (mesa) =>
+    apiRequest("/mesas", {
+      method: "POST",
+      body: JSON.stringify({
+        numero: mesa.numero,
+        capacidad: mesa.capacidad,
+        estado: "disponible",
+      }),
+    }),
 
-    delete: (id) => apiRequest(`/mesas/${id}`, {
-    method: "DELETE",
-  }),
+  update: (id, mesa) =>
+    apiRequest(`/mesas/${id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        numero: mesa.numero,
+        capacidad: mesa.capacidad,
+        estado: mesa.estado,
+      }),
+    }),
+
+  delete: (id) =>
+    apiRequest(`/mesas/${id}`, {
+      method: "DELETE",
+    }),
 };
