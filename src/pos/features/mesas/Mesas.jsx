@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getMesas } from "../../../service/mesero/tables.service";
 import Ventas from "../ventas/Ventas";
+import Titulo from "../../../ui/Titulo/Titulo";
 
 const Mesas = () => {
   const [mesas, setMesas] = useState([]);
@@ -27,7 +28,7 @@ const Mesas = () => {
   }
   return (
     <div>
-      <h2>Plano de Mesas</h2>
+      <Titulo titulo="Control de Mesas" />
       <div
         style={{
           display: "grid",
