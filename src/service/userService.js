@@ -3,9 +3,12 @@ import { apiRequest } from "../api/apiConfig";
 export const userService = {
   getAll: () => apiRequest("/usuarios"),
   
-  create: (data) => apiRequest("/usuarios", {
+  create: (user) => apiRequest("/usuarios", {
     method: "POST",
-    body: JSON.stringify(data), 
+    body: JSON.stringify({
+      nombre: user.nombre_apellido,
+      rol: "",
+    }), 
   }),
 
   update: (id, data) => apiRequest(`/usuarios/${id}`, {

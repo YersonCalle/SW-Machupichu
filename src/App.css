@@ -34,6 +34,11 @@
   --acent-color: #d3c69050;
   --text-color-dk: #d28f3d;
   --border-radius: 8px;
+
+  --pendiente: #f59e0b;
+  --preparacion : #3b82f6;
+  --listo : #10b981;
+
  
   --dark: #1f2937;
   --white: #ffffff;
@@ -46,7 +51,7 @@
 
 }
 
-
+/*
 :root {
   --primary: #2563eb;
   --primary-dark: #1e40af;
@@ -57,4 +62,4 @@
   --light-gray: #f3f4f6;
   --border: #e5e7eb;
 
-}
+}*/
