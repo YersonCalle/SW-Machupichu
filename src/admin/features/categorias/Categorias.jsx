@@ -20,7 +20,7 @@ const Categorias = () => {
     try {
       const data = await categoryService.getAll();
       setCategorias(data);
-    } catch (err) {
+    } catch {
       setMensaje("Error al cargar las categorias");
     }
   };
@@ -78,29 +78,35 @@ const Categorias = () => {
         <div className="card-header">
           <h2>Nueva Categoría</h2>
         </div>
-        <form onSubmit={handleAgregar}>
-          <div className="form-cat">
-            <div className="form-cat2">
+        <form onSubmit={handleAgregar} className="form-container ">
+          <div className="form-row">
+            <div className="form-grou">
               <label>Nombre</label>
               <input
                 type="text"
-                name="nombre"
+                className="form-control"
                 value={nuevaCategoria.nombre}
-                onChange={e => setNuevaCat({ ...nuevaCategoria, nombre: e.target.value })}
+                onChange={(e) =>
+                  setNuevaCat({ ...nuevaCategoria, nombre: e.target.value })
+                }
                 required
               />
             </div>
-            <div className="form-cat2">
-              <label>Descripción</label>
+
+            <div className="form-groups">
+              <label>Descripcion</label>
               <input
                 type="text"
-                name="descripcion"
+                className="form-control"
                 value={nuevaCategoria.descripcion}
-                onChange={e => setNuevaCat({ ...nuevaCategoria, descripcion: e.target.value })}
+                onChange={(e) =>
+                  setNuevaCat({ ...nuevaCategoria, descripcion: e.target.value })
+                }
+                required
               />
             </div>
           </div>
-          <Button2 text="Agregar Categoria" type="submit" />
+          <Button2 type="submit" text="Agregar Categoria" />
         </form>
       </div>
 

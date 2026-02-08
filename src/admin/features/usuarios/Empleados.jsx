@@ -6,8 +6,12 @@ import Titulo from '../../../ui/Titulo/Titulo';
 const Empleados = () => {
   const [empleados, setEmpleados] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [nuevo, setNuevo] = useState({ usuario: '', contraseña: '', rol_id: 3 });
+  const [nuevo, setNuevo] = useState({ usuario: '', contraseña: '',nombre_apellido:"", rol_id: 3 });
   const [edit, setEdit] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
 
   useEffect(() => { load(); }, []);
 
@@ -16,27 +20,66 @@ const Empleados = () => {
     setEmpleados(data);
   };
 
-  const handleCreate = async (e) => {
+ const handleCreate = async (e) => {
     e.preventDefault();
-    const res = await userService.create(nuevo);
+    clearMessages();
+    setLoading(true);
+
+  try{
+    const res = await userService.create({
+      ...nuevo,
+      rol_id: Number(nuevo.rol_id)
+    });
+
     if (res.ok) {
-      setNuevo({ usuario: '', contraseña: '', rol_id: 3 });
+      setSuccess("Usuario creado correctamente");
+      setNuevo({ usuario: '', contraseña: '', nombre_apellido: '', rol_id: 3 });
       load();
+    }else{
+      setError(res.message|| "Error al crear el usuario");
     }
+  }catch{setError("Error de conexion con el servidor");}
+
+  setLoading(false);
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    const res = await userService.update(edit.id, edit);
+    clearMessages();
+    setLoading(true);
+
+    try { 
+    const res = await userService.update(edit.id, {
+      usuario: edit.usuario,
+      nombre_apellido : edit.nombre_apellido,
+      rol_id: Number(edit.rol_id)
+    });
+
     if (res.ok) {
+      setSuccess(" Usuario actualizado correctamente");
       setShowModal(false);
       load();
+    }else{
+      setError(res.message || "Error al actualizar el usuario");
     }
+    }
+    catch{
+      setError("Error al conectar con el servidor")
+    }
+    setLoading(false);
   };
+  const clearMessages = () => {
+    setSuccess("");
+    setError("");
+  }
 
   return (
     <div className="empleados-container">
       <Titulo titulo="Gestion de Usuarios" />
+
+    {success && <div className="alert success">{success}</div>}
+    {error && <div className="alert error">{error}</div>}
+    {loading && <div className="alert loading">Procesando...</div>}
 
     <section className="card">
       <div className="card-header">
@@ -51,11 +94,11 @@ const Empleados = () => {
             <input
               type="text"
               className="form-control"
-              value={nuevo.nombre}
+              value={nuevo.nombre_apellido}
               onChange={(e) =>
-                setNuevo({ ...nuevo, nombre: e.target.value })
+                setNuevo({ ...nuevo, nombre_apellido: e.target.value })
               }
-              required
+           
             />
           </div>
 
@@ -65,12 +108,11 @@ const Empleados = () => {
               className="form-control"
               value={nuevo.rol_id}
               onChange={(e) =>
-                setNuevo({ ...nuevo, rol_id: e.target.value })
+                setNuevo({ ...nuevo, rol_id: Number(e.target.value) })
               }
             >
               <option value={3}>Mesero</option>
               <option value={1}>Administrador</option>
-              <option value={4}>Cocinero</option>
             </select>
           </div>
         </div>
@@ -130,7 +172,7 @@ const Empleados = () => {
             {empleados.length > 0 ? (
               empleados.map((emp) => (
                 <tr key={emp.id}>
-                  <td>{emp.nombre}</td>
+                  <td>{emp.nombre_apellido}</td>
                   <td>{emp.usuario}</td>
                   <td>
                     <span
@@ -148,9 +190,14 @@ const Empleados = () => {
                     <button
                       className="btn btn-sm btn-primary"
                       onClick={() => {
-                        setEdit(emp);
-                        setShowModal(true);
-                      }}
+  setEdit({
+    ...emp,
+    rol_id: emp.rol?.id || 3
+  });
+  setShowModal(true);
+}}
+
+              
                     >
                       Editar
                     </button>
@@ -169,13 +216,22 @@ const Empleados = () => {
       </div>
     </section>
 
-    {/* MODAL EDITAR */}
     {showModal && (
       <div className="modal-overlay">
         <div className="modal-content card">
-          <h2>Editar Empleado</h2>
+          <h2>Editar </h2>
 
           <form onSubmit={handleUpdate}>
+            <label >Nombre</label>
+            <input 
+              type="text" 
+              className="form-control"
+              value={edit.nombre_apellido}
+              onChange={(e)=>
+              setEdit({ ...edit , nombre_apellido : e.target.value })
+            }
+            />
+
             <label>Usuario</label>
             <input
               type="text"
@@ -196,7 +252,6 @@ const Empleados = () => {
             >
               <option value={3}>Mesero</option>
               <option value={1}>Administrador</option>
-              <option value={4}>Cocinero</option>
             </select>
 
             <button type="submit" className="btn btn-primary btn-block">

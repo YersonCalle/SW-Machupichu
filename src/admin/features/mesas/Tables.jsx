@@ -9,7 +9,7 @@ const Tables = () => {
   const [mensaje, setMensaje] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [nuevaMesa, setNuevaMesa] = useState({ numero: "", capacidad: "" });
-  const [editMesa, setEditMesa] = useState({ id: null, numero: "", capacidad: "", estado: "libre" });
+  const [editMesa, setEditMesa] = useState({ id: null, numero: "", capacidad: "", estado: "disponible" });
 
   useEffect(() => {
     cargarMesas();
@@ -31,7 +31,6 @@ const Tables = () => {
       setNuevaMesa({ numero: "", capacidad: "" });
       setMensaje("Mesa creada correctamente");
       cargarMesas();
-      setTimeout(() => setMensaje(""), 3000);
     } catch (err) {
       alert("No se pudo crear la mesa");
     }
@@ -62,7 +61,7 @@ const Tables = () => {
     id: mesa.id,
     numero: mesa.numero,
     capacidad: mesa.capacidad,
-    estado: mesa.estado_id?.descripcion?.toLowerCase() || "libre",
+    estado: mesa.estado?.descripcion?.toLowerCase() ,
   });
   setShowModal(true);
 };
@@ -130,8 +129,8 @@ const Tables = () => {
                   <td>Mesa {mesa.numero ?? mesa.id}</td>
                   <td>{mesa.capacidad} personas</td>
                   <td>
-                    <span className={`badge badge-${mesa.estado?.descripcion?.toLowerCase() === "libre" ? "success" : "danger"}`}>
-                      {mesa.estado?.descripcion || "LIBRE"}
+                    <span className={`badge badge-${mesa.estado?.descripcion === "disponible" ? "success" : "danger"}`}>
+                      {mesa.estado?.descripcion }
                     </span>
                   </td>
                   <td>

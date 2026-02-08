@@ -11,7 +11,8 @@ import Report from './admin/features/informes/Report.jsx';
 import Products from './admin/features/productos/Prducts.jsx';
 import Printers from './admin/features/impresoras/Printers.jsx';
 import Tables from './admin/features/mesas/Tables.jsx';
-import Category from './admin/features/categorias/Categorias.jsx'
+import Category from './admin/features/categorias/Categorias.jsx';
+
 
 // Layout del administrador
 import AdminLayout from './pages/Layout/AdminLayout.jsx';

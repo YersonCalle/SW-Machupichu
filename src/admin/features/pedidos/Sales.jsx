@@ -1,126 +1,272 @@
-import React, { useState, useEffect } from 'react';
-
-
+import { useEffect, useState } from "react";
+import Titulo from "../../../ui/Titulo/Titulo";
+import { OrdersService } from "../../../service/orderService";
+import { SectionTitle } from "../../../ui/title/Title";
+import OrderCard from "../../../ui/OrderCard/OrderCard";
+import { estadoToUI, estadoToId } from "../../../ui/Order/OrderMapper";
+import "./Sales.css";
 
 const Sales = () => {
-  const [pedidos, setPedidos] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [filtroActivo, setFiltroActivo] = useState("todos");
 
+  const loadOrders = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const data = await OrdersService.getAll();
+
+      const normalized = data.map(o => ({
+        ...o,
+        estado_ui: estadoToUI(o.estado)
+      }));
+
+      setOrders(normalized);
+    } catch (err) {
+      console.error("Error cargando pedidos:", err);
+      setError("No se pudieron cargar los pedidos");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    fetch('../../assets/files/data.json') 
-      .then((res) => res.json())
-      .then((data) => setPedidos(data));
+    loadOrders();
   }, []);
 
+  const changeEstado = async (order, nuevo) => {
+    try {
+      await OrdersService.updateStatus(
+        order.id,
+        estadoToId[nuevo]
+      );
+      loadOrders();
+    } catch (err) {
+      console.error("Error cambiando estado:", err);
+      alert("Error actualizando pedido");
+    }
+  };
+
+  const contarPorEstado = (estado) => {
+    return orders.filter(o => o.estado_ui === estado).length;
+  };
+  const obtenerPedidosFiltrados = () => {
+    if (filtroActivo === "todos") {
+      return orders;
+    }
+    return orders.filter(o => o.estado_ui === filtroActivo);
+  };
+
+  const pedidosFiltrados = obtenerPedidosFiltrados();
+
+  if (loading) {
+    return (
+      <div className="admin-container">
+        <Titulo titulo="Gestión de Pedidos" />
+        <div className="loading-wrapper">
+          <div className="spinner"></div>
+          <p className="loading">Cargando pedidos...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="admin-container">
+        <Titulo titulo="Gestión de Pedidos" />
+        <div className="error-wrapper">
+          <p className="error">{error}</p>
+          <button className="btn-retry" onClick={loadOrders}>
+            🔄 Reintentar
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <>
-    
-    <div className="container-fluid p-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="fw-bold">
-          <i className="fas fa-clipboard-list me-2"></i>Gestión de Pedidos
-        </h2>
+    <div className="admin-container">
+      <div className="sales-header">
+        <Titulo titulo="Gestión de Pedidos" />
+        <div className="header-actions">
+          <button className="btn-actualizar" onClick={loadOrders}>
+            🔄 Actualizar
+          </button>
+        </div>
       </div>
 
-      <div className="row">
-        {pedidos
-          .filter((p) => filtro === '' || p.estado === filtro)
-          .map((pedido) => (
-            <div
-              key={pedido.id}
-              className="col-md-6 col-lg-4 mb-4 pedido-card"
-              data-estado={pedido.estado}
-            >
-              <div className="card shadow-sm">
-                <div className="card-header d-flex justify-content-between align-items-center bg-white">
-                  <strong>Pedido #{pedido.id}</strong>
-                  <span className={`badge ${getBadgeClass(pedido.estado)}`}>
-                    {pedido.estado}
-                  </span>
-                </div>
-                <div className="card-body">
-                  <div className="mb-2">
-                    <i className="fas fa-chair me-2 text-muted"></i>Mesa {pedido.mesa_numero}
-                  </div>
-                  <div className="mb-2">
-                    <i className="fas fa-user me-2 text-muted"></i>{pedido.mesero_nombre}
-                  </div>
-                  <div className="mb-2">
-                    <i className="fas fa-clock me-2 text-muted"></i>
-                    {new Date(pedido.fecha_pedido).toLocaleTimeString([], {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </div>
-                  <div className="mb-2">
-                    <i className="fas fa-utensils me-2 text-muted"></i>{pedido.total_productos} productos
-                  </div>
-                  <div className="mb-3">
-                    <strong className="text-danger">
-                      Total: ${pedido.total.toFixed(2)}
-                    </strong>
-                  </div>
-                  
-                  {pedido.estado !== 'entregado' && pedido.estado !== 'cancelado' && (
-                    <div className="dropdown">
-                      <button
-                        className="btn btn-sm btn-outline-secondary dropdown-toggle"
-                        data-bs-toggle="dropdown"
-                      >
-                        <i className="fas fa-edit"></i>
-                      </button>
-                      <ul className="dropdown-menu">
-                        {pedido.estado === 'pendiente' && (
-                          <>
-                            <li>
-                              <button
-                                className="dropdown-item"
-                                onClick={() => cambiarEstado(pedido.id, 'preparando')}
-                              >
-                                Marcar como Preparando
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                className="dropdown-item"
-                                onClick={() => cambiarEstado(pedido.id, 'cancelado')}
-                              >
-                                Cancelar
-                              </button>
-                            </li>
-                          </>
-                        )}
-                        {pedido.estado === 'preparando' && (
-                          <>
-                            <li>
-                              <button
-                                className="dropdown-item"
-                                onClick={() => cambiarEstado(pedido.id, 'listo')}
-                              >
-                                Marcar como Listo
-                              </button>
-                            </li>
-                            <li>
-                              <button
-                                className="dropdown-item"
-                                onClick={() => cambiarEstado(pedido.id, 'cancelado')}
-                              >
-                                Cancelar
-                              </button>
-                            </li>
-                          </>
-                        )}
-                      </ul>
-                    </div>
-                  )}
-                </div>
+      {/* Sistema de Filtros */}
+      <div className="filtros-sales">
+        <button
+          className={`filtro-sales-btn ${filtroActivo === "todos" ? "activo" : ""}`}
+          onClick={() => setFiltroActivo("todos")}
+        >
+          <span className="filtro-texto">Todos</span>
+          <span className="filtro-count">{orders.length}</span>
+        </button>
+        
+        <button
+          className={`filtro-sales-btn ${filtroActivo === "cola" ? "activo" : ""}`}
+          onClick={() => setFiltroActivo("cola")}
+        >
+          <span className="punto-estado cola"></span>
+          <span className="filtro-texto">En Cola</span>
+          <span className="filtro-count">{contarPorEstado("cola")}</span>
+        </button>
+
+        <button
+          className={`filtro-sales-btn ${filtroActivo === "preparacion" ? "activo" : ""}`}
+          onClick={() => setFiltroActivo("preparacion")}
+        >
+          <span className="punto-estado preparacion"></span>
+          <span className="filtro-texto">En Preparación</span>
+          <span className="filtro-count">{contarPorEstado("preparacion")}</span>
+        </button>
+
+        <button
+          className={`filtro-sales-btn ${filtroActivo === "terminado" ? "activo" : ""}`}
+          onClick={() => setFiltroActivo("terminado")}
+        >
+          <span className="punto-estado terminado"></span>
+          <span className="filtro-texto">Terminados</span>
+          <span className="filtro-count">{contarPorEstado("terminado")}</span>
+        </button>
+
+        <button
+          className={`filtro-sales-btn ${filtroActivo === "cancelado" ? "activo" : ""}`}
+          onClick={() => setFiltroActivo("cancelado")}
+        >
+          <span className="punto-estado cancelado"></span>
+          <span className="filtro-texto">Cancelados</span>
+          <span className="filtro-count">{contarPorEstado("cancelado")}</span>
+        </button>
+      </div>
+      <div className="orders-content">
+        {filtroActivo === "todos" ? (
+          <>
+            <SectionTitle text="Pedidos en cola" />
+            {orders.filter(o => o.estado_ui === "cola").length === 0 ? (
+              <p className="empty">No hay pedidos en cola</p>
+            ) : (
+              <div className="orders-grid">
+                {orders
+                  .filter(o => o.estado_ui === "cola")
+                  .map(o => (
+                    <OrderCard
+                      key={o.id}
+                      order={o}
+                      onEdit={() => console.log("editar", o)}
+                      onPrepare={() => changeEstado(o, "preparacion")}
+                    />
+                  ))}
               </div>
-            </div>
-          ))}
+            )}
+
+            <SectionTitle text="Pedidos en preparación" />
+            {orders.filter(o => o.estado_ui === "preparacion").length === 0 ? (
+              <p className="empty">No hay pedidos en preparación</p>
+            ) : (
+              <div className="orders-grid">
+                {orders
+                  .filter(o => o.estado_ui === "preparacion")
+                  .map(o => (
+                    <OrderCard
+                      key={o.id}
+                      order={o}
+                      onEdit={() => console.log("editar", o)}
+                      onFinish={() => changeEstado(o, "terminado")}
+                    />
+                  ))}
+              </div>
+            )}
+
+            <SectionTitle text="Pedidos terminados" />
+            {orders.filter(o => o.estado_ui === "terminado").length === 0 ? (
+              <p className="empty">No hay pedidos terminados</p>
+            ) : (
+              <div className="orders-grid">
+                {orders
+                  .filter(o => o.estado_ui === "terminado")
+                  .map(o => (
+                    <OrderCard
+                      key={o.id}
+                      order={o}
+                      onDetails={() => console.log("detalle", o)}
+                    />
+                  ))}
+              </div>
+            )}
+
+            <SectionTitle text="Pedidos cancelados" />
+            {orders.filter(o => o.estado_ui === "cancelado").length === 0 ? (
+              <p className="empty">No hay pedidos cancelados</p>
+            ) : (
+              <div className="orders-grid">
+                {orders
+                  .filter(o => o.estado_ui === "cancelado")
+                  .map(o => (
+                    <OrderCard
+                      key={o.id}
+                      order={o}
+                      onDetails={() => console.log("detalle", o)}
+                    />
+                  ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            <SectionTitle 
+              text={`Pedidos ${
+                filtroActivo === "cola" ? "en cola" :
+                filtroActivo === "preparacion" ? "en preparación" :
+                filtroActivo === "terminado" ? "terminados" :
+                "cancelados"
+              }`} 
+            />
+            
+            {pedidosFiltrados.length === 0 ? (
+              <div className="estado-vacio">
+                <div className="vacio-icono">📭</div>
+                <h3 className="vacio-titulo">No hay pedidos en esta categoría</h3>
+                <p className="vacio-texto">
+                  Los pedidos aparecerán aquí cuando cambien a este estado
+                </p>
+              </div>
+            ) : (
+              <div className="orders-grid">
+                {pedidosFiltrados.map(o => (
+                  <OrderCard
+                    key={o.id}
+                    order={o}
+                    onEdit={() => console.log("editar", o)}
+                    onPrepare={
+                      o.estado_ui === "cola" 
+                        ? () => changeEstado(o, "preparacion") 
+                        : undefined
+                    }
+                    onFinish={
+                      o.estado_ui === "preparacion" 
+                        ? () => changeEstado(o, "terminado") 
+                        : undefined
+                    }
+                    onDetails={
+                      o.estado_ui === "cancelado" || o.estado_ui === "terminado"
+                        ? () => console.log("detalle", o) 
+                        : undefined
+                    }
+                  />
+                ))}
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
-    </>
   );
 };
 

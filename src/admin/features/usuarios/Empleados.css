@@ -1,11 +1,7 @@
-
-
-/* ===== CONTENEDOR ===== */
 .empleados-container {
   padding: 20px;
 }
 
-/* ===== HEADER ===== */
 .header {
   margin-bottom: 20px;
   border-bottom: 2px solid #eee;
@@ -17,7 +13,6 @@
   font-weight: 600;
 }
 
-/* ===== CARDS ===== */
 .card {
   background: #fff;
   border-radius: 8px;
@@ -29,7 +24,6 @@
   margin-top: 20px;
 }
 
-/* ===== FORMULARIOS ===== */
 .form-container {
   padding: 0;
 }
@@ -54,7 +48,6 @@
   border-color: #0d6efd;
 }
 
-/* ===== BOTONES ===== */
 .btn {
   border: none;
   border-radius: 4px;
@@ -96,7 +89,6 @@
   margin-left: 5px;
 }
 
-/* ===== TABLA ===== */
 .table-custom {
   width: 100%;
   border-collapse: collapse;
@@ -118,7 +110,6 @@
   font-weight: 600;
 }
 
-/* ===== BADGES ===== */
 .badge {
   padding: 4px 10px;
   border-radius: 6px;
@@ -190,3 +181,26 @@
     transform: translateY(0);
   }
 }
+
+.alert {
+  padding: 12px;
+  margin: 15px 0;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.alert.success {
+  background: #d4edda;
+  color: #155724;
+}
+
+.alert.error {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.alert.loading {
+  background: #fff3cd;
+  color: #856404;
+}
+

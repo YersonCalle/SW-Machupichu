@@ -1,94 +1,98 @@
-import { useState} from "react"
-import './Report.css'
+import { useEffect, useState } from "react";
+import { buildDashboardData } from "../../../service/ReportService";
+import { StatCard } from "../../../ui/Card/StartCard";
+import './Report.css';
+import Titulo from "../../../ui/Titulo/Titulo";
 
-const Report = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState("today")
+export default function Dashboard() {
+  const [date, setDate] = useState(new Date().toISOString().slice(0,10));
+  const [data, setData] = useState(null);
 
-  const salesData = {
-    today: [
-      { label: "10:00", value: 150 },
-      { label: "12:00", value: 320 },
-      { label: "14:00", value: 280 },
-      { label: "16:00", value: 180 },
-      { label: "18:00", value: 420 },
-      { label: "20:00", value: 380 },
-      { label: "22:00", value: 220 },
-    ],
-    week: [
-      { label: "Lun", value: 1200 },
-      { label: "Mar", value: 1800 },
-      { label: "Mié", value: 1600 },
-      { label: "Jue", value: 2100 },
-      { label: "Vie", value: 2800 },
-      { label: "Sáb", value: 3200 },
-      { label: "Dom", value: 2400 },
-    ],
-    month: [
-      { label: "Sem 1", value: 8500 },
-      { label: "Sem 2", value: 9200 },
-      { label: "Sem 3", value: 8800 },
-      { label: "Sem 4", value: 10500 },
-    ],
-  }
+  const loadData = async () => {
+    const res = await buildDashboardData(date);
+    setData(res);
+  };
 
-  const topProducts = [
-    { name: "Pollo a la Brasa", sales: 45, revenue: 1125 },
-    { name: "Medio Pollo", sales: 32, revenue: 480 },
-    { name: "Arroz Chaufa", sales: 28, revenue: 504 },
-    { name: "Inca Kola", sales: 67, revenue: 335 },
-    { name: "Papa Rellena", sales: 23, revenue: 138 },
-  ]
+  useEffect(() => {
+    loadData();
+  }, [date]);
 
   return (
-    <>
-    <div className="reports-container">
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-value">S/ 2,450</div>
-          <div className="stat-label">Ventas de Hoy</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">156</div>
-          <div className="stat-label">Pedidos Completados</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">S/ 157</div>
-          <div className="stat-label">Ticket Promedio</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">12</div>
-          <div className="stat-label">Mesas Activas</div>
+    <div className="contenedor-informe">
+    
+    <Titulo titulo="Informe General" />
+
+      <div className="tarjeta">
+        <div className="tarjeta-cuerpo">
+          <h2 className="titulo-seccion">Seleccionar Fecha</h2>
+          <div className="selector-fecha">
+            <label className="estadistica-etiqueta">Fecha</label>
+            <input 
+              type="date" 
+              className="input-fecha"
+              value={date}
+              onChange={e => setDate(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 
-      <div className="chart-container">
-        <div className="chart-title">Productos Más Vendidos</div>
-        <div style={{ overflowX: "auto" }}>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Producto</th>
-                <th>Cantidad Vendida</th>
-                <th>Ingresos</th>
-                
+      <div className="cuadricula-estadisticas">
+        <StatCard titulo="TOTAL VENTAS" valor={`$${data?.totalSales.toFixed(2) || "0.00"}`} />
+        <StatCard titulo="PEDIDOS CERRADOS" valor={data?.closedOrders || 0} />
+        <StatCard titulo="PROMEDIO POR PEDIDO" valor={`$${data?.averageOrder.toFixed(2) || "0.00"}`} />
+      </div>
+
+      <div className="tarjeta">
+        <div className="tarjeta-cuerpo border-b">
+          <h3 className="titulo-seccion">Productos Más Vendidos</h3>
+        </div>
+        <table className="tabla-contenedor">
+          <thead className="tabla-encabezado">
+            <tr>
+              <th>Producto</th>
+              <th className="texto-centro">Cantidad Vendida</th>
+              <th className="texto-derecha">Total Ingresos</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data?.topProducts.length ? data.topProducts.map(p => (
+              <tr key={p.product} className="tabla-fila">
+                <td>{p.product}</td>
+                <td className="texto-centro">{p.quantity}</td>
+                <td className="texto-derecha font-bold">${p.total.toFixed(2)}</td>
               </tr>
-            </thead>
-            <tbody>
-              {topProducts.map((product, index) => (
-                <tr key={index}>
-                  <td>{product.name}</td>
-                  <td>{product.sales}</td>
-                  <td>S/ {product.revenue}</td>
-                 
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            )) : (
+              <tr><td colSpan="3" className="sin-datos">No hay datos para esta fecha</td></tr>
+            )}
+          </tbody>
+        </table>
       </div>
-    </div>
-  </>
-  )
-}
 
-export default Report
+      <div className="tarjeta">
+        <div className="tarjeta-cuerpo border-b">
+          <h3 className="titulo-seccion">Ventas por Usuario</h3>
+        </div>
+        <table className="tabla-contenedor">
+          <thead className="tabla-encabezado">
+            <tr>
+              <th>Usuario</th>
+              <th className="texto-centro">Pedidos Atendidos</th>
+              <th className="texto-derecha">Total Ventas</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data?.salesByUser.map(u => (
+              <tr key={u.user} className="tabla-fila">
+                <td>{u.user}</td>
+                <td className="texto-centro">{u.orders}</td>
+                <td className="texto-derecha font-bold">${u.total.toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  );
+}
