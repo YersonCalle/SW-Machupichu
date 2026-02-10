@@ -135,7 +135,7 @@ const Tables = () => {
                   </td>
                   <td>
                     <button className="btn btn-sm btn-primary" onClick={() => abrirModalEditar(mesa)}>Editar</button>
-                    <button className="btn btn-sm btn-danger ml-5" onClick={() => eliminarMesa(mesa.id)}>Eliminar</button>
+                    <button className="btn btn-sm btn-danger ml-5" onClick={() => eliminarMesa(mesa.id)}>Deshabilitar</button>
                   </td>
                 </tr>
               ))}
