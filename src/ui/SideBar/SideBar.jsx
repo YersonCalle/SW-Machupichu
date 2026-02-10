@@ -10,7 +10,6 @@ const Sidebar = ({ rol = "admin" }) => {
     //rutas de administrador
     dashboard: "/admin",
     tables: "/tables",
-    categorias: "/categories",
     productos: "/products",
     empleados: "/users",
     reportes: "/report",
