@@ -1,19 +1,41 @@
 import React, { useEffect, useState } from "react";
-import { getProductos, crearPedido } from "../../../service/mesero/sales.service";
+import { getProductos, crearPedido, getPedidoById } from "../../../service/mesero/sales.service";
+import Detalle from "../detalle/DetallePedido";
+import "./Ventas.css";
 
 const Ventas = ({ mesa, alCerrar }) => {
   const [productos, setProductos] = useState([]);
   const [carrito, setCarrito] = useState([]);
   const [catActual, setCatActual] = useState("Todas");
+  const [busqueda, setBusqueda] = useState("");
+  const [cargando, setCargando] = useState(false);
+  const [procesandoPedido, setProcesandoPedido] = useState(false);
+  const [notificacion, setNotificacion] = useState(null);
+  const [pedidoCreado, setPedidoCreado] = useState(null); // Nuevo estado para el pedido
+  const [vistaActual, setVistaActual] = useState("productos"); // productos | resumen
 
   useEffect(() => {
-    getProductos()
-      .then(setProductos)
-      .catch((err) => {
-        console.error("Error al cargar productos:", err);
-        alert("No se pudieron cargar los productos");
-      });
+    cargarProductos();
   }, []);
+
+  const cargarProductos = async () => {
+    try {
+      setCargando(true);
+      const data = await getProductos();
+      setProductos(data);
+    } catch (err) {
+      console.error("Error al cargar productos:", err);
+      mostrarNotificacion("No se pudieron cargar los productos", "error");
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  const mostrarNotificacion = (mensaje, tipo = "info") => {
+    setNotificacion({ mensaje, tipo });
+    setTimeout(() => setNotificacion(null), 3000);
+  };
+
   const agregar = (p) => {
     const existe = carrito.find((i) => i.id === p.id);
     if (existe) {
@@ -25,116 +47,388 @@ const Ventas = ({ mesa, alCerrar }) => {
     } else {
       setCarrito([...carrito, { ...p, cant: 1 }]);
     }
+    mostrarNotificacion(`${p.descripcion} agregado al pedido`, "success");
   };
-  const total = carrito.reduce((acc, i) => acc + i.cant * i.precio, 0);
- const confirmarPedido = async () => {
+
+  const modificarCantidad = (id, accion) => {
+    setCarrito(
+      carrito
+        .map((i) => {
+          if (i.id === id) {
+            const nuevaCant = accion === "aumentar" ? i.cant + 1 : i.cant - 1;
+            return { ...i, cant: nuevaCant };
+          }
+          return i;
+        })
+        .filter((i) => i.cant > 0)
+    );
+  };
+
+  const eliminarItem = (id) => {
+    setCarrito(carrito.filter((i) => i.id !== id));
+    mostrarNotificacion("Producto eliminado del pedido", "info");
+  };
+
+  const limpiarCarrito = () => {
+    if (carrito.length === 0) return;
+    
+    if (window.confirm("¿Estás seguro de vaciar el carrito?")) {
+      setCarrito([]);
+      mostrarNotificacion("Carrito vaciado", "info");
+    }
+  };
+
+  const total = carrito.reduce((acc, i) => acc + i.cant * parseFloat(i.precio), 0);
+
+  const generarPedido = async () => {
     if (carrito.length === 0) {
-      alert("El pedido está vacío");
+      mostrarNotificacion("El pedido está vacío", "error");
       return;
     }
 
+    const confirmacion = window.confirm(
+      `¿Generar pedido para Mesa ${mesa.id}?\n\nTotal: $${total.toFixed(2)}\nProductos: ${carrito.length}\n\nEl pedido quedará en estado PENDIENTE.`
+    );
+
+    if (!confirmacion) return;
+    const now = new Date();
+    const numeroPedido = parseInt(
+      `${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}${String(now.getMilliseconds()).padStart(3, '0')}`
+    );
+
     const payload = {
-      numero_pedido: Math.floor(Math.random() * 1000000), 
-      fecha: new Date().toISOString().slice(0, 19).replace('T', ' '),
+      numero_pedido: numeroPedido,
+      fecha: new Date().toISOString().slice(0, 19).replace("T", " "),
       mesa: mesa.id,
-      estado: 1,
-      metodo_pago: 1,
-      items: carrito.map(i => ({
+      estado: 1, // Estado PENDIENTE
+      metodo_pago: 1, 
+      items: carrito.map((i) => ({
         producto: i.id,
         cantidad: i.cant,
-        precio_unitario: i.precio
-      }))
+        precio_unitario: parseFloat(i.precio),
+      })),
     };
 
-    console.log("📤 ENVIANDO PEDIDO CON NÚMERO CORTO:", payload);
-
     try {
-      await crearPedido(payload);
-      alert("✅ Pedido creado correctamente");
-      setCarrito([]);
-      alCerrar();
+      setProcesandoPedido(true);
+      const resultado = await crearPedido(payload);
+      
+      mostrarNotificacion("✅ Pedido generado correctamente", "success");
+      const pedidoCompleto = await getPedidoById(resultado.pedido_id);
+      
+      setPedidoCreado(pedidoCompleto);
+      setVistaActual("resumen");
+      setCarrito([]); // Limpia carrito
     } catch (error) {
       console.error("❌ Error al crear pedido:", error);
-      alert(error.message);
+      mostrarNotificacion(
+        error.message || "Error al crear el pedido",
+        "error"
+      );
+    } finally {
+      setProcesandoPedido(false);
     }
   };
+
+  const handleVolverAProductos = () => {
+    setVistaActual("productos");
+    setPedidoCreado(null);
+  };
+
+  const handleModificarPedido = () => {
+    const itemsDelPedido = pedidoCreado.detalles.map((detalle) => ({
+      id: detalle.producto_id,
+      descripcion: detalle.descripcion,
+      precio: detalle.precio_unitario,
+      cant: detalle.cantidad,
+    }));
+    
+    setCarrito(itemsDelPedido);
+    setVistaActual("productos");
+    mostrarNotificacion("Pedido cargado para modificación", "info");
+  };
+//redireccion a el detalle
+  if (vistaActual === "resumen" && pedidoCreado) {
+    return (
+      <Detalle
+        pedido={pedidoCreado}
+        onCerrar={alCerrar}
+        onModificar={handleModificarPedido}
+      />
+    );
+  }
+
+  const productosFiltrados = productos.filter((p) => {
+    const cumpleCategoria = catActual === "Todas" || p.categoria === catActual;
+    const cumpleBusqueda =
+      busqueda === "" ||
+      p.descripcion.toLowerCase().includes(busqueda.toLowerCase());
+    return cumpleCategoria && cumpleBusqueda;
+  });
+
+  const categorias = ["Todas", "Comidas", "Bebidas", "Postres"];
+
   return (
-    <div style={{ display: "flex", height: "80vh", gap: "20px" }}>
-      <div style={{ flex: 1 }}>
-        <div style={{ display: "flex", gap: "10px", marginBottom: "15px" }}>
-          {["Todas", "Comidas", "Bebidas", "Postres"].map((c) => (
+    <div className="ventas-container">
+      {notificacion && (
+        <div className={`notificacion notificacion-${notificacion.tipo}`}>
+          {notificacion.mensaje}
+        </div>
+      )}
+      <div className="productos-seccion">
+        <div className="header-productos">
+          <div className="busqueda-container">
+            <svg
+              className="icono-busqueda"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+            <input
+              type="text"
+              className="input-busqueda"
+              placeholder="Buscar producto..."
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+            />
+            {busqueda && (
+              <button
+                className="btn-limpiar-busqueda"
+                onClick={() => setBusqueda("")}
+              >
+                ×
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="filtros-categorias">
+          {categorias.map((c) => (
             <button
               key={c}
               onClick={() => setCatActual(c)}
-              className={`btn ${catActual === c ? "btn-primary" : ""}`}
-              style={{ borderRadius: "20px" }}
+              className={`btn btn-categoria ${
+                catActual === c ? "btn-primary" : ""
+              }`}
             >
               {c}
             </button>
           ))}
         </div>
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))",
-            gap: "10px",
-            overflowY: "auto",
-          }}
-        >
-          {productos
-            .filter((p) => catActual === "Todas" || p.categoria === catActual)
-            .map((p) => (
-              <div
-                key={p.id}
-                className="card item-pos"
-                onClick={() => agregar(p)}
-                style={{ cursor: "pointer", textAlign: "center" }}
-              >
-                <div style={{ fontSize: "1.5rem" }}>🍽️</div>
-                <b>{p.descripcion}</b>
-                <p style={{ color: "green" }}>${p.precio}</p>
+        {cargando ? (
+          <div className="cargando-productos">
+            <div className="spinner"></div>
+            <p>Cargando productos...</p>
+          </div>
+        ) : (
+          <div className="grid-productos">
+            {productosFiltrados.length > 0 ? (
+              productosFiltrados.map((p) => (
+                <div
+                  key={p.id}
+                  className="card card-producto"
+                  onClick={() => agregar(p)}
+                >
+                  <div className="icono-producto">🍽️</div>
+                  <div className="nombre-producto">
+                    <b>{p.descripcion}</b>
+                  </div>
+                  <p className="precio-producto">${parseFloat(p.precio).toFixed(2)}</p>
+                </div>
+              ))
+            ) : (
+              <div className="sin-productos">
+                <p>No se encontraron productos</p>
               </div>
-            ))}
-        </div>
+            )}
+          </div>
+        )}
       </div>
-      <div className="card" style={{ width: "350px", padding: "15px" }}>
-        <h3>Mesa {mesa.id}</h3>
-        <hr />
 
-        <div style={{ flex: 1, overflowY: "auto" }}>
-          {carrito.map((i) => (
-            <div
-              key={i.id}
-              style={{ display: "flex", justifyContent: "space-between" }}
+      <div className="card panel-carrito">
+        <div className="header-carrito">
+          <div className="info-mesa">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
             >
-              <span>
-                {i.cant}x {i.descripcion}
-              </span>
-              <span>${(i.cant * i.precio).toFixed(2)}</span>
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+            </svg>
+            <div>
+              <h3>Mesa {mesa.id}</h3>
+              <span className="estado-mesa">{mesa.estado?.descripcion || "Activa"}</span>
             </div>
-          ))}
+          </div>
+          {carrito.length > 0 && (
+            <button className="btn-vaciar-carrito" onClick={limpiarCarrito}>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              </svg>
+              Vaciar
+            </button>
+          )}
         </div>
 
         <hr />
+        <div className="lista-items-carrito">
+          {carrito.length === 0 ? (
+            <div className="carrito-vacio">
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              >
+                <circle cx="9" cy="21" r="1" />
+                <circle cx="20" cy="21" r="1" />
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+              </svg>
+              <p>El carrito está vacío</p>
+              <small>Selecciona productos para agregar al pedido</small>
+            </div>
+          ) : (
+            carrito.map((i) => (
+              <div key={i.id} className="item-carrito">
+                <div className="item-info">
+                  <span className="item-nombre">{i.descripcion}</span>
+                  <span className="item-precio-unitario">
+                    ${parseFloat(i.precio).toFixed(2)} c/u
+                  </span>
+                </div>
 
-        <h2>Total: ${total.toFixed(2)}</h2>
+                <div className="item-controles">
+                  <div className="cantidad-controles">
+                    <button
+                      className="btn-cantidad"
+                      onClick={() => modificarCantidad(i.id, "disminuir")}
+                    >
+                      −
+                    </button>
+                    <span className="cantidad">{i.cant}</span>
+                    <button
+                      className="btn-cantidad"
+                      onClick={() => modificarCantidad(i.id, "aumentar")}
+                    >
+                      +
+                    </button>
+                  </div>
 
-        <button
-          className="btn btn-success btn-block"
-          style={{ padding: "15px" }}
-          onClick={confirmarPedido}
-        >
-          CONFIRMAR PEDIDO
-        </button>
+                  <span className="item-subtotal">
+                    ${(i.cant * parseFloat(i.precio)).toFixed(2)}
+                  </span>
 
-        <button
-          className="btn btn-danger btn-block"
-          style={{ marginTop: "10px" }}
-          onClick={alCerrar}
-        >
-          Cerrar
-        </button>
+                  <button
+                    className="btn-eliminar"
+                    onClick={() => eliminarItem(i.id)}
+                    title="Eliminar producto"
+                  >
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+        <div className="footer-carrito">
+          {carrito.length > 0 && (
+            <div className="resumen-pedido">
+              <div className="detalle-resumen">
+                <span>Productos:</span>
+                <span>{carrito.length}</span>
+              </div>
+              <div className="detalle-resumen">
+                <span>Items totales:</span>
+                <span>{carrito.reduce((acc, i) => acc + i.cant, 0)}</span>
+              </div>
+            </div>
+          )}
+
+          <hr />
+
+          <div className="total-contenedor">
+            <span>TOTAL:</span>
+            <span className="total-monto">${total.toFixed(2)}</span>
+          </div>
+
+          <button
+            className="btn btn-success btn-pagar"
+            onClick={generarPedido}
+            disabled={carrito.length === 0 || procesandoPedido}
+          >
+            {procesandoPedido ? (
+              <>
+                <div className="spinner-small"></div>
+                Procesando...
+              </>
+            ) : (
+              <>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                  <polyline points="10 9 9 9 8 9" />
+                </svg>
+                GENERAR PEDIDO
+              </>
+            )}
+          </button>
+
+          <button
+            className="btn btn-secondary btn-cerrar-carrito"
+            onClick={alCerrar}
+            disabled={procesandoPedido}
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+            Volver a Mesas
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -23,7 +23,7 @@ const styles = {
   content: {
     flex: 1,
     backgroundColor: "#f3f4f6",
-    padding: "24px",
+    padding: "48px",
     overflowY: "auto",
   },
 };

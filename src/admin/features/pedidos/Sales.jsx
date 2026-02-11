@@ -99,7 +99,6 @@ const Sales = () => {
         </div>
       </div>
 
-      {/* Sistema de Filtros */}
       <div className="filtros-sales">
         <button
           className={`filtro-sales-btn ${filtroActivo === "todos" ? "activo" : ""}`}

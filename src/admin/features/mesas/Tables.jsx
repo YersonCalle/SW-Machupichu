@@ -69,7 +69,7 @@ const Tables = () => {
   return (
     <div>
       
-      < Titulo titulo="Gestion de Mesas"/>
+      < Titulo titulo="Gestión de Mesas"/>
 
       {mensaje && <div className="alert alert-success">{mensaje}</div>}
 
