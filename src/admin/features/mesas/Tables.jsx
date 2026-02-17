@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { mesaService } from "../../../service/mesaService";
+import { mesaService } from "../../../service/tables.service";
 import Titulo from "../../../ui/Titulo/Titulo";
 import Button2 from "../../../ui/Buttnon-Form/Button2";
 import "./Table.css";
 
 const Tables = () => {
   const [mesas, setMesas] = useState([]);
+  const [estados, setEstados] = useState([]); // ← Nuevo estado
   const [mensaje, setMensaje] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [nuevaMesa, setNuevaMesa] = useState({ numero: "", capacidad: "" });
-  const [editMesa, setEditMesa] = useState({ id: null, numero: "", capacidad: "", estado: "disponible" });
+  const [editMesa, setEditMesa] = useState({ 
+    id: null, 
+    numero: "", 
+    capacidad: "", 
+    estado_id: null // ← Cambiar a estado_id
+  });
 
   useEffect(() => {
     cargarMesas();
+    cargarEstados(); // ← Cargar estados
   }, []);
 
   const cargarMesas = async () => {
@@ -21,6 +28,16 @@ const Tables = () => {
       setMesas(data);
     } catch (err) {
       setMensaje("Error al cargar las mesas");
+    }
+  };
+
+  // ✅ Nueva función para cargar estados
+  const cargarEstados = async () => {
+    try {
+      const data = await mesaService.getAllStates();
+      setEstados(data);
+    } catch (err) {
+      console.error("Error al cargar estados:", err);
     }
   };
 
@@ -39,11 +56,18 @@ const Tables = () => {
   const guardarEdicion = async (e) => {
     e.preventDefault();
     try {
-      await mesaService.update(editMesa.id, editMesa);
+      await mesaService.update(editMesa.id, {
+        numero: parseInt(editMesa.numero),
+        capacidad: parseInt(editMesa.capacidad),
+        estado_id: parseInt(editMesa.estado_id) // ← Enviar el estado_id
+      });
+      
       setShowModal(false);
+      setMensaje("Mesa actualizada correctamente");
       cargarMesas();
     } catch (err) {
-      alert("Error al actualizar");
+      console.error('Error al actualizar:', err);
+      alert("Error al actualizar la mesa");
     }
   };
 
@@ -56,20 +80,20 @@ const Tables = () => {
       alert("No se pudo eliminar");
     }
   };
+
   const abrirModalEditar = (mesa) => {
-  setEditMesa({
-    id: mesa.id,
-    numero: mesa.numero,
-    capacidad: mesa.capacidad,
-    estado: mesa.estado?.descripcion?.toLowerCase() ,
-  });
-  setShowModal(true);
-};
+    setEditMesa({
+      id: mesa.id,
+      numero: mesa.numero,
+      capacidad: mesa.capacidad,
+      estado_id: mesa.estado?.id // ← Guardar el ID del estado
+    });
+    setShowModal(true);
+  };
 
   return (
     <div>
-      
-      < Titulo titulo="Gestión de Mesas"/>
+      <Titulo titulo="Gestión de Mesas"/>
 
       {mensaje && <div className="alert alert-success">{mensaje}</div>}
 
@@ -130,7 +154,7 @@ const Tables = () => {
                   <td>{mesa.capacidad} personas</td>
                   <td>
                     <span className={`badge badge-${mesa.estado?.descripcion === "disponible" ? "success" : "danger"}`}>
-                      {mesa.estado?.descripcion }
+                      {mesa.estado?.descripcion}
                     </span>
                   </td>
                   <td>
@@ -152,39 +176,55 @@ const Tables = () => {
 
             <form onSubmit={guardarEdicion}>
               <div className="form-group">
-              <label>Número</label>
-              <input
-                type="number"
-                className="form-control"
-                value={editMesa.numero}
-                onChange={(e) =>
-                  setEditMesa({ ...editMesa, numero: e.target.value })}/>
+                <label>Número</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  value={editMesa.numero}
+                  onChange={(e) =>
+                    setEditMesa({ ...editMesa, numero: e.target.value })}
+                />
               </div>
               
               <div className="form-group">
-              <label>Capacidad</label>
-              <input
-                type="number"
-                className="form-control"
-                value={editMesa.capacidad}
-                onChange={(e) =>
-                  setEditMesa({ ...editMesa, capacidad: e.target.value })}/>
+                <label>Capacidad</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  value={editMesa.capacidad}
+                  onChange={(e) =>
+                    setEditMesa({ ...editMesa, capacidad: e.target.value })}
+                />
               </div>
               
               <div className="form-group">
-              <label>Estado</label>
-              <select
-                className="form-control"
-                value={editMesa.estado}
-                onChange={(e) =>
-                  setEditMesa({ ...editMesa, estado: e.target.value })}>
-
-                <option value="libre">Libre</option>
-                <option value="ocupada">Ocupada</option>
-              </select>
+                <label>Estado</label>
+                <select
+                  className="form-control"
+                  value={editMesa.estado_id} // ← value es el ID
+                  onChange={(e) =>
+                    setEditMesa({ ...editMesa, estado_id: e.target.value })}>
+                  <option value="">Seleccionar estado</option>
+                  {/* ✅ Mapear los estados desde la API */}
+                  {estados.map(estado => (
+                    <option key={estado.id} value={estado.id}>
+                      {estado.descripcion} {/* ← Lo que se muestra */}
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              <button type="submit" className="btn btn-primary btn-block">Guardar</button>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button type="submit" className="btn btn-primary btn-block">
+                  Guardar
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-secondary btn-block"
+                  onClick={() => setShowModal(false)}>
+                  Cancelar
+                </button>
+              </div>
             </form>
           </div>
         </div>

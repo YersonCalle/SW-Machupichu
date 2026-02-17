@@ -2,6 +2,7 @@ import { apiRequest } from "../api/apiConfig";
 
 export const mesaService = {
   getAll: () => apiRequest("/mesas"),
+  getAllStates: () => apiRequest("/mesas/estados"),
 
   create: (mesa) =>
     apiRequest("/mesas", {
@@ -19,7 +20,7 @@ export const mesaService = {
       body: JSON.stringify({
         numero: mesa.numero,
         capacidad: mesa.capacidad,
-        estado: mesa.estado,
+        estado_id: mesa.estado_id,
       }),
     }),
 
