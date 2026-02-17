@@ -1,29 +1,32 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './LoadProducts.css'
 
 import Button1 from '../../../ui/Button1/Button1.jsx'
 import CardProduct from '../../../ui/CardProduct/CardProduct.jsx'
 import AddProductModal from './AddProductModal.jsx'
-import UpdateProductModal from './UpdateProductModal.jsx' // Importar el nuevo modal
-import { getData } from '../../../utils/utils.js'
+import UpdateProductModal from './UpdateProductModal.jsx'
+import { ProductsService } from '../../../service/products.service.js' // ← USAR EL SERVICIO
 
 function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false); // Estado del modal de actualización
-  const [selectedProduct, setSelectedProduct] = useState(null); // Producto a actualizar
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Cargar productos
-  const loadProducts = async (e) => {
-    e.preventDefault();
-    
+  // ✅ Cargar productos automáticamente al montar
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  // ✅ Simplificado - sin `e.preventDefault()`
+  const loadProducts = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      const response = await getData('http://localhost:3000/api/productos');
+      const response = await ProductsService.getAll(); // ← SERVICIO
       
       if (Array.isArray(response) && response.length > 0) {
         setProducts(response);
@@ -40,20 +43,22 @@ function Products() {
     }
   };
 
-  // Agregar productos
-  const AddProduct = (e) => {
-    e.preventDefault();
+  // ✅ Abrir modal de agregar
+  const handleAddClick = () => {
     setIsAddModalOpen(true);
   };
 
-  // Callback cuando se crea un producto
+  // ✅ Callback cuando se crea un producto
   const handleProductAdded = (newProduct) => {
-    // Recargar la lista de productos
-    loadProducts({ preventDefault: () => {} });
+    // Opción 1: Agregar el nuevo producto al estado sin recargar
+    setProducts(prev => [...prev, newProduct]);
+    
+    // Opción 2: Recargar todo (si prefieres datos frescos)
+    // loadProducts();
   };
 
-  // Actualizar producto - Abre el modal de edición
-  const updateProduct = (productId) => {
+  // ✅ Actualizar producto - Abre el modal de edición
+  const handleUpdateClick = (productId) => {
     const product = products.find(p => p.id === productId);
     if (product) {
       setSelectedProduct(product);
@@ -61,41 +66,29 @@ function Products() {
     }
   };
 
-  // Callback cuando se actualiza un producto
+  // ✅ Callback cuando se actualiza un producto
   const handleProductUpdated = (updatedProduct) => {
-    // Actualizar el producto en la lista sin recargar todo
     setProducts(prev => 
       prev.map(p => p.id === updatedProduct.id ? updatedProduct : p)
     );
-    // O si prefieres recargar todos los productos:
-    // loadProducts({ preventDefault: () => {} });
   };
 
-  // Deshabilitar producto
-  const disableProduct = async (productId) => {
+  // ✅ Deshabilitar producto - USANDO SERVICIO
+  const handleDisableProduct = async (productId) => {
     const confirmar = window.confirm('¿Seguro que quieres deshabilitar este producto?');
     if (!confirmar) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/productos/${productId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
-        const message = data.message ?? `Error ${response.status}`;
-        throw new Error(message);
-      }
-
-      setProducts((prev) => prev.filter((product) => product.id !== productId));
-    } catch (err) {
-      console.error('Error al deshabilitar producto:', err);
+      await ProductsService.delete(productId); // ← SERVICIO
+      
+      // Remover del estado local
+      setProducts(prev => prev.filter(p => p.id !== productId));
+      
+    } catch (error) {
+      console.error('Error al deshabilitar producto:', error);
       setError('No se pudo deshabilitar el producto. Intenta nuevamente.');
     }
-  }
+  };
 
   return (
     <>
@@ -119,11 +112,10 @@ function Products() {
       
       <div className='list-products'>
         <h3 className='subtitle'>Listado de productos</h3>
-        <p>Para ver los productos, haga click en el botón "Cargar Productos".</p>
         
         <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
           <Button1 
-            text={loading ? 'Cargando...' : 'Cargar Productos'} 
+            text={loading ? 'Cargando...' : 'Recargar Productos'} 
             color="var(--primary)"
             onClick={loadProducts}
             disabled={loading}
@@ -132,7 +124,7 @@ function Products() {
           <Button1 
             text='Agregar Producto' 
             color="var(--success, #28a745)"
-            onClick={AddProduct}
+            onClick={handleAddClick}
           />
         </div>
 
@@ -142,7 +134,9 @@ function Products() {
           </div>
         )}
 
-        {products.length > 0 && (
+        {loading && <p>Cargando productos...</p>}
+
+        {!loading && products.length > 0 && (
           <div className="products-grid">
             <h4>Productos encontrados: {products.length}</h4>
             {products.map((product) => (
@@ -151,16 +145,16 @@ function Products() {
                 id={product.id}
                 title={product.descripcion}
                 price={product.precio}
-                category={product.categoria.descripcion}
-                onUpdate={() => updateProduct(product.id)}
-                onDelete={() => disableProduct(product.id)}
+                category={product.categoria?.descripcion || 'Sin categoría'}
+                onUpdate={() => handleUpdateClick(product.id)}
+                onDelete={() => handleDisableProduct(product.id)}
               />
             ))}
           </div>
         )}
 
         {!loading && products.length === 0 && !error && (
-          <p>No hay productos cargados. Haz click en "Cargar Productos" para verlos.</p>
+          <p>No hay productos disponibles.</p>
         )}
       </div>
 
@@ -168,11 +162,6 @@ function Products() {
         <h3 className='subtitle'>Deshabilitar Producto</h3>
         <p>Precaución:</p>
         <p>Tenga en cuenta que al DESHABILITAR un producto se deshabilitará para que no se pueda seleccionar en el punto de venta, esto incluye si hay alguna mesa activa con este producto seleccionado. Se recomienda eliminar con cuidado y fuera de horario laboral.</p>
-        <Button1 
-          text='Deshabilitar Producto' 
-          color="var(--primary-color)"
-          onClick={() => alert('Selecciona un producto en la lista para deshabilitar.')} 
-        />
       </div>
     </>
   );
