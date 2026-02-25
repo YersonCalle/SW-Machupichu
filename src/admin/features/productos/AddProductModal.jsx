@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { ProductsService } from '../../../service/products.service';
+import { categoryService } from '../../../service/categoryService';
 import './AddProductModal.css';
 
 function AddProductModal({ isOpen, onClose, onProductAdded }) {
@@ -6,7 +8,7 @@ function AddProductModal({ isOpen, onClose, onProductAdded }) {
     descripcion: '',
     precio: '',
     categoria_id: '',
-    estado: true
+    habilitado: true
   });
   
   const [errors, setErrors] = useState({});
@@ -59,25 +61,14 @@ function AddProductModal({ isOpen, onClose, onProductAdded }) {
     try {
       setLoading(true);
       
-      const response = await fetch('http://localhost:3000/api/productos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          descripcion: formData.descripcion.trim(),
-          precio: parseFloat(formData.precio),
-          categoria_id: parseInt(formData.categoria_id),
-          estado: formData.estado
-        })
+      // Usar el service para crear el producto
+      const result = await ProductsService.create({
+        descripcion: formData.descripcion.trim(),
+        precio: parseFloat(formData.precio),
+        categoria_id: parseInt(formData.categoria_id),
+        estado: formData.habilitado
       });
 
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
-        throw new Error(data.message || 'Error al crear producto');
-      }
-
-      const result = await response.json();
       console.log('Producto creado:', result);
       
       // Resetear formulario
@@ -85,7 +76,7 @@ function AddProductModal({ isOpen, onClose, onProductAdded }) {
         descripcion: '',
         precio: '',
         categoria_id: '',
-        estado: true
+        habilitado: true
       });
       
       // Notificar al componente padre
@@ -110,7 +101,7 @@ function AddProductModal({ isOpen, onClose, onProductAdded }) {
       descripcion: '',
       precio: '',
       categoria_id: '',
-      estado: true
+      habilitado: true
     });
     setErrors({});
     onClose();
@@ -122,7 +113,7 @@ function AddProductModal({ isOpen, onClose, onProductAdded }) {
     const fetchCategorias = async () => {
       setLoadingCategorias(true);
       try {
-        const data = await fetch('http://localhost:3000/api/categorias').then(res => res.json());
+        const data = await categoryService.getAll();
         setCategorias(data);
       } catch (error) {
         console.error('Error cargando categorías:', error);
@@ -201,8 +192,8 @@ function AddProductModal({ isOpen, onClose, onProductAdded }) {
             <label>
               <input
                 type="checkbox"
-                name="estado"
-                checked={formData.estado}
+                name="habilitado"
+                checked={formData.habilitado}
                 onChange={handleChange}
               />
               <span>Producto habilitado</span>
