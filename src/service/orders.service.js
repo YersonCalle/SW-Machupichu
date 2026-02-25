@@ -24,10 +24,6 @@ export const OrdersService = {
     apiRequest(`/pedidos/${id}`, {
       method: "PUT",
       body: JSON.stringify({
-        fecha_modificacion: new Date()
-          .toISOString()
-          .slice(0, 19)
-          .replace("T", " "),
         estado: estadoId
       })
     }),

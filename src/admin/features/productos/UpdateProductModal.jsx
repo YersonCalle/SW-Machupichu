@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ProductsService } from '../../../service/products.service';
-import { categoryService } from '../../../service/categoryService';
+import { categoryService } from '../../../service/categories.service';
 
 function UpdateProductModal({ isOpen, onClose, onProductUpdated, product }) {
   const [formData, setFormData] = useState({

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Titulo from "../../../ui/Titulo/Titulo";
-import { OrdersService } from "../../../service/orderService";
+import { OrdersService } from "../../../service/orders.service";
 import { SectionTitle } from "../../../ui/title/Title";
 import OrderCard from "../../../ui/OrderCard/OrderCard";
 import { estadoToUI, estadoToId } from "../../../ui/Order/OrderMapper";

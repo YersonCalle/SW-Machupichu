@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { categoryService } from '../../../service/categoryService';
+import { categoryService } from '../../../service/categories.service';
 import './Categorias.css'
 import Titulo from '../../../ui/Titulo/Titulo';
 import Button2 from '../../../ui/Buttnon-Form/Button2';
