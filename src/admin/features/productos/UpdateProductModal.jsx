@@ -17,7 +17,7 @@ function UpdateProductModal({ isOpen, onClose, onProductUpdated, product }) {
       loadCategories();
       if (product) {
         setFormData({
-          nombre: product.nombre || product.descripcion || '',
+          descripcion: product.nombre || product.descripcion || '',
           precio: product.precio || '',
           categoria_id: product.categoria?.id || product.categoria_id || '',
           estado: product.estado !== undefined ? product.estado : 1
@@ -76,7 +76,7 @@ function UpdateProductModal({ isOpen, onClose, onProductUpdated, product }) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          nombre: formData.nombre.trim(),
+          descripcion: formData.nombre.trim(),
           precio: parseFloat(formData.precio),
           stock: product.stock || 0, // Mantener el stock actual sin cambiarlo
           categoria_id: parseInt(formData.categoria_id),
