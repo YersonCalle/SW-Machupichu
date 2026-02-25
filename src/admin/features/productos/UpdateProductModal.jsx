@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { ProductsService } from '../../../service/products.service';
+import { categoryService } from '../../../service/categoryService';
 
 function UpdateProductModal({ isOpen, onClose, onProductUpdated, product }) {
   const [formData, setFormData] = useState({
-    nombre: '',
+    descripcion: '',
     precio: '',
     categoria_id: '',
-    estado: 1
+    habilitado: true
   });
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -17,10 +19,12 @@ function UpdateProductModal({ isOpen, onClose, onProductUpdated, product }) {
       loadCategories();
       if (product) {
         setFormData({
-          descripcion: product.nombre || product.descripcion || '',
+          descripcion: product.descripcion || product.nombre || '',
           precio: product.precio || '',
           categoria_id: product.categoria?.id || product.categoria_id || '',
-          estado: product.estado !== undefined ? product.estado : 1
+          habilitado: product.habilitado !== undefined 
+          ? product.habilitado 
+          : (product.estado !== undefined ? product.estado === 1 : true) // Por defecto true
         });
       }
     }
@@ -28,9 +32,7 @@ function UpdateProductModal({ isOpen, onClose, onProductUpdated, product }) {
 
   const loadCategories = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/categorias');
-      if (!response.ok) throw new Error('Error al cargar categorías');
-      const data = await response.json();
+      const data = await categoryService.getAll();
       setCategories(data);
     } catch (err) {
       console.error('Error cargando categorías:', err);
@@ -42,7 +44,7 @@ function UpdateProductModal({ isOpen, onClose, onProductUpdated, product }) {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? (checked ? 1 : 0) : value
+      [name]: type === 'checkbox' ? checked : value
     }));
   };
 
@@ -50,7 +52,7 @@ function UpdateProductModal({ isOpen, onClose, onProductUpdated, product }) {
     e.preventDefault();
     
     // Validaciones
-    if (!formData.nombre.trim()) {
+    if (!formData.descripcion.trim()) {
       setError('La descripción es obligatoria');
       return;
     }
@@ -67,41 +69,27 @@ function UpdateProductModal({ isOpen, onClose, onProductUpdated, product }) {
     setError(null);
 
     try {
-      // Obtener la fecha actual en formato MySQL
-      const fechaModificacion = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
-      const response = await fetch(`http://localhost:3000/api/productos/${product.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          descripcion: formData.nombre.trim(),
-          precio: parseFloat(formData.precio),
-          stock: product.stock || 0, // Mantener el stock actual sin cambiarlo
-          categoria_id: parseInt(formData.categoria_id),
-          fecha_modificacion: fechaModificacion,
-          estado: parseInt(formData.estado)
-        })
+      // Usar el service para actualizar
+      await ProductsService.update(product.id, {
+        descripcion: formData.descripcion.trim(),
+        precio: parseFloat(formData.precio),
+        categoria_id: parseInt(formData.categoria_id),
+        habilitado: formData.habilitado
       });
-
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
-        throw new Error(data.message || `Error ${response.status}`);
-      }
 
       // Notificar al componente padre con el producto actualizado
       onProductUpdated({
         ...product,
-        nombre: formData.nombre,
-        descripcion: formData.nombre,
+        descripcion: formData.descripcion,
+        nombre: formData.descripcion,
         precio: parseFloat(formData.precio),
         categoria_id: parseInt(formData.categoria_id),
-        estado: parseInt(formData.estado)
+        habilitado: formData.habilitado,
+        estado: formData.habilitado ? 1 : 0
       });
       
       // Limpiar y cerrar
-      setFormData({ nombre: '', precio: '', categoria_id: '', estado: 1 });
+      setFormData({ descripcion: '', precio: '', categoria_id: '', habilitado: true });
       setError(null);
       onClose();
       
@@ -114,7 +102,7 @@ function UpdateProductModal({ isOpen, onClose, onProductUpdated, product }) {
   };
 
   const handleCancel = () => {
-    setFormData({ nombre: '', precio: '', categoria_id: '', estado: 1 });
+    setFormData({ descripcion: '', precio: '', categoria_id: '', habilitado: true });
     setError(null);
     onClose();
   };
@@ -164,8 +152,8 @@ function UpdateProductModal({ isOpen, onClose, onProductUpdated, product }) {
             </label>
             <input
               type="text"
-              name="nombre"
-              value={formData.nombre}
+              name="descripcion"
+              value={formData.descripcion}
               onChange={handleChange}
               placeholder="Ej: Pizza Muzzarella"
               disabled={loading}
@@ -240,8 +228,8 @@ function UpdateProductModal({ isOpen, onClose, onProductUpdated, product }) {
             }}>
               <input
                 type="checkbox"
-                name="estado"
-                checked={formData.estado === 1}
+                name="habilitado"
+                checked={formData.habilitado}
                 onChange={handleChange}
                 disabled={loading}
                 style={{
