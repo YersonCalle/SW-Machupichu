@@ -1,33 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { getMetodosPago } from "../../../service/mesero/pay.service";
+import React, { useState } from "react";
 import { actualizarPedido } from "../../../service/mesero/sales.service";
 import "./DetallePedido.css";
 
 const Detalle = ({ pedido, onCerrar, onModificar }) => {
-  const [metodosPago, setMetodosPago] = useState([]);
-  const [metodoPagoSeleccionado, setMetodoPagoSeleccionado] = useState(null);
   const [procesando, setProcesando] = useState(false);
   const [notificacion, setNotificacion] = useState(null);
-
-  useEffect(() => {
-    cargarMetodosPago();
-  }, []);
-
-  useEffect(() => {
-    if (pedido?.metodo_pago?.id) {
-      setMetodoPagoSeleccionado(pedido.metodo_pago.id);
-    }
-  }, [pedido]);
-
-  const cargarMetodosPago = async () => {
-    try {
-      const data = await getMetodosPago();
-      setMetodosPago(data);
-    } catch (error) {
-      console.error("Error al cargar métodos de pago:", error);
-      mostrarNotificacion("Error al cargar métodos de pago", "error");
-    }
-  };
 
   const mostrarNotificacion = (mensaje, tipo = "info") => {
     setNotificacion({ mensaje, tipo });
@@ -35,15 +12,8 @@ const Detalle = ({ pedido, onCerrar, onModificar }) => {
   };
 
   const handleCerrarPedidoYCobrar = async () => {
-    if (!metodoPagoSeleccionado) {
-      mostrarNotificacion("Por favor selecciona un método de pago", "error");
-      return;
-    }
-
     const confirmacion = window.confirm(
-      `¿Confirmar cobro del pedido #${pedido.numero_pedido}?\n\nTotal: $${parseFloat(pedido.total).toFixed(2)}\nMétodo: ${
-        metodosPago.find((m) => m.id === metodoPagoSeleccionado)?.descripcion
-      }`
+      `¿Confirmar cobro del pedido #${pedido.numero_pedido}?\n\nTotal: $${parseFloat(pedido.total).toFixed(2)}\nMétodo: ${pedido.metodo_pago?.descripcion}`
     );
 
     if (!confirmacion) return;
@@ -51,8 +21,7 @@ const Detalle = ({ pedido, onCerrar, onModificar }) => {
     try {
       setProcesando(true);
       await actualizarPedido(pedido.id, {
-        estado: 2, 
-        metodo_pago_id: metodoPagoSeleccionado,
+        estado: 4, // Estado ENTREGADO/PAGADO
       });
 
       mostrarNotificacion("✅ Pedido cobrado exitosamente", "success");
@@ -80,14 +49,16 @@ const Detalle = ({ pedido, onCerrar, onModificar }) => {
 
   const getIconoMetodoPago = (id) => {
     const iconos = {
-      1: "💵", 
-      2: "💳", // Tarjeta de Débito
-      3: "💳", // Tarjeta de Crédito
-      4: "🔄", // Transferencia
-      5: "📱", // Mercado Pago
+      1: { emoji: "💵", color: "#10b981" },
+      2: { emoji: "💳", color: "#3b82f6" },
+      3: { emoji: "💳", color: "#8b5cf6" },
+      4: { emoji: "🔄", color: "#f59e0b" },
+      5: { emoji: "📱", color: "#06b6d4" },
     };
-    return iconos[id] || "💰";
+    return iconos[id] || { emoji: "💰", color: "#6b7280" };
   };
+
+  const metodoPago = getIconoMetodoPago(pedido.metodo_pago?.id);
 
   return (
     <div className="resumen-pedido-container">
@@ -98,19 +69,20 @@ const Detalle = ({ pedido, onCerrar, onModificar }) => {
       )}
 
       <div className="resumen-pedido-wrapper">
-         <div className="resumen-header">
-    <div className="header-info">
-      <h2>
-        Pedido #{pedido.numero_pedido}
-        <span className="mesa-info">Mesa {pedido.mesa_id}</span>
-      </h2>
+        <div className="resumen-header">
+          <div className="header-info">
+            <h2>
+              Pedido #{pedido.numero_pedido}
+              <span className="mesa-info">Mesa {pedido.mesa_id}</span>
+            </h2>
 
-      <div className="estado-badge">
-        <span className={`badge badge-${pedido.estado.descripcion.toLowerCase()}`}>
-          {pedido.estado.descripcion}
-        </span>
-      </div>
-    </div>
+            <div className="estado-badge">
+              <span className={`badge badge-${pedido.estado.descripcion.toLowerCase().replace(/ /g, '-')}`}>
+                {pedido.estado.descripcion}
+              </span>
+            </div>
+          </div>
+          
           <button
             className="btn-modificar-pedido"
             onClick={onModificar}
@@ -178,48 +150,29 @@ const Detalle = ({ pedido, onCerrar, onModificar }) => {
             </div>
           </div>
           <div className="seccion-acciones">
-            <h3 className="seccion-titulo">Acciones</h3>
+            <h3 className="seccion-titulo">Información de Pago</h3>
 
-            <div className="metodo-pago-selector">
-              <label className="metodo-pago-label">
-                Método de Pago <span className="required">*</span>
-              </label>
-              <div className="metodos-pago-grid">
-                {metodosPago.map((metodo) => (
-                  <div
-                    key={metodo.id}
-                    className={`metodo-pago-card ${
-                      metodoPagoSeleccionado === metodo.id ? "seleccionado" : ""
-                    }`}
-                    onClick={() => setMetodoPagoSeleccionado(metodo.id)}
-                  >
-                    <div className="metodo-icono">
-                      {getIconoMetodoPago(metodo.id)}
-                    </div>
-                    <div className="metodo-nombre">{metodo.descripcion}</div>
-                    {metodoPagoSeleccionado === metodo.id && (
-                      <div className="metodo-check">
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="3"
-                        >
-                          <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                ))}
+   
+            <div className="metodo-pago-info">
+              <label className="info-label">Método de Pago Seleccionado</label>
+              <div 
+                className="metodo-pago-display"
+                style={{ "--metodo-color": metodoPago.color }}
+              >
+                <div className="metodo-icono-wrapper">
+                  <span className="metodo-emoji">{metodoPago.emoji}</span>
+                </div>
+                <div className="metodo-detalles">
+                  <span className="metodo-nombre">{pedido.metodo_pago?.descripcion}</span>
+                  <span className="metodo-subtexto">Método elegido al generar el pedido</span>
+                </div>
               </div>
             </div>
 
             <button
               className="btn btn-success btn-cerrar-cobrar"
               onClick={handleCerrarPedidoYCobrar}
-              disabled={!metodoPagoSeleccionado || procesando}
+              disabled={procesando}
             >
               {procesando ? (
                 <>

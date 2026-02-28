@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getMesas } from "../../../service/mesero/tables.service";
+import { getPedidoActivoByMesa } from "../../../service/mesero/sales.service";
 import Ventas from "../ventas/Ventas";
+import DetallePedido from "../detalle/DetallePedido";
 import Titulo from "../../../ui/Titulo/Titulo";
 import MesasEstadisticas from "../../../ui/Mesa/pos/MesaEstadisticas";
 import MesasFiltros from "../../../ui/Mesa/pos/MesaFiltros";
@@ -10,8 +12,11 @@ import "./Mesas.css";
 const Mesas = () => {
   const [mesas, setMesas] = useState([]);
   const [mesaSeleccionada, setMesaSeleccionada] = useState(null);
-  const [filtro, setFiltro] = useState("todas"); // todas, disponible, ocupada
+  const [pedidoActivo, setPedidoActivo] = useState(null);
+  const [vistaActual, setVistaActual] = useState(null); 
+  const [filtro, setFiltro] = useState("todas");
   const [cargando, setCargando] = useState(true);
+  const [cargandoPedido, setCargandoPedido] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -47,18 +52,80 @@ const Mesas = () => {
     ocupadas: mesas.filter((m) => obtenerEstadoMesa(m) === "ocupada").length,
   };
 
-  const handleSeleccionarMesa = (mesa) => {
+  const handleSeleccionarMesa = async (mesa) => {
+    const estado = obtenerEstadoMesa(mesa);
+
     setMesaSeleccionada(mesa);
+
+    if (estado === "ocupada") {
+      try {
+        setCargandoPedido(true);
+        const pedido = await getPedidoActivoByMesa(mesa.id);
+        setPedidoActivo(pedido);
+        setVistaActual("detalle");
+      } catch (error) {
+        console.error("Error al cargar pedido activo:", error);
+        
+        const confirmar = window.confirm(
+          `La mesa ${mesa.numero} está marcada como ocupada pero no tiene un pedido activo.\n\n¿Desea tomar un nuevo pedido?`
+        );
+        
+        if (confirmar) {
+          setVistaActual("ventas");
+        } else {
+          setMesaSeleccionada(null);
+          setPedidoActivo(null);
+          setVistaActual(null);
+        }
+      } finally {
+        setCargandoPedido(false);
+      }
+    } else {
+      setVistaActual("ventas");
+    }
   };
 
   const handleCerrarMesa = () => {
     setMesaSeleccionada(null);
-    cargarMesas();
+    setPedidoActivo(null);
+    setVistaActual(null);
+    cargarMesas(); 
   };
-  if (mesaSeleccionada) {
-    return <Ventas mesa={mesaSeleccionada} alCerrar={handleCerrarMesa} />;
+
+  const handleModificarPedido = () => {
+    setVistaActual("ventas");
+  };
+
+
+  if (vistaActual === "ventas" && mesaSeleccionada) {
+    return (
+      <Ventas
+        mesa={mesaSeleccionada}
+        pedidoExistente={pedidoActivo} 
+        alCerrar={handleCerrarMesa}
+      />
+    );
   }
 
+  if (vistaActual === "detalle" && pedidoActivo && mesaSeleccionada) {
+    return (
+      <DetallePedido
+        pedido={pedidoActivo}
+        onCerrar={handleCerrarMesa}
+        onModificar={handleModificarPedido}
+      />
+    );
+  }
+  if (cargandoPedido) {
+    return (
+      <div className="mesas-container">
+        <div className="mesas-cargando">
+          <div className="spinner"></div>
+          <p>Cargando pedido de la mesa...</p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="mesas-container">
       <Titulo titulo="Control de Mesas" />

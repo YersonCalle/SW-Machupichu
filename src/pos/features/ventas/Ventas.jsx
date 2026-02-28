@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { getProductos, crearPedido, getPedidoById } from "../../../service/mesero/sales.service";
+import { getMetodosPago } from "../../../service/mesero/pay.service";
+import Pago from "../../../ui/Pago/Pago";
 import Detalle from "../detalle/DetallePedido";
 import "./Ventas.css";
 
-const Ventas = ({ mesa, alCerrar }) => {
+const Ventas = ({ mesa, pedidoExistente, alCerrar }) => {
   const [productos, setProductos] = useState([]);
   const [carrito, setCarrito] = useState([]);
   const [catActual, setCatActual] = useState("Todas");
@@ -11,12 +13,32 @@ const Ventas = ({ mesa, alCerrar }) => {
   const [cargando, setCargando] = useState(false);
   const [procesandoPedido, setProcesandoPedido] = useState(false);
   const [notificacion, setNotificacion] = useState(null);
-  const [pedidoCreado, setPedidoCreado] = useState(null); // Nuevo estado para el pedido
-  const [vistaActual, setVistaActual] = useState("productos"); // productos | resumen
+  const [pedidoCreado, setPedidoCreado] = useState(null);
+  const [vistaActual, setVistaActual] = useState("productos");
+  
+  // Estados para método de pago
+  const [metodosPago, setMetodosPago] = useState([]);
+  const [metodoPagoSeleccionado, setMetodoPagoSeleccionado] = useState(null);
 
   useEffect(() => {
     cargarProductos();
-  }, []);
+    cargarMetodosPago();
+    
+    if (pedidoExistente) {
+      const itemsDelPedido = pedidoExistente.detalles.map((detalle) => ({
+        id: detalle.producto_id,
+        descripcion: detalle.descripcion,
+        precio: detalle.precio_unitario,
+        cant: detalle.cantidad,
+      }));
+      setCarrito(itemsDelPedido);
+      // Pre-seleccionar método de pago si existe
+      if (pedidoExistente.metodo_pago?.id) {
+        setMetodoPagoSeleccionado(pedidoExistente.metodo_pago.id);
+      }
+      mostrarNotificacion("Pedido cargado para modificación", "info");
+    }
+  }, [pedidoExistente]);
 
   const cargarProductos = async () => {
     try {
@@ -28,6 +50,20 @@ const Ventas = ({ mesa, alCerrar }) => {
       mostrarNotificacion("No se pudieron cargar los productos", "error");
     } finally {
       setCargando(false);
+    }
+  };
+
+  const cargarMetodosPago = async () => {
+    try {
+      const data = await getMetodosPago();
+      setMetodosPago(data);
+      // Pre-seleccionar Efectivo por defecto (id: 1)
+      if (data.length > 0 && !metodoPagoSeleccionado) {
+        setMetodoPagoSeleccionado(1);
+      }
+    } catch (error) {
+      console.error("Error al cargar métodos de pago:", error);
+      mostrarNotificacion("Error al cargar métodos de pago", "error");
     }
   };
 
@@ -86,11 +122,18 @@ const Ventas = ({ mesa, alCerrar }) => {
       return;
     }
 
+    if (!metodoPagoSeleccionado) {
+      mostrarNotificacion("Por favor selecciona un método de pago", "error");
+      return;
+    }
+
+    const metodoPago = metodosPago.find((m) => m.id === metodoPagoSeleccionado);
     const confirmacion = window.confirm(
-      `¿Generar pedido para Mesa ${mesa.id}?\n\nTotal: $${total.toFixed(2)}\nProductos: ${carrito.length}\n\nEl pedido quedará en estado PENDIENTE.`
+      `¿Generar pedido para Mesa ${mesa.id}?\n\nTotal: $${total.toFixed(2)}\nProductos: ${carrito.length}\nMétodo de Pago: ${metodoPago?.descripcion}\n\nEl pedido quedará en estado PENDIENTE.`
     );
 
     if (!confirmacion) return;
+    
     const now = new Date();
     const numeroPedido = parseInt(
       `${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}${String(now.getMilliseconds()).padStart(3, '0')}`
@@ -101,7 +144,7 @@ const Ventas = ({ mesa, alCerrar }) => {
       fecha: new Date().toISOString().slice(0, 19).replace("T", " "),
       mesa: mesa.id,
       estado: 1, // Estado PENDIENTE
-      metodo_pago: 1, 
+      metodo_pago: metodoPagoSeleccionado,
       items: carrito.map((i) => ({
         producto: i.id,
         cantidad: i.cant,
@@ -118,7 +161,7 @@ const Ventas = ({ mesa, alCerrar }) => {
       
       setPedidoCreado(pedidoCompleto);
       setVistaActual("resumen");
-      setCarrito([]); // Limpia carrito
+      setCarrito([]);
     } catch (error) {
       console.error("❌ Error al crear pedido:", error);
       mostrarNotificacion(
@@ -144,10 +187,13 @@ const Ventas = ({ mesa, alCerrar }) => {
     }));
     
     setCarrito(itemsDelPedido);
+    if (pedidoCreado.metodo_pago?.id) {
+      setMetodoPagoSeleccionado(pedidoCreado.metodo_pago.id);
+    }
     setVistaActual("productos");
     mostrarNotificacion("Pedido cargado para modificación", "info");
   };
-//redireccion a el detalle
+
   if (vistaActual === "resumen" && pedidoCreado) {
     return (
       <Detalle
@@ -175,6 +221,7 @@ const Ventas = ({ mesa, alCerrar }) => {
           {notificacion.mensaje}
         </div>
       )}
+      
       <div className="productos-seccion">
         <div className="header-productos">
           <div className="busqueda-container">
@@ -207,6 +254,7 @@ const Ventas = ({ mesa, alCerrar }) => {
             )}
           </div>
         </div>
+        
         <div className="filtros-categorias">
           {categorias.map((c) => (
             <button
@@ -220,6 +268,7 @@ const Ventas = ({ mesa, alCerrar }) => {
             </button>
           ))}
         </div>
+        
         {cargando ? (
           <div className="cargando-productos">
             <div className="spinner"></div>
@@ -287,6 +336,7 @@ const Ventas = ({ mesa, alCerrar }) => {
         </div>
 
         <hr />
+        
         <div className="lista-items-carrito">
           {carrito.length === 0 ? (
             <div className="carrito-vacio">
@@ -358,21 +408,30 @@ const Ventas = ({ mesa, alCerrar }) => {
             ))
           )}
         </div>
+        
         <div className="footer-carrito">
           {carrito.length > 0 && (
-            <div className="resumen-pedido">
-              <div className="detalle-resumen">
-                <span>Productos:</span>
-                <span>{carrito.length}</span>
+            <>
+              <div className="resumen-pedido">
+                <div className="detalle-resumen">
+                  <span>Productos:</span>
+                  <span>{carrito.length}</span>
+                </div>
               </div>
-              <div className="detalle-resumen">
-                <span>Items totales:</span>
-                <span>{carrito.reduce((acc, i) => acc + i.cant, 0)}</span>
-              </div>
-            </div>
-          )}
+              <hr />
 
-          <hr />
+              <div className="metodo-pago-ventas">
+                <Pago
+                  metodosPago={metodosPago}
+                  metodoPagoSeleccionado={metodoPagoSeleccionado}
+                  onSeleccionarMetodo={setMetodoPagoSeleccionado}
+                  required={true}
+                />
+              </div>
+
+              <hr />
+            </>
+          )}
 
           <div className="total-contenedor">
             <span>TOTAL:</span>
@@ -382,7 +441,7 @@ const Ventas = ({ mesa, alCerrar }) => {
           <button
             className="btn btn-success btn-pagar"
             onClick={generarPedido}
-            disabled={carrito.length === 0 || procesandoPedido}
+            disabled={carrito.length === 0 || !metodoPagoSeleccionado || procesandoPedido}
           >
             {procesandoPedido ? (
               <>

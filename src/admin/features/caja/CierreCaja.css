@@ -1,0 +1,111 @@
+
+.gestion-caja-container {
+  padding: 30px;
+  background: #f4f6f8;
+  font-family: 'Inter', sans-serif;
+}
+
+.dashboard-caja {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 25px;
+  margin-top: 20px;
+}
+
+/* Paneles */
+.panel-monitoreo, .panel-cierre {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Cards de Estados */
+.cards-estados {
+  display: flex;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.card-mini {
+  flex: 1;
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-mini.warning { background: #fff4e5; border-left: 4px solid #ffa117; }
+.card-mini.info { background: #e5f6fd; border-left: 4px solid #03a9f4; }
+
+/* Tabla de Pedidos */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+th { text-align: left; color: #666; font-size: 0.8rem; padding: 10px; }
+td { padding: 12px 10px; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem; }
+
+.tag {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.tag.preparacion { background: #ffe0b2; color: #e65100; }
+.tag.entregado { background: #b3e5fc; color: #01579b; }
+
+/* Corte Contable */
+.corte-real-box {
+  background: #1e293b;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.row-corte {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.total-final {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #4ade80;
+  margin-top: 10px;
+}
+
+.alerta-cierre {
+  background: #fef2f2;
+  color: #991b1b;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  border: 1px solid #fee2e2;
+}
+
+.input-prof {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1.2rem;
+}
+
+.btn-finalizar-cierre {
+  width: 100%;
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  margin-top: 20px;
+  cursor: pointer;
+}

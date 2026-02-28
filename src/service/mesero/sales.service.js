@@ -30,6 +30,18 @@ export const getPedidoById = async (id) => {
   }
 };
 
+export const getPedidoActivoByMesa = async (mesa_id) => {
+  try {
+    return await apiRequest(`/mesas/${mesa_id}/pedido-activo`);
+  } catch (error) {
+    console.error("Error en getPedidoActivoByMesa service:", error);
+    if (error.status === 404) {
+      throw new Error("No hay pedido activo para esta mesa");
+    }
+    throw error;
+  }
+};
+
 export const actualizarPedido = async (id, datos) => {
   try {
     return await apiRequest(`/pedidos/${id}`, {

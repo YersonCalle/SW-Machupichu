@@ -12,7 +12,7 @@ import Products from './admin/features/productos/Prducts.jsx';
 import Printers from './admin/features/impresoras/Printers.jsx';
 import Tables from './admin/features/mesas/Tables.jsx';
 import Category from './admin/features/categorias/Categorias.jsx';
-
+import Box from './admin/features/caja/CierreCaja.jsx'
 
 // Layout del administrador
 import AdminLayout from './pages/Layout/AdminLayout.jsx';
@@ -38,6 +38,8 @@ function App() {
         <Route path="/printers" element={<AdminLayout><Printers /></AdminLayout>} />
         <Route path="/tables" element={<AdminLayout><Tables /></AdminLayout>} />
         <Route path="/category" element={<AdminLayout><Category /></AdminLayout>} />
+        <Route path="/caja" element={<AdminLayout><Box /></AdminLayout>} />
+
 
         {/* Rutas de Mesero (POS) */}
         <Route path="/pos" element={<PosLayout />}>

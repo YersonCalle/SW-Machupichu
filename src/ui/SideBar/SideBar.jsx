@@ -14,7 +14,7 @@ const Sidebar = ({ rol = "admin" }) => {
     empleados: "/users",
     reportes: "/report",
     categorias : "/category",
-    caja: "caja",
+    caja: "/caja",
 
     //rutas de mesero 
     mesas: "mesas",
