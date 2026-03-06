@@ -61,16 +61,13 @@ const MesaCard = ({ mesa, estado, onSeleccionar }) => {
 
       {!esDisponible && (
         <div className="mesa-accion">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
+          <button className="btn-cerrar-mesa"
+            onClick={(e) => {
+              e.stopPropagation();
+              onCerrarMesa(mesa);
+            }}
+            >CERRAR
+          </button>
         </div>
       )}
     </div>
