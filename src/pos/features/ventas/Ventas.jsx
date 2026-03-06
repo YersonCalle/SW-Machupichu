@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getProductos, crearPedido, getPedidoById } from "../../../service/mesero/sales.service";
 import { getMetodosPago } from "../../../service/mesero/pay.service";
+import { categoryService } from "../../../service/categories.service";
 import Pago from "../../../ui/Pago/Pago";
 import Detalle from "../detalle/DetallePedido";
 import "./Ventas.css";
@@ -8,6 +9,7 @@ import "./Ventas.css";
 const Ventas = ({ mesa, pedidoExistente, alCerrar }) => {
   const [productos, setProductos] = useState([]);
   const [carrito, setCarrito] = useState([]);
+  const [categorias, setCategorias] = useState([]); 
   const [catActual, setCatActual] = useState("Todas");
   const [busqueda, setBusqueda] = useState("");
   const [cargando, setCargando] = useState(false);
@@ -23,6 +25,7 @@ const Ventas = ({ mesa, pedidoExistente, alCerrar }) => {
   useEffect(() => {
     cargarProductos();
     cargarMetodosPago();
+    cargarCategorias(); 
     
     if (pedidoExistente) {
       const itemsDelPedido = pedidoExistente.detalles.map((detalle) => ({
@@ -64,6 +67,19 @@ const Ventas = ({ mesa, pedidoExistente, alCerrar }) => {
     } catch (error) {
       console.error("Error al cargar métodos de pago:", error);
       mostrarNotificacion("Error al cargar métodos de pago", "error");
+    }
+  };
+
+  const cargarCategorias = async () => {
+    try {
+      const data = await categoryService.getAll();
+      const categoriasActivas = data.filter(c => c.activo === 1);
+      setCategorias([
+        { id: 0, nombre: "Todas" }, 
+        ...categoriasActivas
+      ]);
+    } catch (error) {
+      console.error("Error al cargar categorías:", error);
     }
   };
 
@@ -205,14 +221,13 @@ const Ventas = ({ mesa, pedidoExistente, alCerrar }) => {
   }
 
   const productosFiltrados = productos.filter((p) => {
-    const cumpleCategoria = catActual === "Todas" || p.categoria === catActual;
+    const cumpleCategoria = catActual === "Todas" || 
+      (p.categoria && p.categoria.id === catActual);
     const cumpleBusqueda =
       busqueda === "" ||
       p.descripcion.toLowerCase().includes(busqueda.toLowerCase());
     return cumpleCategoria && cumpleBusqueda;
   });
-
-  const categorias = ["Todas", "Comidas", "Bebidas", "Postres"];
 
   return (
     <div className="ventas-container">
@@ -258,13 +273,13 @@ const Ventas = ({ mesa, pedidoExistente, alCerrar }) => {
         <div className="filtros-categorias">
           {categorias.map((c) => (
             <button
-              key={c}
-              onClick={() => setCatActual(c)}
+              key={c.id}
+              onClick={() => setCatActual(c.id === 0 ? "Todas" : c.id)}
               className={`btn btn-categoria ${
-                catActual === c ? "btn-primary" : ""
+                catActual === (c.id === 0 ? "Todas" : c.id) ? "btn-primary" : ""
               }`}
             >
-              {c}
+              {c.nombre}
             </button>
           ))}
         </div>
