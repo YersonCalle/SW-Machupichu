@@ -107,8 +107,13 @@
 }
 
 .punto-estado.terminado {
-  background: var(--listo);
+  background: var(--entregado);
   box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+}
+
+.punto-estado.cerrado {
+  background: var(--cerrado);
+  box-shadow: 0 0 8px rgba(103, 29, 153, 0.616);
 }
 
 .punto-estado.cancelado {

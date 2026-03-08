@@ -113,7 +113,7 @@ const Sales = () => {
           onClick={() => setFiltroActivo("cola")}
         >
           <span className="punto-estado cola"></span>
-          <span className="filtro-texto">En Cola</span>
+          <span className="filtro-texto">Pendientes</span>
           <span className="filtro-count">{contarPorEstado("cola")}</span>
         </button>
 
@@ -122,7 +122,7 @@ const Sales = () => {
           onClick={() => setFiltroActivo("preparacion")}
         >
           <span className="punto-estado preparacion"></span>
-          <span className="filtro-texto">En Preparación</span>
+          <span className="filtro-texto">Preparación</span>
           <span className="filtro-count">{contarPorEstado("preparacion")}</span>
         </button>
 
@@ -131,7 +131,16 @@ const Sales = () => {
           onClick={() => setFiltroActivo("terminado")}
         >
           <span className="punto-estado terminado"></span>
-          <span className="filtro-texto">Terminados</span>
+          <span className="filtro-texto">Entregado</span>
+          <span className="filtro-count">{contarPorEstado("terminado")}</span>
+        </button>
+
+        <button
+          className={`filtro-sales-btn ${filtroActivo === "terminado" ? "activo" : ""}`}
+          onClick={() => setFiltroActivo("terminado")}
+        >
+          <span className="punto-estado cerrado"></span>
+          <span className="filtro-texto">Cerrado</span>
           <span className="filtro-count">{contarPorEstado("terminado")}</span>
         </button>
 
@@ -140,7 +149,7 @@ const Sales = () => {
           onClick={() => setFiltroActivo("cancelado")}
         >
           <span className="punto-estado cancelado"></span>
-          <span className="filtro-texto">Cancelados</span>
+          <span className="filtro-texto">Anulado</span>
           <span className="filtro-count">{contarPorEstado("cancelado")}</span>
         </button>
       </div>
