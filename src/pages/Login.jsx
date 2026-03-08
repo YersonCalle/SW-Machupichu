@@ -4,7 +4,7 @@ import Button1 from '../ui/Button1/Button1.jsx';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getData } from '../utils/utils.js';
+import { userService } from '../service/users.service';
 
 const Login = () => {
   const [usuario, setUsuario] = useState('');
@@ -18,7 +18,7 @@ const Login = () => {
 
     try {
    
-      const usuarios = await getData('http://localhost:3000/api/usuarios');
+      const usuarios = await userService.getAll();
 
       const userFound = usuarios.find(
         u => u.usuario === usuario && u.contraseña === password
