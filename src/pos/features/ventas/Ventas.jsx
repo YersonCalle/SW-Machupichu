@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { getProductos, crearPedido, getPedidoById } from "../../../service/mesero/sales.service";
-import { getMetodosPago } from "../../../service/mesero/pay.service";
-import { categoryService } from "../../../service/categories.service";
+import { getProductos, crearPedido, getPedidoById } from "../../../services/sales.service";
+import { getMetodosPago } from "../../../services/pay.service";
+import { categoryService } from "../../../services/categories.service";
 import Pago from "../../../ui/Pago/Pago";
 import Detalle from "../detalle/DetallePedido";
 import "./Ventas.css";

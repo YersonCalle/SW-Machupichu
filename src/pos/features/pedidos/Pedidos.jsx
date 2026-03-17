@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { 
-  getPedidosActivos, 
-  actualizarEstadoPedido 
-} from "../../../service/mesero/orders.service";
+import { OrdersService } from "../../../services/orders.service";
 import Titulo from "../../../ui/Titulo/Titulo";
 import "./Pedidos.css";
 
@@ -16,7 +13,7 @@ const Pedidos = () => {
   const cargarPedidos = async () => {
     try {
       setError(null);
-      const data = await getPedidosActivos();
+      const data = await OrdersService.getAll();
       setPedidos(data);
     } catch (err) {
       console.error("Error al cargar pedidos:", err);
@@ -89,7 +86,7 @@ const Pedidos = () => {
 
     try {
       setProcesando(pedidoId);
-      await actualizarEstadoPedido(pedidoId, nuevoEstadoId);
+      await OrdersService.updateStatus(pedidoId, nuevoEstadoId);
       await cargarPedidos();
     } catch (error) {
       console.error("Error al cambiar estado:", error);

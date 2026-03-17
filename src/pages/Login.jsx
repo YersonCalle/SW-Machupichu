@@ -4,7 +4,7 @@ import Button1 from '../ui/Button1/Button1.jsx';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { userService } from '../service/users.service';
+import { userService } from '../services/users.service';
 
 const Login = () => {
   const [usuario, setUsuario] = useState('');

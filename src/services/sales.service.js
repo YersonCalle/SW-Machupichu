@@ -1,11 +1,10 @@
-import { apiRequest } from "../../api/apiConfig";
+import { apiRequest } from "../api/apiConfig";
+import { OrdersService } from "../services/orders.service";
+import { ProductsService } from "../services/products.service";
 
 export const crearPedido = async (datosPedido) => {
   try {
-    return await apiRequest("/pedidos", {
-      method: "POST",
-      body: JSON.stringify(datosPedido),
-    });
+    return await OrdersService.create(datosPedido);
   } catch (error) {
     console.error("Error en crearPedido service:", error);
     throw error;
@@ -14,7 +13,7 @@ export const crearPedido = async (datosPedido) => {
 
 export const getProductos = async () => {
   try {
-    return await apiRequest("/productos");
+    return await ProductsService.getAll();
   } catch (error) {
     console.error("Error en getProductos service:", error);
     throw error;
@@ -23,7 +22,7 @@ export const getProductos = async () => {
 
 export const getPedidoById = async (id) => {
   try {
-    return await apiRequest(`/pedidos/${id}`);
+    return await OrdersService.getById(id);
   } catch (error) {
     console.error("Error en getPedidoById service:", error);
     throw error;
@@ -44,10 +43,7 @@ export const getPedidoActivoByMesa = async (mesa_id) => {
 
 export const actualizarPedido = async (id, datos) => {
   try {
-    return await apiRequest(`/pedidos/${id}`, {
-      method: "PUT",
-      body: JSON.stringify(datos),
-    });
+    return await OrdersService.update(id, datos);
   } catch (error) {
     console.error("Error en actualizarPedido service:", error);
     throw error;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { buildDashboardData } from "../../../service/ReportService";
+import { buildDashboardData } from "../../../services/report.service";
 import { StatCard } from "../../../ui/Card/StartCard";
 import './Report.css';
 import Titulo from "../../../ui/Titulo/Titulo";

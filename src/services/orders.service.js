@@ -20,6 +20,13 @@ export const OrdersService = {
       body: JSON.stringify(data)
     }),
 
+  // Actualiza un pedido con un payload arbitrario
+  update: (id, data) =>
+    apiRequest(`/pedidos/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    }),
+
   updateStatus: (id, estadoId) =>
     apiRequest(`/pedidos/${id}`, {
       method: "PUT",

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { actualizarPedido } from "../../../service/mesero/sales.service";
+import { actualizarPedido } from "../../../services/sales.service";
 import "./DetallePedido.css";
 
 const Detalle = ({ pedido, onCerrar, onModificar }) => {

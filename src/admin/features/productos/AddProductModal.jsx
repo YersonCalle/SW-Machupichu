@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ProductsService } from '../../../service/products.service';
-import { categoryService } from '../../../service/categories.service';
+import { ProductsService } from '../../../services/products.service';
+import { categoryService } from '../../../services/categories.service';
 import './AddProductModal.css';
 
 function AddProductModal({ isOpen, onClose, onProductAdded }) {

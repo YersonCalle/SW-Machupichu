@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getMesas } from "../../../service/mesero/tables.service";
-import { getPedidoActivoByMesa } from "../../../service/mesero/sales.service";
+import { mesaService } from "../../../services/tables.service";
+import { getPedidoActivoByMesa } from "../../../services/sales.service";
 import Ventas from "../ventas/Ventas";
 import DetallePedido from "../detalle/DetallePedido";
 import Titulo from "../../../ui/Titulo/Titulo";
@@ -27,7 +27,7 @@ const Mesas = () => {
     try {
       setCargando(true);
       setError(null);
-      const data = await getMesas();
+      const data = await mesaService.getAll();
       setMesas(data);
     } catch (err) {
       console.error("Error al cargar mesas:", err);

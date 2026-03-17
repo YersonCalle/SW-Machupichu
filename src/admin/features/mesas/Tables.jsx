@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { mesaService } from "../../../service/tables.service";
+import { mesaService } from "../../../services/tables.service";
 import Titulo from "../../../ui/Titulo/Titulo";
 import Button2 from "../../../ui/Buttnon-Form/Button2";
 import "./Table.css";

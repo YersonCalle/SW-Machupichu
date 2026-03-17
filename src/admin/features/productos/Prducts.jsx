@@ -5,7 +5,7 @@ import Button1 from '../../../ui/Button1/Button1.jsx'
 import CardProduct from '../../../ui/CardProduct/CardProduct.jsx'
 import AddProductModal from './AddProductModal.jsx'
 import UpdateProductModal from './UpdateProductModal.jsx'
-import { ProductsService } from '../../../service/products.service.js' // ← USAR EL SERVICIO
+import { ProductsService } from '../../../services/products.service.js' // ← USAR EL SERVICIO
 
 function Products() {
   const [products, setProducts] = useState([]);

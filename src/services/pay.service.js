@@ -1,4 +1,4 @@
-import { apiRequest } from "../../api/apiConfig";
+import { apiRequest } from "../api/apiConfig";
 
 export const getMetodosPago = async () => {
   try {
