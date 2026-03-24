@@ -13,8 +13,9 @@ export const estadoToUI = (estado) => {
       case 2:
         return "preparacion";
       case 3:
+        return "listo";
       case 4:
-        return "terminado";
+        return "entregado";
       case 5:
         return "cancelado";
       default:
@@ -29,7 +30,8 @@ export const estadoToUI = (estado) => {
   // Orden importa: "pendiente de preparación" no debe caer en preparación.
   if (name.includes("pendiente")) return "cola";
   if (name.includes("cancel") || name.includes("anul")) return "cancelado";
-  if (name.includes("listo") || name.includes("entreg")) return "terminado";
+  if (name.includes("entreg")) return "entregado";
+  if (name.includes("listo")) return "listo";
   if (name.includes("prepar")) return "preparacion";
 
   return "cola";
@@ -38,6 +40,7 @@ export const estadoToUI = (estado) => {
 export const estadoToId = {
   cola: 1,
   preparacion: 2,
-  terminado: 3,
+  listo: 3,
+  entregado: 4,
   cancelado: 5
 };

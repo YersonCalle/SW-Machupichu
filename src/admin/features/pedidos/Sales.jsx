@@ -113,7 +113,7 @@ const Sales = () => {
           onClick={() => setFiltroActivo("cola")}
         >
           <span className="punto-estado cola"></span>
-          <span className="filtro-texto">Pendientes</span>
+          <span className="filtro-texto">Pendiente</span>
           <span className="filtro-count">{contarPorEstado("cola")}</span>
         </button>
 
@@ -122,26 +122,26 @@ const Sales = () => {
           onClick={() => setFiltroActivo("preparacion")}
         >
           <span className="punto-estado preparacion"></span>
-          <span className="filtro-texto">Preparación</span>
+          <span className="filtro-texto">En preparación</span>
           <span className="filtro-count">{contarPorEstado("preparacion")}</span>
         </button>
 
         <button
-          className={`filtro-sales-btn ${filtroActivo === "terminado" ? "activo" : ""}`}
-          onClick={() => setFiltroActivo("terminado")}
+          className={`filtro-sales-btn ${filtroActivo === "listo" ? "activo" : ""}`}
+          onClick={() => setFiltroActivo("listo")}
         >
-          <span className="punto-estado terminado"></span>
-          <span className="filtro-texto">Entregado</span>
-          <span className="filtro-count">{contarPorEstado("terminado")}</span>
+          <span className="punto-estado listo"></span>
+          <span className="filtro-texto">Listo</span>
+          <span className="filtro-count">{contarPorEstado("listo")}</span>
         </button>
 
         <button
-          className={`filtro-sales-btn ${filtroActivo === "terminado" ? "activo" : ""}`}
-          onClick={() => setFiltroActivo("terminado")}
+          className={`filtro-sales-btn ${filtroActivo === "entregado" ? "activo" : ""}`}
+          onClick={() => setFiltroActivo("entregado")}
         >
-          <span className="punto-estado cerrado"></span>
-          <span className="filtro-texto">Cerrado</span>
-          <span className="filtro-count">{contarPorEstado("terminado")}</span>
+          <span className="punto-estado entregado"></span>
+          <span className="filtro-texto">Entregado</span>
+          <span className="filtro-count">{contarPorEstado("entregado")}</span>
         </button>
 
         <button
@@ -149,16 +149,16 @@ const Sales = () => {
           onClick={() => setFiltroActivo("cancelado")}
         >
           <span className="punto-estado cancelado"></span>
-          <span className="filtro-texto">Anulado</span>
+          <span className="filtro-texto">Cancelado</span>
           <span className="filtro-count">{contarPorEstado("cancelado")}</span>
         </button>
       </div>
       <div className="orders-content">
         {filtroActivo === "todos" ? (
           <>
-            <SectionTitle text="Pedidos en cola" />
+            <SectionTitle text="Pedidos pendientes" />
             {orders.filter(o => o.estado_ui === "cola").length === 0 ? (
-              <p className="empty">No hay pedidos en cola</p>
+              <p className="empty">No hay pedidos pendientes</p>
             ) : (
               <div className="orders-grid">
                 {orders
@@ -186,19 +186,37 @@ const Sales = () => {
                       key={o.id}
                       order={o}
                       onEdit={() => console.log("editar", o)}
-                      onFinish={() => changeEstado(o, "terminado")}
+                      onFinish={() => changeEstado(o, "listo")}
                     />
                   ))}
               </div>
             )}
 
-            <SectionTitle text="Pedidos terminados" />
-            {orders.filter(o => o.estado_ui === "terminado").length === 0 ? (
-              <p className="empty">No hay pedidos terminados</p>
+            <SectionTitle text="Pedidos listos" />
+            {orders.filter(o => o.estado_ui === "listo").length === 0 ? (
+              <p className="empty">No hay pedidos listos</p>
             ) : (
               <div className="orders-grid">
                 {orders
-                  .filter(o => o.estado_ui === "terminado")
+                  .filter(o => o.estado_ui === "listo")
+                  .map(o => (
+                    <OrderCard
+                      key={o.id}
+                      order={o}
+                      onEdit={() => console.log("editar", o)}
+                      onDeliver={() => changeEstado(o, "entregado")}
+                    />
+                  ))}
+              </div>
+            )}
+
+            <SectionTitle text="Pedidos entregados" />
+            {orders.filter(o => o.estado_ui === "entregado").length === 0 ? (
+              <p className="empty">No hay pedidos entregados</p>
+            ) : (
+              <div className="orders-grid">
+                {orders
+                  .filter(o => o.estado_ui === "entregado")
                   .map(o => (
                     <OrderCard
                       key={o.id}
@@ -230,9 +248,10 @@ const Sales = () => {
           <>
             <SectionTitle 
               text={`Pedidos ${
-                filtroActivo === "cola" ? "en cola" :
+                filtroActivo === "cola" ? "pendientes" :
                 filtroActivo === "preparacion" ? "en preparación" :
-                filtroActivo === "terminado" ? "terminados" :
+                filtroActivo === "listo" ? "listos" :
+                filtroActivo === "entregado" ? "entregados" :
                 "cancelados"
               }`} 
             />
@@ -258,13 +277,18 @@ const Sales = () => {
                         : undefined
                     }
                     onFinish={
-                      o.estado_ui === "preparacion" 
-                        ? () => changeEstado(o, "terminado") 
+                      o.estado_ui === "preparacion"
+                        ? () => changeEstado(o, "listo")
+                        : undefined
+                    }
+                    onDeliver={
+                      o.estado_ui === "listo"
+                        ? () => changeEstado(o, "entregado")
                         : undefined
                     }
                     onDetails={
-                      o.estado_ui === "cancelado" || o.estado_ui === "terminado"
-                        ? () => console.log("detalle", o) 
+                      o.estado_ui === "cancelado" || o.estado_ui === "entregado"
+                        ? () => console.log("detalle", o)
                         : undefined
                     }
                   />

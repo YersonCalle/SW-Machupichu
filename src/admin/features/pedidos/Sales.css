@@ -106,14 +106,14 @@
   box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
 }
 
-.punto-estado.terminado {
-  background: var(--entregado);
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+.punto-estado.listo {
+  background: var(--listo);
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.5);
 }
 
-.punto-estado.cerrado {
-  background: var(--cerrado);
-  box-shadow: 0 0 8px rgba(103, 29, 153, 0.616);
+.punto-estado.entregado {
+  background: var(--entregado);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
 }
 
 .punto-estado.cancelado {
@@ -128,6 +128,14 @@
 
 .status-preparacion {
   border-color: var(--preparacion);
+}
+
+.status-listo {
+  border-color: var(--listo);
+}
+
+.status-entregado {
+  border-color: var(--entregado);
 }
 
 .status-cancelado {

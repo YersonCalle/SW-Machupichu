@@ -3,6 +3,7 @@ export default function OrderCard({
   onEdit,
   onPrepare,
   onFinish,
+  onDeliver,
   onDetails
 }) {
   return (
@@ -42,7 +43,13 @@ export default function OrderCard({
 
         {order.estado_ui === "preparacion" && (
           <button className="btn success" onClick={onFinish}>
-            Terminado
+            Listo
+          </button>
+        )}
+
+        {order.estado_ui === "listo" && (
+          <button className="btn success" onClick={onDeliver}>
+            Entregado
           </button>
         )}
 
