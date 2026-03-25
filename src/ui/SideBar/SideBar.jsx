@@ -2,7 +2,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../../assets/images/logo-machuu.png";
 import "./SideBar.css";
 
-const Sidebar = ({ rol = "admin" }) => {
+const Sidebar = ({ rol = "admin", open, setOpen }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -15,6 +15,7 @@ const Sidebar = ({ rol = "admin" }) => {
     reportes: "/report",
     categorias : "/category",
     caja: "/caja",
+    gastos: "/gastos",
 
     //rutas de mesero 
     mesas: "mesas",
@@ -29,6 +30,7 @@ const Sidebar = ({ rol = "admin" }) => {
     localStorage.clear();
     navigate("/");
   };
+
   const allNavItems = [
     {
       id: "dashboard",
@@ -86,20 +88,30 @@ const Sidebar = ({ rol = "admin" }) => {
       roles: ["mesero"],
       icon: <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
     },
+    {
+      id: "gastos",
+      label: "Gastos Operativos",
+      path: routes.gastos,
+      roles: ["admin"],
+      icon: <svg viewBox="0 0 24 24"><path d="M3 3h18v2H3V3zm2 4h14l-1.5 13h-11L5 7zm5 3v6h2v-6h-2zm-3 2v4h2v-4H7zm6-1v5h2v-5h-2z"/></svg>    
+    },
     {//caja
       id: "Caja",
       label: "Caja",
       path: routes.caja,
       roles: ["admin"],
-      icon: <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+      icon: <svg viewBox="0 0 24 24"><path d="M4 7h16v13H4V7zm2 2v3h12V9H6zm0 5v4h4v-4H6zm6 0v4h6v-4h-6zM6 3h12v2H6V3z"/></svg>    
     },
 
   ];
 
-  const visibleItems = allNavItems.filter((item) => item.roles.includes(rol));
+  const visibleItems = allNavItems.filter((item) =>
+    item.roles.includes(rol)
+  );
 
   return (
-    <aside className={`sidebar ${rol === "admin" ? "sidebar-admin" : "sidebar-mesero"}`}>
+    <aside className={`sidebar ${rol === "admin" ? "sidebar-admin" : "sidebar-mesero"} ${open ? "active" : ""}`}>
+
       <div className="sidebar-header">
         <img src={logo} alt="Logo Machu Picchu" id="sidebar-logo" />
       </div>
@@ -109,7 +121,10 @@ const Sidebar = ({ rol = "admin" }) => {
           <div
             key={item.id}
             className={`nav-item ${location.pathname === item.path ? "active" : ""}`}
-            onClick={() => handleNavigate(item.path)}
+            onClick={() => {
+              handleNavigate(item.path);
+              setOpen(false);
+            }}
           >
             <span className="nav-icon">{item.icon}</span>
             <span className="nav-text">{item.label}</span>

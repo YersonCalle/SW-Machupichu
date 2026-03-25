@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import Sidebar from "../../ui/SideBar/SideBar";
 import "../../App.css";
 
 const AdminLayout = ({ children }) => {
+  const [open, setOpen] = useState(false);
   return (
     <div className="admin-layout" style={styles.container}>
-      <Sidebar rol="admin" />
+
+      <button className="hamburger" onClick={() => setOpen(!open)}>
+        {open ? "X" : "☰"}
+      </button>
+
+      <Sidebar rol="admin" open={open} setOpen={setOpen} />
+      {open && <div className="overlay" onClick={() => setOpen(false)} />}
+      
       <main style={styles.content}>
         {children}
       </main>
@@ -21,10 +29,10 @@ const styles = {
     overflow: "hidden",
   },
   content: {
-    flex: 1,
-    backgroundColor: "#f3f4f6",
-    padding: "48px",
-    overflowY: "auto",
+  flex: 1,
+  backgroundColor: "#f3f4f6",
+  padding: window.innerWidth < 768 ? "16px" :"30px",
+  overflowY: "auto",
   },
 };
 

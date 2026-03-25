@@ -1,9 +1,7 @@
 .ventas-container {
   display: flex;
-  height: 80vh;
   gap: 20px;
-  padding: 20px;
-  background: #f8f9fa;
+  background: #ffffff;
 }
 
 .notificacion {
@@ -122,7 +120,7 @@
 .btn-categoria {
   border-radius: 20px;
   padding: 8px 20px;
-  border: 2px solid #e9ecef;
+  border: 2px solid #235586;
   background: white;
   color: #495057;
   font-weight: 500;

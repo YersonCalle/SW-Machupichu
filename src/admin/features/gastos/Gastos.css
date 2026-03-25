@@ -1,0 +1,154 @@
+.contenedor-finanzas {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 15px;
+  background: #fff;
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.balance-general {
+
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: #f8fafc;
+  padding: 8px 15px;
+  border-radius: 8px;
+}
+
+.grid-financiero {
+  display: grid;
+  grid-template-columns: 1fr; 
+  gap: 30px;
+}
+
+@media (min-width: 850px) {
+  .grid-financiero {
+    grid-template-columns: 1fr 1fr; 
+  }
+}
+
+.formulario-responsive {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+  background: #fcfcfc;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #f0f0f0;
+}
+
+@media (min-width: 600px) {
+  .formulario-responsive {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.2fr; 
+  }
+}
+
+.input-group-btn {
+  display: grid;
+  grid-template-columns: 1fr 45px;
+  gap: 5px;
+}
+
+.formulario-responsive input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.btn-add {
+  height: 40px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-g { background: #f32314; }
+.btn-v { background: #0bb422; }
+.btn-add:hover { opacity: 0.9; }
+
+.tabla-minimalista {
+  border-top: 1px solid #eee;
+}
+
+.tr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 8px;
+  border-bottom: 1px solid #f9f9f9;
+}
+
+.td-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.main-txt {
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.sub-txt {
+  font-size: 12px;
+  color: #94a3b8;
+  text-transform: capitalize;
+}
+
+.header-bloque {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.subtitulo { 
+  font-family: 'Kanit', sans-serif;
+  font-size: 1.1rem;
+  margin: 0; 
+  color: #596472;
+ }
+
+.total-badge { 
+  font-weight: 700
+  ; font-size: 0.95rem; 
+}
+
+.rojo { color: #e11d48; }
+.verde { color: #16a34a; }
+
+.txt-derecha { 
+  text-align: right; 
+  font-family: 'Roboto Mono', monospace; 
+}
+.negrita { font-weight: 600; }
+
+.scroll-area {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.vacio {
+  text-align: center;
+  padding: 30px;
+  color: #cbd5e1;
+  font-size: 14px;
+}
