@@ -1,10 +1,10 @@
 import { apiRequest } from "../api/apiConfig";
 
 export const billsService = {
-  getAll: () => apiRequest("/bills/gastos"),
+  getAll: () => apiRequest("/gastos"),
 
   create: (movimiento, tipoFlujo) =>
-    apiRequest("/bills/gasto", {
+    apiRequest("/gasto", {
       method: "POST",
       body: JSON.stringify({
         movimiento_tipo: tipoFlujo,
@@ -15,7 +15,7 @@ export const billsService = {
     }),
 
   delete: (id) =>
-    apiRequest(`/bills/gasto/${id}`, {
+    apiRequest(`/gasto/${id}`, {
       method: "DELETE",
     }),
 };
