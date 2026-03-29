@@ -1,6 +1,6 @@
 export default function OrderCard({
   order,
-  onEdit,
+  onCancel,
   onPrepare,
   onFinish,
   onDeliver,
@@ -30,8 +30,8 @@ export default function OrderCard({
       <div className="order-actions">
 
         {order.estado_ui !== "cancelado" && (
-          <button className="btn secondary" onClick={onEdit}>
-            Editar
+          <button className="btn danger" onClick={onCancel}>
+            Cancelar
           </button>
         )}
 

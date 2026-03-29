@@ -1,321 +1,330 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import Titulo from "../../../ui/Titulo/Titulo";
+import { cajaService } from "../../../services/caja.service";
+import "./CierreCaja.css";
 
-const initialState = {
-  fondoInicial: "",
-  ventasEfectivo: "",
-  efectivo: "",
-  transferencia: "",
-  gastos: "",
-  agregados: "",
-  totalRealEnCaja: "",
-  obs: "",
-};
+const fmt = (v) =>
+  "$ " + Number(v || 0).toLocaleString("es-AR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
-export default function CajaRestaurante() {
-  const [form, setForm] = useState(initialState);
-  const [pedidosEnCurso] = useState(3);
-  const [pedidosEntregados] = useState(12);
-  const [corteHecho, setCorteHecho] = useState(false);
-  const [cierreListo, setCierreListo] = useState(false);
+const Caja = () => {
+  const [caja, setCaja] = useState(null);
+  const [resumen, setResumen] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [modalFondo, setModalFondo] = useState(false);
+  const [modalCorte, setModalCorte] = useState(null);
+  const [inputFondo, setInputFondo] = useState("");
+  const [obs, setObs] = useState("");
+  const [obsTimer, setObsTimer] = useState(null);
 
-  const parse = (v) => parseFloat(v) || 0;
+  const cargarDatos = useCallback(async () => {
+    try {
+      const [resCaja, resResumen] = await Promise.all([
+        cajaService.getHoy(),
+        cajaService.getResumen(),
+      ]);
+      setCaja(resCaja.abierta ? resCaja.caja : null);
+      setResumen(resResumen);
+      if (resCaja.abierta) setObs(resCaja.caja.observaciones || "");
+    } catch (e) {
+      console.error("Error al cargar caja:", e);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  const totalDia =
-    parse(form.efectivo) +
-    parse(form.transferencia) -
-    parse(form.gastos) +
-    parse(form.agregados);
+  useEffect(() => {
+    cargarDatos();
+  }, [cargarDatos]);
 
-  const diferencia =
-    parse(form.totalRealEnCaja) -
-    (parse(form.fondoInicial) + parse(form.ventasEfectivo));
-
-  const handleChange = (field) => (e) =>
-    setForm((prev) => ({ ...prev, [field]: e.target.value }));
-
-  const handleReset = () => {
-    setForm(initialState);
-    setCorteHecho(false);
-    setCierreListo(false);
+  const handleObs = (val) => {
+    setObs(val);
+    clearTimeout(obsTimer);
+    setObsTimer(
+      setTimeout(async () => {
+        try {
+          await cajaService.updateObservaciones(val);
+        } catch (e) {
+          console.error("Error al guardar observaciones:", e);
+        }
+      }, 800)
+    );
   };
 
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#0f0e0c",
-        fontFamily: "'Georgia', 'Times New Roman', serif",
-        display: "flex",
-        alignItems: "flex-start",
-        justifyContent: "center",
-        padding: "32px 16px",
-      }}
-    >
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Mono:wght@300;400&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        .caja-root { font-family: 'DM Mono', monospace; }
-        .title-font { font-family: 'Playfair Display', serif; }
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type=number] { -moz-appearance: textfield; }
-        .field-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
-        .field-label { color: #b5a98a; font-size: 13px; letter-spacing: 0.04em; white-space: nowrap; }
-        .field-input {
-          background: #1a1916;
-          border: 1px solid #2e2c27;
-          border-radius: 6px;
-          color: #705612;
-          font-family: 'DM Mono', monospace;
-          font-size: 14px;
-          padding: 7px 12px;
-          width: 130px;
-          text-align: right;
-          transition: border-color 0.2s, background 0.2s;
-          outline: none;
-        }
-        .field-input:focus { border-color: #c9a84c; background: #201f1b; }
-        .field-input::placeholder { color: #3e3c35; }
-        .section-card {
-          background: #161512;
-          border: 1px solid #2a2822;
-          border-radius: 12px;
-          padding: 20px 22px;
-        }
-        .section-title {
-          font-size: 11px;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          color: #6b6350;
-          margin-bottom: 16px;
-          padding-bottom: 10px;
-          border-bottom: 1px solid #222018;
-        }
-        .divider { border: none; border-top: 1px solid #222018; margin: 14px 0; }
-        .stat-box {
-          background: #1a1916;
-          border: 1px solid #2e2c27;
-          border-radius: 8px;
-          padding: 10px 16px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-        .stat-label { color: #6b6350; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
-        .stat-val { color: #f0e6cc; font-size: 20px; font-weight: 700; }
-        .total-big { font-family: 'Playfair Display', serif; font-size: 26px; color: #c9a84c; }
-        .badge {
-          display: inline-block;
-          border-radius: 20px;
-          padding: 2px 10px;
-          font-size: 11px;
-          font-weight: 600;
-          letter-spacing: 0.06em;
-        }
-        .badge-amber { background: #c9a84c22; color: #c9a84c; border: 1px solid #c9a84c44; }
-        .badge-green { background: #4caf5022; color: #81c784; border: 1px solid #4caf5044; }
-        .badge-red   { background: #ef535022; color: #ef9a9a; border: 1px solid #ef535044; }
-        .btn {
-          border: none; cursor: pointer; border-radius: 8px;
-          font-family: 'DM Mono', monospace;
-          font-size: 12px; letter-spacing: 0.1em;
-          text-transform: uppercase; padding: 10px 18px;
-          transition: opacity 0.2s, transform 0.1s;
-        }
-        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
-        .btn:active { transform: translateY(0px); }
-        .btn-gold { background: #c9a84c; color: #0f0e0c; font-weight: 700; }
-        .btn-outline { background: transparent; border: 1px solid #2e2c27; color: #b5a98a; }
-        .btn-ghost { background: #1a1916; color: #b5a98a; }
-        .corte-active { background: #4caf5022 !important; border-color: #4caf5044 !important; }
-        .cierre-active { background: #ef535022 !important; border-color: #ef535044 !important; }
-        textarea {
-          background: #1a1916; border: 1px solid #2e2c27; border-radius: 6px;
-          color: #b5a98a; font-family: 'DM Mono', monospace; font-size: 12px;
-          padding: 8px 12px; width: 100%; resize: none; outline: none;
-          transition: border-color 0.2s;
-        }
-        textarea:focus { border-color: #c9a84c; }
-        .neg { color: #ef9a9a !important; }
-        .pos { color: #81c784 !important; }
-      `}</style>
+  const abrirCaja = async () => {
+    const fondo = parseFloat(inputFondo) || 0;
+    try {
+      await cajaService.abrir(fondo);
+      setModalFondo(false);
+      setInputFondo("");
+      await cargarDatos();
+    } catch (e) {
+      alert(e.message || "Error al abrir caja");
+    }
+  };
 
-      <div className="caja-root" style={{ width: "100%", maxWidth: 880 }}>
-        {/* Header */}
-        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 28 }}>
-          <div>
-            <h1 className="title-font" style={{ color: "#f0e6cc", fontSize: 30, letterSpacing: "-0.01em" }}>
-              Estado de Caja
-            </h1>
-            <p style={{ color: "#4a4840", fontSize: 12, marginTop: 4, letterSpacing: "0.08em" }}>
-              {new Date().toLocaleDateString("es-AR", { weekday: "long", year: "numeric", month: "long", day: "numeric" }).toUpperCase()}
-            </p>
-          </div>
-          <button className="btn btn-outline" onClick={handleReset}>
-            ↺ Reset
-          </button>
+  const realizarCorte = async (tipo) => {
+    try {
+      const data = await cajaService.corte(tipo, obs);
+      alert(
+        `${data.message}\nRetirar: ${fmt(data.monto_retirado)}\nNuevo fondo: ${fmt(data.nuevo_fondo)}`
+      );
+      setModalCorte(null);
+      await cargarDatos();
+    } catch (e) {
+      alert(e.message || "Error al realizar corte");
+    }
+  };
+
+  const hoy = new Date();
+  const fechaStr = hoy
+    .toLocaleDateString("es-AR", {
+      weekday: "long", day: "numeric",
+      month: "long", year: "numeric",
+    })
+    .toUpperCase();
+
+  const efectivo = resumen?.ventas?.efectivo || 0;
+  const transferencia = resumen?.ventas?.transferencia || 0;
+  const gastos = resumen?.gastos || 0;
+  const agregados = resumen?.agregados || 0;
+  const fondo = caja?.fondo_inicial || 0;
+  const totalDia = efectivo + transferencia + agregados - gastos;
+  const totalCaja = fondo + efectivo;
+  const enCurso = resumen?.pedidos?.en_curso || { cantidad: 0, total: 0 };
+  const listos = resumen?.pedidos?.listos || { cantidad: 0, total: 0 };
+
+  if (loading) {
+    return (
+      <div className="caja-page">
+        <div className="caja-loading">Cargando caja...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <Titulo titulo="Gestión de Caja" />
+      <div className="caja-page">
+
+        <div className="caja-topbar">
+          <p className="caja-fecha">{fechaStr}</p>
+          {!caja ? (
+            <button className="btn-caja1" onClick={() => setModalFondo(true)}>
+              + Abrir caja
+            </button>
+          ) : (
+            <span className={`caja-badge ${caja.estado === "cerrada" ? "badge-red" : "badge-green"}`}>
+              {caja.estado === "abierta" ? "Abierta" :
+               caja.estado === "corte_parcial" ? "Corte parcial" : "Cerrada"}
+            </span>
+          )}
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-
-          {/* ── COLUMNA IZQUIERDA ── */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-
-            {/* Estado de pedidos */}
-            <div className="section-card">
-              <div className="section-title">Estado de pedidos</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                <div className="stat-box">
-                  <div>
-                    <div className="stat-label">En curso</div>
-                    <div className="stat-val">{pedidosEnCurso}</div>
-                  </div>
-                  <span className="badge badge-amber">activos</span>
-                </div>
-                <div className="stat-box">
-                  <div>
-                    <div className="stat-label">Entregados</div>
-                    <div className="stat-val">{pedidosEntregados}</div>
-                  </div>
-                  <span className="badge badge-green">cerrados</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Detalles */}
-            <div className="section-card" style={{ flex: 1 }}>
-              <div className="section-title">Detalles del turno</div>
-
-              <div className="field-row">
-                <span className="field-label">Efectivo</span>
-                <input className="field-input" type="number" placeholder="0.00"
-                  value={form.efectivo} onChange={handleChange("efectivo")} />
-              </div>
-              <div className="field-row">
-                <span className="field-label">Transferencia</span>
-                <input className="field-input" type="number" placeholder="0.00"
-                  value={form.transferencia} onChange={handleChange("transferencia")} />
-              </div>
-
-              <hr className="divider" />
-
-              <div className="field-row">
-                <span className="field-label" style={{ color: "#ef9a9a" }}>Gastos</span>
-                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <span style={{ color: "#ef9a9a", fontSize: 13 }}>−</span>
-                  <input className="field-input" type="number" placeholder="0.00"
-                    value={form.gastos} onChange={handleChange("gastos")} />
-                </div>
-              </div>
-              <div className="field-row">
-                <span className="field-label" style={{ color: "#81c784" }}>Agregados</span>
-                <input className="field-input" type="number" placeholder="0.00"
-                  value={form.agregados} onChange={handleChange("agregados")} />
-              </div>
-
-              <hr className="divider" />
-
-              <div className="field-row" style={{ marginBottom: 0 }}>
-                <span className="field-label" style={{ fontWeight: 600, color: "#f0e6cc" }}>Total del día</span>
-                <span className={`total-big`} style={{ fontSize: 22 }}>
-                  $ {totalDia.toFixed(2)}
-                </span>
-              </div>
-            </div>
+        {!caja && (
+          <div className="caja-empty">
+            <p>No hay caja abierta para hoy.</p>
+            <button className="btn-caja1" onClick={() => setModalFondo(true)}>
+              Abrir caja del día
+            </button>
           </div>
+        )}
 
-          {/* ── COLUMNA DERECHA ── */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        {caja && resumen && (
+          <div className="caja-grid">
 
-            {/* Caja */}
-            <div className="section-card">
-              <div className="section-title">Caja</div>
-
-              <div className="field-row">
-                <span className="field-label">Fondo inicial</span>
-                <input className="field-input" type="number" placeholder="0.00"
-                  value={form.fondoInicial} onChange={handleChange("fondoInicial")} />
-              </div>
-              <div className="field-row">
-                <span className="field-label">Ventas (efectivo)</span>
-                <input className="field-input" type="number" placeholder="0.00"
-                  value={form.ventasEfectivo} onChange={handleChange("ventasEfectivo")} />
-              </div>
-
-              <hr className="divider" />
-
-              <div className="field-row">
-                <span className="field-label">Total real en caja</span>
-                <input className="field-input" type="number" placeholder="0.00"
-                  value={form.totalRealEnCaja} onChange={handleChange("totalRealEnCaja")} />
+            <div className="caja-card">
+              <div className="card-section-title">ESTADO DE PEDIDOS</div>
+              <div className="pedidos-grid">
+                <div className="pedido-stat">
+                  <div className="pedido-lbl">
+                    En curso <span className="badge badge-amber">activos</span>
+                  </div>
+                  <div className="pedido-num">{enCurso.cantidad}</div>
+                </div>
+                <div className="pedido-stat">
+                  <div className="pedido-lbl">
+                    Listos <span className="badge badge-green">cerrados</span>
+                  </div>
+                  <div className="pedido-num">{listos.cantidad}</div>
+                </div>
               </div>
 
-              {/* Diferencia */}
-              {form.totalRealEnCaja !== "" && (
-                <div style={{ marginTop: 10, background: "#111009", borderRadius: 8, padding: "10px 14px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ color: "#6b6350", fontSize: 12, letterSpacing: "0.08em" }}>DIFERENCIA</span>
-                  <span className={diferencia >= 0 ? "pos" : "neg"} style={{ fontSize: 18, fontFamily: "'Playfair Display', serif", fontWeight: 700 }}>
-                    {diferencia >= 0 ? "+" : ""}$ {diferencia.toFixed(2)}
-                  </span>
+              <div className="divider" />
+
+              <div className="card-section-title">DETALLES DEL TURNO</div>
+              <div className="caja-row">
+                <span className="row-label">Efectivo</span>
+                <span className="row-value">{fmt(efectivo)}</span>
+              </div>
+              <div className="caja-row">
+                <span className="row-label">Transferencia</span>
+                <span className="row-value">{fmt(transferencia)}</span>
+              </div>
+              {resumen.ventas.desglose
+                .filter((v) => v.metodo !== "Efectivo" && v.metodo !== "Transferencia")
+                .map((v) => (
+                  <div className="caja-row" key={v.metodo}>
+                    <span className="row-label">{v.metodo}</span>
+                    <span className="row-value">{fmt(v.total)}</span>
+                  </div>
+                ))}
+              <div className="caja-row">
+                <span className="row-label danger">Gastos</span>
+                <span className="row-value danger">- {fmt(gastos)}</span>
+              </div>
+              <div className="caja-row">
+                <span className="row-label success">Agregados</span>
+                <span className="row-value success">+ {fmt(agregados)}</span>
+              </div>
+              <div className="caja-total-row">
+                <span>Total del día</span>
+                <span className={totalDia >= 0 ? "success" : "danger"}>{fmt(totalDia)}</span>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+
+              <div className="caja-card">
+                <div className="card-section-title">CAJA</div>
+                <div className="caja-row">
+                  <span className="row-label">Fondo inicial</span>
+                  <span className="row-value">{fmt(fondo)}</span>
+                </div>
+                <div className="caja-row">
+                  <span className="row-label">Ventas (efectivo)</span>
+                  <span className="row-value">{fmt(efectivo)}</span>
+                </div>
+                <div className="caja-row last">
+                  <span className="row-label bold">Total real en caja</span>
+                  <span className="row-value bold">{fmt(totalCaja)}</span>
+                </div>
+              </div>
+
+              <div className="caja-card">
+                <div className="card-section-title">OBSERVACIONES</div>
+                <textarea
+                  className="caja-obs"
+                  placeholder="Notas del turno..."
+                  value={obs}
+                  onChange={(e) => handleObs(e.target.value)}
+                />
+              </div>
+
+              {caja.estado !== "cerrada" && (
+                <div className="caja-card">
+                  <div className="card-section-title">ACCIONES DE CAJA</div>
+                  <div className="acciones-grid">
+                    <button
+                      className="btn-caja1"
+                      onClick={() => setModalCorte("parcial")}
+                    >
+                      Corte parcial
+                    </button>
+                    <button
+                      className="btn-caja2"
+                      onClick={() => setModalCorte("cierre")}
+                    >
+                      Cierre de caja
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
+          </div>
+        )}
 
-            {/* Observaciones */}
-            <div className="section-card">
-              <div className="section-title">Observaciones</div>
-              <textarea rows={3} placeholder="Notas del turno..."
-                value={form.obs} onChange={handleChange("obs")} />
+        {caja && resumen && (
+          <div className="caja-footer">
+            <div className="footer-items">
+              <div className="footer-item">
+                <label>FONDO</label>
+                <span>{fmt(fondo)}</span>
+              </div>
+              <div className="footer-item">
+                <label>VENTAS</label>
+                <span>{fmt(efectivo + transferencia)}</span>
+              </div>
+              <div className="footer-item">
+                <label>GASTOS</label>
+                <span className="danger">- {fmt(gastos)}</span>
+              </div>
             </div>
+            <div className="footer-total">
+              <label>TOTAL DEL DÍA</label>
+              <span>{fmt(totalDia)}</span>
+            </div>
+          </div>
+        )}
 
-            {/* Acciones de corte */}
-            <div className="section-card">
-              <div className="section-title">Acciones de caja</div>
-              <div style={{ display: "flex", gap: 10 }}>
-                <button
-                  className={`btn ${corteHecho ? "btn-ghost corte-active" : "btn-gold"}`}
-                  style={{ flex: 1 }}
-                  onClick={() => setCorteHecho((v) => !v)}
-                >
-                  {corteHecho ? "✓ Corte parcial" : "Corte parcial"}
+        {modalFondo && (
+          <div className="modal-overlay" onClick={() => setModalFondo(false)}>
+            <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+              <h3>Abrir caja del día</h3>
+              <p>Ingresá el fondo inicial destinado a cambio</p>
+              <input
+                type="number"
+                placeholder="0.00"
+                value={inputFondo}
+                onChange={(e) => setInputFondo(e.target.value)}
+                autoFocus
+                min="0"
+                step="0.01"
+              />
+              <div className="modal-btns">
+                <button className="btn-caja2" onClick={() => setModalFondo(false)}>
+                  Cancelar
                 </button>
-                <button
-                  className={`btn ${cierreListo ? "btn-ghost cierre-active" : "btn-outline"}`}
-                  style={{ flex: 1 }}
-                  onClick={() => setCierreListo((v) => !v)}
-                >
-                  {cierreListo ? "✓ Cierre de caja" : "Cierre de caja"}
+                <button className="btn-caja1" onClick={abrirCaja}>
+                  Confirmar
                 </button>
               </div>
             </div>
-
           </div>
-        </div>
+        )}
 
-        {/* Footer resumen */}
-        <div style={{
-          marginTop: 16, borderRadius: 12, background: "#161512",
-          border: "1px solid #2a2822", padding: "16px 22px",
-          display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12
-        }}>
-          <div style={{ display: "flex", gap: 24 }}>
-            {[
-              { label: "Fondo", val: `$ ${parse(form.fondoInicial).toFixed(2)}` },
-              { label: "Ventas", val: `$ ${parse(form.ventasEfectivo).toFixed(2)}` },
-              { label: "Gastos", val: `- $ ${parse(form.gastos).toFixed(2)}`, neg: true },
-            ].map(({ label, val, neg }) => (
-              <div key={label}>
-                <div className="stat-label">{label}</div>
-                <div style={{ color: neg ? "#ef9a9a" : "#b5a98a", fontSize: 14, marginTop: 2 }}>{val}</div>
+        {modalCorte && (
+          <div className="modal-overlay" onClick={() => setModalCorte(null)}>
+            <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+              <h3>{modalCorte === "parcial" ? "Corte parcial" : "Cierre de caja"}</h3>
+              {resumen && (
+                <div className="corte-detalle">
+                  <div className="caja-row">
+                    <span className="row-label">Pedidos en curso</span>
+                    <span className="row-value">{enCurso.cantidad} — {fmt(enCurso.total)}</span>
+                  </div>
+                  <div className="caja-row">
+                    <span className="row-label">Pedidos listos</span>
+                    <span className="row-value success">{listos.cantidad} — {fmt(listos.total)}</span>
+                  </div>
+                  <div className="divider" />
+                  <div className="caja-row">
+                    <span className="row-label bold">A retirar</span>
+                    <span className="row-value bold success">{fmt(listos.total)}</span>
+                  </div>
+                  <div className="caja-row">
+                    <span className="row-label bold">Queda en caja</span>
+                    <span className="row-value bold">{fmt(enCurso.total)}</span>
+                  </div>
+                </div>
+              )}
+              <div className="modal-btns">
+                <button className="btn-caja2" onClick={() => setModalCorte(null)}>
+                  Cancelar
+                </button>
+                <button className="btn-caja1" onClick={() => realizarCorte(modalCorte)}>
+                  Confirmar {modalCorte === "parcial" ? "corte" : "cierre"}
+                </button>
               </div>
-            ))}
+            </div>
           </div>
-          <div style={{ textAlign: "right" }}>
-            <div className="stat-label">Total del día</div>
-            <div className="total-big">$ {totalDia.toFixed(2)}</div>
-          </div>
-        </div>
+        )}
+
       </div>
     </div>
   );
-}
+};
+
+export default Caja;

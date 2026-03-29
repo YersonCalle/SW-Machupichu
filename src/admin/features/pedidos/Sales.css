@@ -106,9 +106,9 @@
   box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
 }
 
-.punto-estado.listo {
+.punto-estado.list {
   background: var(--listo);
-  box-shadow: 0 0 8px rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 8px rgba(29, 12, 122, 0.5);
 }
 
 .punto-estado.entregado {
@@ -202,6 +202,9 @@
   color: white;
 }
 
-.btn:hover {
-  opacity: 0.85;
+.btn.danger {
+  background:  red;
+  color: white;
 }
+
+

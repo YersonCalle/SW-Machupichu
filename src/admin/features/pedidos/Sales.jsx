@@ -12,6 +12,13 @@ const Sales = () => {
   const [error, setError] = useState(null);
   const [filtroActivo, setFiltroActivo] = useState("todos");
 
+  const [modalCancelar, setModalCancelar] = useState(null);
+  const [motivo, setMotivo] = useState("");
+  const [cancelando, setCancelando] = useState(false);
+
+  // Modal detalles
+  const [modalDetalle, setModalDetalle] = useState(null);
+
   const loadOrders = async () => {
     try {
       setLoading(true);
@@ -50,254 +57,256 @@ const Sales = () => {
     }
   };
 
-  const contarPorEstado = (estado) => {
-    return orders.filter(o => o.estado_ui === estado).length;
-  };
-  const obtenerPedidosFiltrados = () => {
-    if (filtroActivo === "todos") {
-      return orders;
-    }
-    return orders.filter(o => o.estado_ui === filtroActivo);
+  const abrirModalCancelar = (order) => {
+    setModalCancelar(order);
+    setMotivo("");
   };
 
+  const confirmarCancelacion = async () => {
+    if (!modalCancelar) return;
+    setCancelando(true);
+    try {
+      await OrdersService.cancel(modalCancelar.id, motivo);
+      setModalCancelar(null);
+      setMotivo("");
+      await loadOrders();
+    } catch (err) {
+      console.error("Error cancelando pedido:", err);
+      alert("Error al cancelar el pedido");
+    } finally {
+      setCancelando(false);
+    }
+  };
+  const contarPorEstado = (estado) => orders.filter(o => o.estado_ui === estado).length;
+  const obtenerPedidosFiltrados = () =>
+    filtroActivo === "todos" ? orders : orders.filter(o => o.estado_ui === filtroActivo);
   const pedidosFiltrados = obtenerPedidosFiltrados();
 
-  if (loading) {
-    return (
-      <div className="admin-container">
-        <Titulo titulo="Gestión de Pedidos" />
-        <div className="loading-wrapper">
-          <div className="spinner"></div>
-          <p className="loading">Cargando pedidos...</p>
-        </div>
-      </div>
-    );
-  }
+  const renderCard = (o) => (
+    <OrderCard
+      key={o.id}
+      order={o}
+      onCancel={o.estado_ui !== "cancelado" ? () => abrirModalCancelar(o) : undefined}
+      onPrepare={o.estado_ui === "cola" ? () => changeEstado(o, "preparacion") : undefined}
+      onFinish={o.estado_ui === "preparacion" ? () => changeEstado(o, "listo") : undefined}
+      onDeliver={o.estado_ui === "listo" ? () => changeEstado(o, "entregado") : undefined}
+      onDetails={o.estado_ui === "cancelado" || o.estado_ui === "entregado"
+        ? () => setModalDetalle(o) : undefined}
+    />
+  );
 
-  if (error) {
-    return (
-      <div className="admin-container">
-        <Titulo titulo="Gestión de Pedidos" />
-        <div className="error-wrapper">
-          <p className="error">{error}</p>
-          <button className="btn-retry" onClick={loadOrders}>
-            🔄 Reintentar
-          </button>
-        </div>
+  if (loading) return (
+    <div className="admin-container">
+      <Titulo titulo="Gestión de Pedidos" />
+      <div className="loading-wrapper">
+        <div className="spinner"></div>
+        <p className="loading">Cargando pedidos...</p>
       </div>
-    );
-  }
+    </div>
+  );
+
+  if (error) 
+    return (
+    <div className="admin-container">
+      <Titulo titulo="Gestión de Pedidos" />
+      <div className="error-wrapper">
+        <p className="error">{error}</p>
+        <button className="btn-retry" onClick={loadOrders}>🔄 Reintentar</button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="admin-container">
       <div className="sales-header">
         <Titulo titulo="Gestión de Pedidos" />
         <div className="header-actions">
-          <button className="btn-actualizar" onClick={loadOrders}>
-            🔄 Actualizar
-          </button>
+          <button className="btn-actualizar" onClick={loadOrders}>🔄 Actualizar</button>
         </div>
       </div>
 
       <div className="filtros-sales">
-        <button
-          className={`filtro-sales-btn ${filtroActivo === "todos" ? "activo" : ""}`}
-          onClick={() => setFiltroActivo("todos")}
-        >
-          <span className="filtro-texto">Todos</span>
-          <span className="filtro-count">{orders.length}</span>
-        </button>
-        
-        <button
-          className={`filtro-sales-btn ${filtroActivo === "cola" ? "activo" : ""}`}
-          onClick={() => setFiltroActivo("cola")}
-        >
-          <span className="punto-estado cola"></span>
-          <span className="filtro-texto">Pendiente</span>
-          <span className="filtro-count">{contarPorEstado("cola")}</span>
-        </button>
-
-        <button
-          className={`filtro-sales-btn ${filtroActivo === "preparacion" ? "activo" : ""}`}
-          onClick={() => setFiltroActivo("preparacion")}
-        >
-          <span className="punto-estado preparacion"></span>
-          <span className="filtro-texto">En preparación</span>
-          <span className="filtro-count">{contarPorEstado("preparacion")}</span>
-        </button>
-
-        <button
-          className={`filtro-sales-btn ${filtroActivo === "listo" ? "activo" : ""}`}
-          onClick={() => setFiltroActivo("listo")}
-        >
-          <span className="punto-estado listo"></span>
-          <span className="filtro-texto">Listo</span>
-          <span className="filtro-count">{contarPorEstado("listo")}</span>
-        </button>
-
-        <button
-          className={`filtro-sales-btn ${filtroActivo === "entregado" ? "activo" : ""}`}
-          onClick={() => setFiltroActivo("entregado")}
-        >
-          <span className="punto-estado entregado"></span>
-          <span className="filtro-texto">Entregado</span>
-          <span className="filtro-count">{contarPorEstado("entregado")}</span>
-        </button>
-
-        <button
-          className={`filtro-sales-btn ${filtroActivo === "cancelado" ? "activo" : ""}`}
-          onClick={() => setFiltroActivo("cancelado")}
-        >
-          <span className="punto-estado cancelado"></span>
-          <span className="filtro-texto">Cancelado</span>
-          <span className="filtro-count">{contarPorEstado("cancelado")}</span>
-        </button>
+        {[
+          { key: "todos", label: "Todos", count: orders.length },
+          { key: "cola", label: "Pendiente", count: contarPorEstado("cola") },
+          { key: "preparacion", label: "En preparación", count: contarPorEstado("preparacion") },
+          { key: "listo", label: "Listo", count: contarPorEstado("listo") },
+          { key: "entregado", label: "Entregado", count: contarPorEstado("entregado") },
+          { key: "cancelado", label: "Cancelado", count: contarPorEstado("cancelado") },
+        ].map(({ key, label, count }) => (
+          <button
+            key={key}
+            className={`filtro-sales-btn ${filtroActivo === key ? "activo" : ""}`}
+            onClick={() => setFiltroActivo(key)}
+          >
+            {key !== "todos" && <span className={`punto-estado ${key}`}></span>}
+            <span className="filtro-texto">{label}</span>
+            <span className="filtro-count">{count}</span>
+          </button>
+        ))}
       </div>
+
       <div className="orders-content">
         {filtroActivo === "todos" ? (
           <>
-            <SectionTitle text="Pedidos pendientes" />
-            {orders.filter(o => o.estado_ui === "cola").length === 0 ? (
-              <p className="empty">No hay pedidos pendientes</p>
-            ) : (
-              <div className="orders-grid">
-                {orders
-                  .filter(o => o.estado_ui === "cola")
-                  .map(o => (
-                    <OrderCard
-                      key={o.id}
-                      order={o}
-                      onEdit={() => console.log("editar", o)}
-                      onPrepare={() => changeEstado(o, "preparacion")}
-                    />
-                  ))}
+            {["cola", "preparacion", "listo", "entregado", "cancelado"].map((estado) => (
+              <div key={estado}>
+                <SectionTitle text={
+                  estado === "cola" ? "Pedidos pendientes" :
+                  estado === "preparacion" ? "Pedidos en preparación" :
+                  estado === "listo" ? "Pedidos listos" :
+                  estado === "entregado" ? "Pedidos entregados" :
+                  "Pedidos cancelados"
+                } />
+                {orders.filter(o => o.estado_ui === estado).length === 0
+                  ? <p className="empty">No hay pedidos en esta categoría</p>
+                  : <div className="orders-grid">
+                      {orders.filter(o => o.estado_ui === estado).map(renderCard)}
+                    </div>
+                }
               </div>
-            )}
-
-            <SectionTitle text="Pedidos en preparación" />
-            {orders.filter(o => o.estado_ui === "preparacion").length === 0 ? (
-              <p className="empty">No hay pedidos en preparación</p>
-            ) : (
-              <div className="orders-grid">
-                {orders
-                  .filter(o => o.estado_ui === "preparacion")
-                  .map(o => (
-                    <OrderCard
-                      key={o.id}
-                      order={o}
-                      onEdit={() => console.log("editar", o)}
-                      onFinish={() => changeEstado(o, "listo")}
-                    />
-                  ))}
-              </div>
-            )}
-
-            <SectionTitle text="Pedidos listos" />
-            {orders.filter(o => o.estado_ui === "listo").length === 0 ? (
-              <p className="empty">No hay pedidos listos</p>
-            ) : (
-              <div className="orders-grid">
-                {orders
-                  .filter(o => o.estado_ui === "listo")
-                  .map(o => (
-                    <OrderCard
-                      key={o.id}
-                      order={o}
-                      onEdit={() => console.log("editar", o)}
-                      onDeliver={() => changeEstado(o, "entregado")}
-                    />
-                  ))}
-              </div>
-            )}
-
-            <SectionTitle text="Pedidos entregados" />
-            {orders.filter(o => o.estado_ui === "entregado").length === 0 ? (
-              <p className="empty">No hay pedidos entregados</p>
-            ) : (
-              <div className="orders-grid">
-                {orders
-                  .filter(o => o.estado_ui === "entregado")
-                  .map(o => (
-                    <OrderCard
-                      key={o.id}
-                      order={o}
-                      onDetails={() => console.log("detalle", o)}
-                    />
-                  ))}
-              </div>
-            )}
-
-            <SectionTitle text="Pedidos cancelados" />
-            {orders.filter(o => o.estado_ui === "cancelado").length === 0 ? (
-              <p className="empty">No hay pedidos cancelados</p>
-            ) : (
-              <div className="orders-grid">
-                {orders
-                  .filter(o => o.estado_ui === "cancelado")
-                  .map(o => (
-                    <OrderCard
-                      key={o.id}
-                      order={o}
-                      onDetails={() => console.log("detalle", o)}
-                    />
-                  ))}
-              </div>
-            )}
+            ))}
           </>
         ) : (
           <>
-            <SectionTitle 
-              text={`Pedidos ${
-                filtroActivo === "cola" ? "pendientes" :
-                filtroActivo === "preparacion" ? "en preparación" :
-                filtroActivo === "listo" ? "listos" :
-                filtroActivo === "entregado" ? "entregados" :
-                "cancelados"
-              }`} 
-            />
-            
+            <SectionTitle text={
+              filtroActivo === "cola" ? "Pedidos pendientes" :
+              filtroActivo === "preparacion" ? "Pedidos en preparación" :
+              filtroActivo === "listo" ? "Pedidos listos" :
+              filtroActivo === "entregado" ? "Pedidos entregados" :
+              "Pedidos cancelados"
+            } />
             {pedidosFiltrados.length === 0 ? (
               <div className="estado-vacio">
                 <div className="vacio-icono">📭</div>
                 <h3 className="vacio-titulo">No hay pedidos en esta categoría</h3>
-                <p className="vacio-texto">
-                  Los pedidos aparecerán aquí cuando cambien a este estado
-                </p>
+                <p className="vacio-texto">Los pedidos aparecerán aquí cuando cambien a este estado</p>
               </div>
             ) : (
-              <div className="orders-grid">
-                {pedidosFiltrados.map(o => (
-                  <OrderCard
-                    key={o.id}
-                    order={o}
-                    onEdit={() => console.log("editar", o)}
-                    onPrepare={
-                      o.estado_ui === "cola" 
-                        ? () => changeEstado(o, "preparacion") 
-                        : undefined
-                    }
-                    onFinish={
-                      o.estado_ui === "preparacion"
-                        ? () => changeEstado(o, "listo")
-                        : undefined
-                    }
-                    onDeliver={
-                      o.estado_ui === "listo"
-                        ? () => changeEstado(o, "entregado")
-                        : undefined
-                    }
-                    onDetails={
-                      o.estado_ui === "cancelado" || o.estado_ui === "entregado"
-                        ? () => console.log("detalle", o)
-                        : undefined
-                    }
-                  />
-                ))}
-              </div>
+              <div className="orders-grid">{pedidosFiltrados.map(renderCard)}</div>
             )}
           </>
         )}
       </div>
+
+      {modalCancelar && (
+        <div className="modal-overlay" onClick={() => !cancelando && setModalCancelar(null)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+            <h3>Cancelar pedido #{modalCancelar.numero_pedido}</h3>
+            <p>Mesa {modalCancelar.mesa_id} — ${modalCancelar.total}</p>
+            <textarea
+              placeholder="Motivo de cancelación (opcional)..."
+              value={motivo}
+              onChange={(e) => setMotivo(e.target.value)}
+              rows={3}
+              style={{
+                width: "100%",
+                marginTop: "0.75rem",
+                padding: "8px 10px",
+                fontSize: "13px",
+                borderRadius: "8px",
+                border: "1px solid #ddd",
+                resize: "none",
+                fontFamily: "inherit",
+              }}
+            />
+            <div className="modal-btns" style={{ display: "flex", gap: "8px", marginTop: "1rem" }}>
+              <button className="btn secondary" onClick={() => setModalCancelar(null)} disabled={cancelando}>
+                Volver
+              </button>
+              <button className="btn danger" onClick={confirmarCancelacion} disabled={cancelando}>
+                {cancelando ? "Cancelando..." : "Confirmar cancelación"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {modalDetalle && (
+        <div className="modal-overlay" onClick={() => setModalDetalle(null)}>
+          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem" }}>
+              <div>
+                <h3 style={{ margin: 0 }}>Pedido #{modalDetalle.numero_pedido}</h3>
+                <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#aaa" }}>
+                  Mesa {modalDetalle.mesa_id} — {new Date(modalDetalle.fecha).toLocaleString("es-AR")}
+                </p>
+              </div>
+              <span style={{
+                fontSize: "11px",
+                fontWeight: 500,
+                padding: "3px 10px",
+                borderRadius: "6px",
+                background: modalDetalle.estado_ui === "cancelado" ? "#fff0f0" : "#f0faf4",
+                color: modalDetalle.estado_ui === "cancelado" ? "#c0392b" : "#2d7a4f",
+              }}>
+                {modalDetalle.estado_ui === "cancelado" ? "Cancelado" : "Entregado"}
+              </span>
+            </div>
+
+            <div style={{ borderTop: "0.5px solid #f0f0f0", paddingTop: "0.75rem", marginBottom: "0.75rem" }}>
+              <p style={{ fontSize: "11px", color: "#bbb", letterSpacing: "0.06em", marginBottom: "0.5rem" }}>
+                ITEMS
+              </p>
+              {modalDetalle.detalles?.length > 0 ? (
+                modalDetalle.detalles.map((item, idx) => (
+                  <div key={idx} style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    fontSize: "13px",
+                    padding: "5px 0",
+                    borderBottom: "0.5px solid #f5f5f5"
+                  }}>
+                    <span style={{ color: "#444" }}>{item.cantidad}x {item.descripcion}</span>
+                    <span style={{ fontWeight: 500 }}>${Number(item.subtotal).toLocaleString("es-AR")}</span>
+                  </div>
+                ))
+              ) : (
+                <p style={{ fontSize: "13px", color: "#aaa" }}>Sin items registrados</p>
+              )}
+            </div>
+
+            <div style={{
+              display: "flex",
+              justifyContent: "space-between",
+              fontWeight: 500,
+              fontSize: "14px",
+              paddingTop: "0.5rem",
+              borderTop: "0.5px solid #e5e5e5",
+              marginBottom: "0.75rem"
+            }}>
+              <span>Total</span>
+              <span>${Number(modalDetalle.total).toLocaleString("es-AR")}</span>
+            </div>
+
+            {modalDetalle.estado_ui === "cancelado" && (
+              <div style={{
+                background: "#fff5f5",
+                border: "0.5px solid #fdd",
+                borderRadius: "8px",
+                padding: "10px 12px",
+                marginBottom: "0.75rem"
+              }}>
+                <p style={{ fontSize: "11px", color: "#c0392b", letterSpacing: "0.06em", marginBottom: "4px" }}>
+                  MOTIVO DE CANCELACIÓN
+                </p>
+                <p style={{ fontSize: "13px", color: "#555", margin: 0 }}>
+                  {modalDetalle.motivo_cancelacion || "Sin motivo especificado"}
+                </p>
+              </div>
+            )}
+
+            <button
+              className="btn secondary"
+              style={{ width: "100%" }}
+              onClick={() => setModalDetalle(null)}
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -35,8 +35,9 @@ export const OrdersService = {
       })
     }),
 
-  cancel: (id) =>
-    apiRequest(`/pedidos/${id}`, {
-      method: "DELETE"
-    })
+  cancel: (id, motivo) =>
+  apiRequest(`/pedidos/${id}/cancelar`, {
+    method: "PUT",
+    body: JSON.stringify({ motivo }),
+  }),
 };
